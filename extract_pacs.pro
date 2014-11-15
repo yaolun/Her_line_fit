@@ -328,7 +328,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
         endif
         ; fit the baseline and return the baseline parameter in 'base_para'
 		
-        fit_line, filename, line_name[i], wlb, fluxb, stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
+        fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
         ;select the line+baseline
 		if not keyword_set(localbaseline) then begin
         	if i le 39 then begin
@@ -367,25 +367,25 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		if (where(special_list eq object))[0] eq -1 then b3a = 1
         if keyword_set(fixed_width) and keyword_set(opt_width) then begin
         	if line_name[i] eq 'OI3P1-3P2' then begin
-        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot,b3a=b3a
-				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot,b3a=b3a
 			endif else begin
-				if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
-				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
 			endelse
         endif else if keyword_set(fixed_width) and (not keyword_set(opt_width)) then begin
-        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
-				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
         endif else begin
-        	if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        	if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot
-			if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+			if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot
         endelse
         ; Print the fittng result into text file
@@ -470,7 +470,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				indl = where(wl gt base_range[0] and wl lt max(wl))
 				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 			endif
-			fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+			fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
 			; extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
@@ -491,7 +491,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			; Using band 3 resolution for some of WISH sources
 			b3a = 0
 			if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
-			fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
+			fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
 				noiselevel=3,base_range=base_range,plot_base=plot_base,b3a=b3a,/fix_dg
 			if status eq 0 then begin
 				printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
@@ -861,7 +861,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			endif
 
 			; Fit the baseline and return the baseline parameter in 'base_para'
-			fit_line, filename, line_name[i], wlb, fluxb, stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
+			fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
 			; Select the line+baseline
 			if not keyword_set(localbaseline) then begin
         		if i le 39 then begin
@@ -908,25 +908,25 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
 			if keyword_set(fixed_width) and keyword_set(opt_width) then begin
         		if line_name[i] eq 'OI3P1-3P2'then begin
-        			if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        			if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot,b3a=b3a
-				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot,b3a=b3a
 			    endif else begin
-				    if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				    if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
-				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot,b3a=b3a
 			    endelse
 			endif else if keyword_set(fixed_width) and (not keyword_set(opt_width)) then begin
-					if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+					if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
-				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot,b3a=b3a
 			endif else begin
-        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         											/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot
-				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 													/single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot
 			endelse
 			; Print the fittng result into text file
@@ -1014,7 +1014,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					indl = where(wl gt base_range[0] and wl lt max(wl))
 					wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 				endif
-				fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+				fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
 				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
@@ -1036,7 +1036,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				; Using band 3 resolution for some of the WISH sources
         		b3a = 0
 		        if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
-				fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
+				fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
 					 noiselevel=3,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,b3a=b3a,/fix_dg
 				if status eq 0 then begin
 					printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
