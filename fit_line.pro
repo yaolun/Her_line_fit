@@ -1,4 +1,4 @@
-pro fit_line, pixelname, linename, wl, flux, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+pro fit_line, pixelname, linename, wl, flux, std=std, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 baseline=baseline, test=test, single_gauss=single_gauss, double_gauss=double_gauss, outdir=outdir, noiselevel=noiselevel, fixed_width=fixed_width,global_noise=global_noise,base_range=base_range,brightness=brightness,$
 no_plot=no_plot,b3a=b3a,fix_dg=fix_dg,spire=spire
 
@@ -11,10 +11,14 @@ if file_test(outdir+'double_gauss/',/directory) eq 0 then file_mkdir, outdir+'do
   ;make the unit consist with each other. Change F_nu (Jy) -> F_lambda (W cm-2 um-1)
   ;flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26
 
-  weight = 1+0*flux
+  ; weight = 1+0*flux
   wl = double(wl)
   flux = double(flux)
-  weight = double(weight)
+  if keyword_set(std) then begin
+    weight = double(std)
+  endif else begin
+    weight = 1+0*flux
+  endelse
   expo = round(alog10(abs(median(flux))))*(-1)+1
   factor = 10d^expo
   nwl = wl - median(wl)
@@ -184,66 +188,82 @@ if not keyword_set(baseline) then begin
         base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
         residual = flux - gauss
         noise = stddev(residual)
-		;if pixelname eq 'SSWA1' and linename eq 'HCO+11-10' and keyword_set(global_noise) then stop
-		;if linename eq 'CO11-10' and keyword_set(global_noise) then stop
-        if keyword_set(global_noise) then noise = stddev(global_noise[*,1])
+		    ;if pixelname eq 'SSWA1' and linename eq 'HCO+11-10' and keyword_set(global_noise) then stop
+		    ;if linename eq 'CO11-10' and keyword_set(global_noise) then stop
+        if keyword_set(global_noise) then begin
+          noise = stddev(global_noise[*,1])
+          ; Use Eq. 4.57 from Robinson's note
+          if n_elements(global_noise[0,*]) eq 3 then begin
+            mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
+            std_noise = (1/n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
+            noise = std_noise
+          endif
+        endif
         snr = str/noise/fwhm
         if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
         ;snr = height/noise
         ;
         ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
-		if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
-		if keyword_set(fixed_width) then sig_fwhm = -998
-		if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999 
+		    if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
+		    if keyword_set(fixed_width) then sig_fwhm = -998
+		    if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999 
       endif
       if keyword_set(double_gauss) then begin
-	  	 ;print, 'Finishing double Gaussian fit for '+linename
-         rms2 = total((gauss_double(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
-         rms = sqrt(rms2)
-         sigma = sigma*rms
-         cen_wl = [p[1]+median(wl), p[4]+median(wl)] & sig_cen_wl = [sigma[1],sigma[4]]
-         height = [p[0],p[3]]/factor & sig_height = [sigma[0],sigma[3]]/factor
-         fwhm = 2.354*[abs(p[2]), abs(p[5])] & sig_fwhm = 2.354*[abs(sigma[2]), abs(sigma[5])]
-         str = (2*!PI)^0.5*[height[0]*abs(p[2]), height[1]*abs(p[5])]
-         sig_str = [str[0]*((sig_height[0]/height[0])^2+(abs(sigma[2])/abs(p[2]))^2)^0.5,str[1]*((sig_height[1]/height[1])^2+(abs(sigma[5])/abs(p[5]))^2)^0.5]
-         gauss = height[0]*exp(-(wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(wl-cen_wl[1])^2/2/p[5]^2)
-         fine_wl = (findgen(5001)-2500)/5000.*(max(wl)-min(wl))+(max(wl)+min(wl))/2
-         gauss_fine = height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)
-         base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
-         residual = flux - gauss
-         noise = stddev(residual)
-;         if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
-         if keyword_set(global_noise) then noise = stddev(global_noise[*,1])
-		 if (linename eq 'p-H2O9_37-8_44_CO22-21') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel9_os8_sf7')then stop
-		 snr = str/noise/fwhm
-		 ; Account for the oversample in spire band
-		 if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
-         ;snr = height/noise
-		 ; Making sure the line classification is correct
-		 if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
-			 print, 'Line misplacement found'
-			 cen_wl = reverse(cen_wl)
-			 sig_cen_wl = reverse(sig_cen_wl)
-			 str = reverse(str)
-			 sig_str = reverse(sig_str)
-			 fwhm = reverse(fwhm)
-			 sig_fwhm = reverse(sig_fwhm)
-		   	 snr = reverse(snr)
-		 endif
-		 ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
-		 ; 
-		 if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
-		 for k = 0, 1 do begin
-		 	if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
-		 		sig_fwhm[k] = -999
-;		 		if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
-		 	endif
-		 	if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
-		 	if (str[k] eq 0) then begin
-		 		sig_cen_wl[k] = -998
-		 		sig_str[k] = -998
-		 	endif
-		 endfor
+        ;print, 'Finishing double Gaussian fit for '+linename
+        rms2 = total((gauss_double(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
+        rms = sqrt(rms2)
+        sigma = sigma*rms
+        cen_wl = [p[1]+median(wl), p[4]+median(wl)] & sig_cen_wl = [sigma[1],sigma[4]]
+        height = [p[0],p[3]]/factor & sig_height = [sigma[0],sigma[3]]/factor
+        fwhm = 2.354*[abs(p[2]), abs(p[5])] & sig_fwhm = 2.354*[abs(sigma[2]), abs(sigma[5])]
+        str = (2*!PI)^0.5*[height[0]*abs(p[2]), height[1]*abs(p[5])]
+        sig_str = [str[0]*((sig_height[0]/height[0])^2+(abs(sigma[2])/abs(p[2]))^2)^0.5,str[1]*((sig_height[1]/height[1])^2+(abs(sigma[5])/abs(p[5]))^2)^0.5]
+        gauss = height[0]*exp(-(wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(wl-cen_wl[1])^2/2/p[5]^2)
+        fine_wl = (findgen(5001)-2500)/5000.*(max(wl)-min(wl))+(max(wl)+min(wl))/2
+        gauss_fine = height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)
+        base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
+        residual = flux - gauss
+        noise = stddev(residual)
+        ;         if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
+        if keyword_set(global_noise) then begin
+          noise = stddev(global_noise[*,1])
+          ; Use Eq. 4.57 from Robinson's note
+          if n_elements(global_noise[0,*]) eq 3 then begin
+            mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
+            std_noise = (1/n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
+            noise = std_noise
+          endif
+        endif
+		    if (linename eq 'p-H2O9_37-8_44_CO22-21') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel9_os8_sf7')then stop
+  		  snr = str/noise/fwhm
+  		  ; Account for the oversample in spire band
+  		  if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
+           ;snr = height/noise
+  		  ; Making sure the line classification is correct
+  		  if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
+  			  print, 'Line misplacement found'
+  			  cen_wl = reverse(cen_wl)
+  			  sig_cen_wl = reverse(sig_cen_wl)
+  			  str = reverse(str)
+  			  sig_str = reverse(sig_str)
+  			  fwhm = reverse(fwhm)
+  			  sig_fwhm = reverse(sig_fwhm)
+  		   	snr = reverse(snr)
+  		  endif
+  		  ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
+  		  ; 
+  		  if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
+  		  for k = 0, 1 do begin
+  		 	  if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
+  		 		  sig_fwhm[k] = -999
+  		 		  ; if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
+  		 	  endif
+  		 	  if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
+  		 	  if (str[k] eq 0) then begin
+            sig_cen_wl[k] = -998
+            sig_str[k] = -998
+          endif
+        endfor
       endif
       base = base_para[0]*wl^2+base_para[1]*wl+base_para[2]
       msg=''

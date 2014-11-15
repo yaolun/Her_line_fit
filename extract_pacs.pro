@@ -1,42 +1,35 @@
 pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir, pospath=pospath, noiselevel=noiselevel, test=test, ra=ra, dec=dec,$
 	localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,linescan=linescan,continuum_sub=continuum_sub,opt_width=opt_width,object=object,flat=flat,print_all=print_all,$
 	plot_subtraction=plot_subtraction,current_pix=current_pix,glo_print_only=glo_print_only,no_plot=no_plot,double_gauss=double_gauss
-;pospath is for the [ra,dec] information of the pixels  (e.g. pacs_coord.txt)
-;The indir is the path of the spectrum of each pixel, including every letter in the filename except the pixel number.  For example, '/path/to/data/pacs_pixel13.txt', the indir will be '/path/to/data/pacs_pixel'
-;Same method of the indir apply to the outdir.
-if file_test(outdir) eq 0 then file_mkdir, outdir
-if not keyword_set(no_plot) then begin
-	if file_test(plotdir+'base',/directory) eq 0 then file_mkdir,plotdir+'base'
-endif
-if file_test(plotdir+'cannot_fit',/directory) eq 0 then file_mkdir,plotdir+'cannot_fit'
-if keyword_set(no_plot) then begin
-	no_plot = 1
-endif else begin
-	no_plot = 0
-endelse
-;Read the coordinates of every pixel
-;readcol, pospath, format='D,D,D', pix_ind, ra, dec
-;'~/bhr71/data/pacs_coord.txt'
-;for j = 0,24 do begin	
-    ;The path to the data that you want to fit.  wavelength in um and flux in Jy.
-    ;readcol, indir+'pacs_pixel'+strtrim(string(j+1),1)+'.txt', format='D,D,D', wl, flux, flux_stddev
-    readcol, indir+filename+'.txt', format='D,D', wl, flux,/silent;, flux_stddev
-    ;print, filename
+	; The indir is the path of the spectrum of each pixel, including every letter in the filename except the pixel number.  For example, '/path/to/data/pacs_pixel13.txt', the indir will be '/path/to/data/pacs_pixel'
+	; Same method of the indir apply to the outdir.
+	if file_test(outdir) eq 0 then file_mkdir, outdir
+	if not keyword_set(no_plot) then begin
+		if file_test(plotdir+'base',/directory) eq 0 then file_mkdir,plotdir+'base'
+	endif
+	if file_test(plotdir+'cannot_fit',/directory) eq 0 then file_mkdir,plotdir+'cannot_fit'
+
+	; no_plot flags the option of plotting the fitting results of individual line.
+	if keyword_set(no_plot) then begin
+		no_plot = 1
+	endif else begin
+		no_plot = 0
+	endelse
+    ; The path to the data that you want to fit.  wavelength in um and flux in Jy.
+    readcol, indir+filename+'.txt', format='D,D,D', wl, flux, std,/silent
+    ; Read the corrdinates information if we are fitting data cube.
     if keyword_set(current_pix) then readcol, indir+filename+'_coord.txt', format='D,D,D', wl_coord, ra_tot, dec_tot, /silent
+    ; Get rid off the NaN
     wl = wl[where(finite(flux) eq 1)]
+    std = std[where(finite(flux) eq 1)]
     flux = flux[where(finite(flux) eq 1)]
-    ;Convert the flux to appropriate unit
+    ; Convert the flux to appropriate unit
     c = 2.998d8
     flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26  ;Change F_nu (Jy) -> F_lambda (W cm-2 um-1)
-    ;Information about the line that you want to fit including the range for baseline fitting.
-    ;every level is equal to LAMDA level-1
-	;Possible blend lines:
-	;	p-H2O7_53-7_44 and o-H2O6_52-6_43 at 75.82509470 um
-	;	CO31-30 and OH 8-2 at 84.44156885 um
-	;	CO23-22 and o-H2O4_14-3_03 at 113.5415888 um
-	;	p-H2O3_13-2_02 and p-H2O8_44-7_53 at 138.5774218 um
-	;	p-H2O8_35-8_26 and p-H2O5_42-6_15 at 148.7551367 um
-	;	p-H2O 5_33-6_06 and o-H2O3_03-2_12 at 174.6745582 um
+    std = std*1d-4*c/(wl*1d-6)^2*1d-6*1d-26
+    ; Information about the line that you want to fit including the range for baseline fitting.
+    ; every level is equal to LAMDA level-1
+    ; In the later version, the 10 times of resolutions is used for determining the baseline. Thus the baseline number here is less important
     line_name_oh2o = ['o-H2O8_27-7_16','o-H2O10_29-10_110','o-H2O9_09-8_18','o-H2O7_52-8_27','o-H2O4_32-3_21','o-H2O5_41-6_16','o-H2O9_18-9_09','o-H2O8_18-7_07','o-H2O6_61-6_52','o-H2O7_61-7_52',$
     	              'o-H2O6_25-5_14','o-H2O7_16-6_25','o-H2O3_30-2_21','o-H2O3_30-3_03','o-H2O8_27-8_18','o-H2O7_07-6_16','o-H2O7_25-6_34','o-H2O3_21-2_12','o-H2O8_54-8_45','o-H2O6_52-6_43',$
     	              'o-H2O5_50-5_41','o-H2O7_52-7_43','o-H2O4_23-3_12','o-H2O9_27-9_18','o-H2O6_16-5_05','o-H2O8_36-8_27','o-H2O7_16-7_07','o-H2O8_45-8_36','o-H2O6_43-6_34','o-H2O6_25-6_16',$
@@ -129,51 +122,53 @@ endelse
 	line_center = [line_center_oh2o, line_center_ph2o, line_center_co, line_center_oh, line_center_other]
 	range = [[range_oh2o], [range_ph2o], [range_co], [range_oh], [range_other]]
 	cont = [[cont_oh2o], [cont_ph2o], [cont_co], [cont_oh], [cont_other]]
-;	set_plot, 'ps'
-;	!p.font = 0
-;    device, filename = 'line_list_old.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
-;	loadct,12
-;	!p.thick=3 & !x.thick=0 & !y.thick=0
-;	plot, line_center, 0*line_center, yrange=[0,100], xtitle='Wavelength', /nodata, ytickformat='(A1)'
-;	for i=0, n_elements(line_center_co)-1 do begin
-;		oplot, [line_center_co[i],line_center_co[i]], [0,9], color=120 ;purple
-;		oplot, [range_co[0,i],range_co[0,i]],[0,9],color=120, linestyle=1
-;		oplot, [range_co[1,i],range_co[1,i]],[0,9],color=120, linestyle=1
-;	endfor
-;	for i=0, n_elements(line_center_oh2o)-1 do begin
-;		oplot, [line_center_oh2o[i],line_center_oh2o[i]],[20,29],color=100 ;blue
-;		oplot, [range_oh2o[0,i],range_oh2o[0,i]],[20,29],color=100, linestyle=1
-;		oplot, [range_oh2o[1,i],range_oh2o[1,i]],[20,29],color=100, linestyle=1
-;	endfor
-;	for i=0, n_elements(line_center_ph2o)-1 do begin
-;		oplot, [line_center_ph2o[i],line_center_ph2o[i]],[40,49],color=10 ;green
-;		oplot, [range_ph2o[0,i],range_ph2o[0,i]],[40,49],color=10, linestyle=1
-;		oplot, [range_ph2o[1,i],range_ph2o[1,i]],[40,49],color=10, linestyle=1
-;	endfor
-;	for i=0, n_elements(line_center_oh)-1 do begin
-;		oplot, [line_center_oh[i],line_center_oh[i]],[60,69],color=135 ;pink
-;		oplot, [range_oh[0,i],range_oh[0,i]],[60,69],color=135, linestyle=1
-;		oplot, [range_oh[1,i],range_oh[1,i]],[60,69],color=135, linestyle=1
-;	endfor
-;	for i=0, n_elements(line_center_other)-1 do begin
-;		oplot, [line_center_other[i],line_center_other[i]],[80,89],color=200 ;red
-;		oplot, [range_other[0,i],range_other[0,i]],[80,89],color=200, linestyle=1
-;		oplot, [range_other[1,i],range_other[1,i]],[80,89],color=200, linestyle=1
-;	endfor
-;	al_legend, ['CO','o-H2O','p-H2O','OH','Atomic and other'], textcolors = [30,60,130,225,250],/right
-;	device, /close_file, decomposed = 1
-;    !p.multi = 0
-;	cleanplot
+	; Old plotting code for visualizing the line list
+	;	set_plot, 'ps'
+	;	!p.font = 0
+	;    device, filename = 'line_list_old.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
+	;	loadct,12
+	;	!p.thick=3 & !x.thick=0 & !y.thick=0
+	;	plot, line_center, 0*line_center, yrange=[0,100], xtitle='Wavelength', /nodata, ytickformat='(A1)'
+	;	for i=0, n_elements(line_center_co)-1 do begin
+	;		oplot, [line_center_co[i],line_center_co[i]], [0,9], color=120 ;purple
+	;		oplot, [range_co[0,i],range_co[0,i]],[0,9],color=120, linestyle=1
+	;		oplot, [range_co[1,i],range_co[1,i]],[0,9],color=120, linestyle=1
+	;	endfor
+	;	for i=0, n_elements(line_center_oh2o)-1 do begin
+	;		oplot, [line_center_oh2o[i],line_center_oh2o[i]],[20,29],color=100 ;blue
+	;		oplot, [range_oh2o[0,i],range_oh2o[0,i]],[20,29],color=100, linestyle=1
+	;		oplot, [range_oh2o[1,i],range_oh2o[1,i]],[20,29],color=100, linestyle=1
+	;	endfor
+	;	for i=0, n_elements(line_center_ph2o)-1 do begin
+	;		oplot, [line_center_ph2o[i],line_center_ph2o[i]],[40,49],color=10 ;green
+	;		oplot, [range_ph2o[0,i],range_ph2o[0,i]],[40,49],color=10, linestyle=1
+	;		oplot, [range_ph2o[1,i],range_ph2o[1,i]],[40,49],color=10, linestyle=1
+	;	endfor
+	;	for i=0, n_elements(line_center_oh)-1 do begin
+	;		oplot, [line_center_oh[i],line_center_oh[i]],[60,69],color=135 ;pink
+	;		oplot, [range_oh[0,i],range_oh[0,i]],[60,69],color=135, linestyle=1
+	;		oplot, [range_oh[1,i],range_oh[1,i]],[60,69],color=135, linestyle=1
+	;	endfor
+	;	for i=0, n_elements(line_center_other)-1 do begin
+	;		oplot, [line_center_other[i],line_center_other[i]],[80,89],color=200 ;red
+	;		oplot, [range_other[0,i],range_other[0,i]],[80,89],color=200, linestyle=1
+	;		oplot, [range_other[1,i],range_other[1,i]],[80,89],color=200, linestyle=1
+	;	endfor
+	;	al_legend, ['CO','o-H2O','p-H2O','OH','Atomic and other'], textcolors = [30,60,130,225,250],/right
+	;	device, /close_file, decomposed = 1
+	;    !p.multi = 0
+	;	cleanplot
 
+	; Read the instrument resolutions
   	readcol, '~/bhr71/data/spectralresolution_order1.txt', format='D,D', wl1, res1,/silent
 	readcol, '~/bhr71/data/spectralresolution_order2.txt', format='D,D', wl2, res2,/silent
 	readcol, '~/bhr71/data/spectralresolution_order3.txt', format='D,D', wl3, res3,/silent
 	fwhm1 = wl1/res1 & fwhm2 = wl2/res2 & fwhm3 = wl3/res3
 	wl_ins = [wl2, wl1[where(wl1 eq max(wl2)):*]]
 	dl_ins = [fwhm2, fwhm1[where(wl1 eq max(wl2)):*]]/2.354
-	;Define the range of line center by setting the range within -1~4 times of the resolution elements of the line center
+	; Define the range of line center by setting the range within -2-2 times of the resolution elements of the line center
+	; Since the [OI] 63 um lines are usually wider, we use -3-3 times of the resolution for this line.
 	range = []
-	;range_factor=2
 	line_name = line_name[sort(line_center)]
 	line_center = line_center[sort(line_center)]
 	cont = cont[*,sort(line_center)]
@@ -181,9 +176,7 @@ endelse
 		dl = interpol(dl_ins, wl_ins, line_center[i])
 		if line_name[i] eq 'OI3P1-3P2' then range_factor=3
 		if line_name[i] ne 'OI3P1-3P2' then range_factor=2
-		;range = [[range], [[line_center[i]-range_factor*dl, line_center[i]+(range_factor+2)*dl]]]
 		if i eq 0 then begin
-			;lower = line_center[i]-range_factor*dl
 			lower = line_center[i]-(range_factor)*dl
 			if (range_factor)*dl gt 0.5*(line_center[i+1]-line_center[i]) then begin
 				upper = line_center[i]+0.5*(line_center[i+1]-line_center[i])
@@ -196,7 +189,6 @@ endelse
 			if range_factor*dl gt 0.5*(line_center[i]-line_center[i-1]) then begin
 				lower = line_center[i]-0.5*(line_center[i]-line_center[i-1])
 			endif else begin
-				;lower = line_center[i]-range_factor*dl
 				lower = line_center[i]-(range_factor)*dl
 			endelse
 			if (range_factor)*dl gt 0.5*(line_center[i+1]-line_center[i]) then begin
@@ -210,7 +202,6 @@ endelse
 			if range_factor*dl gt 0.5*(line_center[i]-line_center[i-1]) then begin
 				lower = line_center[i]-0.5*(line_center[i]-line_center[i-1])
 			endif else begin
-				;lower = line_center[i]-range_factor*dl
 				lower = line_center[i]-(range_factor)*dl
 			endelse
 			upper = line_center[i]+(range_factor)*dl
@@ -228,70 +219,61 @@ endelse
 		if valid eq 1 then base_mask[i] = 1
 	endfor
 
-	wl_basepool = wl[where(base_mask ne 0)] & flux_basepool = flux[where(base_mask ne 0)]
-	;Select different line list for line scan spectrum
-	;if keyword_set(linescan) then begin
-		dl_min = interpol(dl_ins, wl_ins, min(wl))
-		dl_max = interpol(dl_ins, wl_ins, max(wl))
-		wl_seg1 = wl[where(wl lt 100)]
-		wl_seg2 = wl[where(wl ge 100)]
-		seg1 = where((line_center ge (min(wl_seg1)+5*dl_min)) and (line_center le (max(wl_seg1)-5*dl_max)))
-		seg2 = where((line_center ge (min(wl_seg2)+5*dl_min)) and (line_center le (max(wl_seg2)-5*dl_max)))
+	wl_basepool = wl[where(base_mask ne 0)] & flux_basepool = flux[where(base_mask ne 0)] & std_basepool = std[where(base_mask ne 0)]
+	; Select different line list for line scan spectrum
+	dl_min = interpol(dl_ins, wl_ins, min(wl))
+	dl_max = interpol(dl_ins, wl_ins, max(wl))
+	wl_seg1 = wl[where(wl lt 100)]
+	wl_seg2 = wl[where(wl ge 100)]
+	seg1 = where((line_center ge (min(wl_seg1)+5*dl_min)) and (line_center le (max(wl_seg1)-5*dl_max)))
+	seg2 = where((line_center ge (min(wl_seg2)+5*dl_min)) and (line_center le (max(wl_seg2)-5*dl_max)))
+
+	seg = []
+	if seg1[0] ne -1 then seg = [seg,seg1]
+	if seg2[0] ne -1 then seg = [seg,seg2]
+	; Check if the spectrum has at least one side of PACS spectrum.
+	if seg1[0] eq -1 and seg2[0] eq -1 then begin
+		return
+		end
+		
+	line_name = line_name[seg]
+	line_center = line_center[seg]
+	range = range[*,seg]
+	cont = cont[*,seg]
+
+	; Modified the line list for double Gaussian fitting
+	line_name_dg = [['CO31-30','OH9-3'],['CO23-22','o-H2O4_14-3_03'],['p-H2O7_53-8_26','CO20-19'],['OH14-12','o-H2O5_14-5_05'],$
+					['p-H2O3_22-3_13','o-H2O5_23-4_32'],['p-H2O6_51-7_26','OH19-14'],['OH18-15','p-H2O7_71-7_62'],['p-H2O9_19-8_08','o-H2O9_09-8_18'],['OH13-9','o-H2O6_25-5_14'],$
+					['OH14-10','OH15-11'],['p-H2O9_37-8_44','CO22-21'],['o-H2O7_34-7_25','p-H2O6_24-6_15'],['p-H2O5_33-6_06','o-H2O3_03-2_12'],['CO16-15','OH7-5']]
+					; lines are too close to get a well-constrained fit: ['CII2P3_2-2P1_2','OH18-17'],['p-H2O3_13-2_02','p-H2O8_44-7_53']
+	line_center_dg = []
+	range_dg = []
+	line_dg = []
+	excluded_line =[]
+	for dg = 0, n_elements(line_name_dg[0,*])-1 do begin
+		ind = where(line_name eq line_name_dg[0,dg] or line_name eq line_name_dg[1,dg])
+		if n_elements(ind) eq 2 then begin
+			range_dg = [[range_dg],[min(range[*,ind]), max(range[*,ind])]]
+			excluded_line = [excluded_line,line_name_dg[0,dg],line_name_dg[1,dg]]
+			line_center_dg = [line_center_dg,line_center[ind]]
+			for k = 0, n_elements(ind)-1 do begin
+				line_dg = [[line_dg], [line_center[ind[k]], range[0,ind[k]], range[1,ind[k]]]]
+			endfor
+		endif
+	endfor
+	; custom range
+	; line_name = line_name[where(line_center le 100 or (line_center gt 104 and line_center lt 179))]
+	; range = range[*,where(line_center le 100 or (line_center gt 104 and line_center lt 179))]
+	; cont = cont[*,where(line_center le 100 or (line_center gt 104 and line_center lt 179))]
+	; line_center = line_center[where(line_center le 100 or (line_center gt 104 and line_center lt 179))]
 
 
-		;print, 'Min and Max wl', min(wl), max(wl)
-		;print, seg
-		seg = []
-		if seg1[0] ne -1 then seg = [seg,seg1]
-		if seg2[0] ne -1 then seg = [seg,seg2]
-		if seg1[0] eq -1 and seg2[0] eq -1 then begin
-			return
-			end
-			
-		line_name = line_name[seg]
-		line_center = line_center[seg]
-		range = range[*,seg]
-		cont = cont[*,seg]
-		; Perform double Gaussian fit on 113 um blended lines
-		; Modified the line list for double Gaussian fitting
-		line_name_dg = [['CO31-30','OH9-3'],['CO23-22','o-H2O4_14-3_03'],['p-H2O7_53-8_26','CO20-19'],['OH14-12','o-H2O5_14-5_05'],$
-						['p-H2O3_22-3_13','o-H2O5_23-4_32'],['p-H2O6_51-7_26','OH19-14'],['OH18-15','p-H2O7_71-7_62'],['p-H2O9_19-8_08','o-H2O9_09-8_18'],['OH13-9','o-H2O6_25-5_14'],$
-						['OH14-10','OH15-11'],['p-H2O9_37-8_44','CO22-21'],['o-H2O7_34-7_25','p-H2O6_24-6_15'],['p-H2O5_33-6_06','o-H2O3_03-2_12'],['CO16-15','OH7-5']]
-						; lines are too close to get a well-constrained fit: ['CII2P3_2-2P1_2','OH18-17'],['p-H2O3_13-2_02','p-H2O8_44-7_53']
-		line_center_dg = []
-		range_dg = []
-		line_dg = []
-		excluded_line =[]
-		for dg = 0, n_elements(line_name_dg[0,*])-1 do begin
-			ind = where(line_name eq line_name_dg[0,dg] or line_name eq line_name_dg[1,dg])
-			if n_elements(ind) eq 2 then begin
-				range_dg = [[range_dg],[min(range[*,ind]), max(range[*,ind])]]
-				excluded_line = [excluded_line,line_name_dg[0,dg],line_name_dg[1,dg]]
-				line_center_dg = [line_center_dg,line_center[ind]]
-				for k = 0, n_elements(ind)-1 do begin
-					line_dg = [[line_dg], [line_center[ind[k]], range[0,ind[k]], range[1,ind[k]]]]
-				endfor
-			endif
-		endfor
-;		print, seg2
-;		for i = 0, n_elements(seg)-1 do begin
-;			if seg[i] eq -1 then begin
-;			print, 'Wavelength error'
-;			return
-;			end
-;		endfor
-	;endif
-	;custom range
-	;line_name = line_name[where(line_center le 100 or (line_center gt 104 and line_center lt 179))]
-	;range = range[*,where(line_center le 100 or (line_center gt 104 and line_center lt 179))]
-	;cont = cont[*,where(line_center le 100 or (line_center gt 104 and line_center lt 179))]
-	;line_center = line_center[where(line_center le 100 or (line_center gt 104 and line_center lt 179))]
-    ;The path to the output file for print out the fitting result.
-    ;openw, lun, outdir+'pacs_pixel'+strtrim(string(j+1),1)+'_lines.txt', /get_lun
+    ; The path to the output file for print out the fitting result.
 	name = outdir+filename+'_lines'
 	if keyword_set(linescan) then name = name+'_LS'
-	;if keyword_set(localbaseline) then name = name+'_localbaseline'
-	;if keyword_set(fixed_width) then name = name+'_fixwidth'
+	; The 'localbaseline' and 'fixwidth' settings are part of the default setting. The suffixes are no longer appeared on the filename
+	; if keyword_set(localbaseline) then name = name+'_localbaseline'
+	; if keyword_set(fixed_width) then name = name+'_fixwidth'
     openw, firstfit, name+'.txt', /get_lun
     if not keyword_set(current_pix) then begin
 		printf, firstfit, format='(17(a16,2x))', $
@@ -300,69 +282,83 @@ endelse
     	printf, firstfit, format='(18(a16,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend'
     endelse
-    ;Do the fitting for every line in the list
+    ; Do the fitting for every line in the list
+    ; Single Gaussian fitting
     for i = 0, n_elements(line_name)-1 do begin
+    	; Check if the line that about to fit is the one in the double Gaussian fitting list.
     	if (keyword_set(double_gauss)) and ((where(excluded_line eq line_name[i]))[0] ne -1) then continue
-        ;select the baseline
-        ;And also store the information of the edge wavelengths of the baseline
+        ; select the baseline
+        ; And also store the information of the edge wavelengths of the baseline
         dl = interpol(dl_ins, wl_ins, line_center[i])
         
 		if not keyword_set(localbaseline) then indb = where((wl gt cont[0,i] and wl lt cont[1,i]) or (wl gt cont[2,i] and wl lt cont[3,i]))
-		
+		; Usually localbaseline = 10
 		if keyword_set(localbaseline) then begin
 			dlb = localbaseline*dl
 			wl_diff = wl[1:-1]-wl[0:-2]
 			numb = ceil(dlb/(wl_diff[where(wl ge line_center[i])])[0])
-			if line_center[i] le 95.08 then left = where(wl_basepool lt range[0,i] and wl_basepool ge min(wl)) & right = where(wl_basepool gt range[1,i] and wl_basepool le 95.08)
-			if line_center[i] ge 102 then left = where(wl_basepool lt range[0,i] and wl_basepool ge 102) & right = where(wl_basepool gt range[1,i] and wl_basepool le max(wl))
+			if line_center[i] le 95.08 then begin
+				left = where(wl_basepool lt range[0,i] and wl_basepool ge min(wl))
+				right = where(wl_basepool gt range[1,i] and wl_basepool le 95.08)
+			endif
+			if line_center[i] ge 102 then begin
+				left = where(wl_basepool lt range[0,i] and wl_basepool ge 102)
+				right = where(wl_basepool gt range[1,i] and wl_basepool le max(wl))
+			endif
 			if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
 			if n_elements(right) gt numb then right = right[0:numb-1]
             if left[0] ne -1 and right[0] ne -1 then begin
-                wlb = [wl_basepool[left], wl_basepool[right]] & fluxb = [flux_basepool[left], flux_basepool[right]]
+                wlb = [wl_basepool[left], wl_basepool[right]]
+                fluxb = [flux_basepool[left], flux_basepool[right]]
+                stdb = [std_basepool[left], std_basepool[right]]
                 base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
             endif 
             if left[0] eq -1 and right[0] ne -1 then begin
-                wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
+                wlb = [wl_basepool[right]]
+                fluxb = [flux_basepool[right]]
+                stdb = [std_basepool[right]]
                 base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
             endif
             if left[0] ne -1 and right[0] eq -1 then begin
-                wlb = [wl_basepool[left]] & fluxb = [flux_basepool[left]]
+                wlb = [wl_basepool[left]]
+                fluxb = [flux_basepool[left]]
+                stdb = [std_basepool[left]]
                 base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
             endif
         endif
-        ;fit the baseline and return the baseline parameter in 'base_para'
+        ; fit the baseline and return the baseline parameter in 'base_para'
 		
-        fit_line, filename, line_name[i], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
+        fit_line, filename, line_name[i], wlb, fluxb, stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
         ;select the line+baseline
 		if not keyword_set(localbaseline) then begin
         	if i le 39 then begin
         	    indl = where(wl gt cont[0,i] and wl lt cont[3,i])
-        	    wll = wl[indl] & fluxl = flux[indl]
+        	    wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
        		endif else begin
         	    indl = where(wl gt range[0,i]-0.5 and wl lt range[1,i]+0.5)
-        	    wll = wl[indl] & fluxl = flux[indl]
+        	    wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
         	endelse
 		endif
 		if keyword_set(localbaseline) then begin
 			indl = where(wl gt base_range[0] and wl lt base_range[3])
 			if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
 			if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
-			wll = wl[indl] & fluxl = flux[indl]
+			wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 		endif
-		;extract the wave and flux for plottng that is for better visualization of the fitting results.
+		; extract the wave and flux for plottng that is for better visualization of the fitting results.
 		ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
-		plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
+		plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
 		plot_base = [[wlb],[fluxb]]
-        ;Substract the baseline from the spectrum
-        ;First, calculate the baseline
-        ;base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
+        ; Subtract the baseline from the spectrum
+        ; First, calculate the baseline
+        ; base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
         base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
-        ;Substract
+        ; Subtract
         fluxx = fluxl - base
+        stdd = stdl
         line = [line_center[i],range[0,i],range[1,i]]                      ;[line_center, line profile lower limit, line profile upper limit]
-        ;Fitting part
-        ;Different fitting keyword for fixed width and test arguement
-        ;if line_name[i] eq 'CO14-13' then stop
+        ; Fitting part
+        ; Different fitting keyword for fixed width and test arguement
 
 		; Using band 3 resolution for some of the WISH sources
 		
@@ -371,34 +367,35 @@ endelse
 		if (where(special_list eq object))[0] eq -1 then b3a = 1
         if keyword_set(fixed_width) and keyword_set(opt_width) then begin
         	if line_name[i] eq 'OI3P1-3P2' then begin
-        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot,b3a=b3a
-				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot,b3a=b3a
 			endif else begin
-				if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
-				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
 			endelse
         endif else if keyword_set(fixed_width) and (not keyword_set(opt_width)) then begin
-        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
-				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
         endif else begin
-        	if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        	if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot
-			if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+			if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot
         endelse
-        ;Print the fittng result into text file
+        ; Print the fittng result into text file
 
         if status le 0 then begin
             printf, firstfit, format = '((a16,2X),(a50))', line_name[i], errmsg
         endif else begin
-            ;The read_line_ref procedure read the g, A, E_u from another file
+            ; The read_line_ref procedure read the g, A, E_u from another file
             read_line_ref, line_name[i], E_u, A, g
+            ; The baseline are in the unit of W/cm2/um
             base_str = interpol(base, wll, cen_wl);*fwhm
             if not keyword_set(ra) then ra = 0
             if not keyword_set(dec) then dec = 0
@@ -429,7 +426,7 @@ endelse
             	blend_msg = 'Red/Blue'
             	blend_flag = 2
             endif
-            ; Ignore the bogus results due to the missing segment in the spectrum
+            ; Throw away the bogus results due to the missing segment in the spectrum
             if finite(snr,/nan) eq 1 then continue
             ; blend flag = 0: no blend; blend_flag = 1: Red blend; blend_flag = 2: Red/Blue blend; blend_flag = 3: Blue blend.
             ;
@@ -454,44 +451,47 @@ endelse
 			if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
 			if n_elements(right) gt numb then right = right[0:numb-1]
 			if left[0] ne -1 and right[0] ne -1 then begin
-            	wlb = [wl_basepool[left], wl_basepool[right]] & fluxb = [flux_basepool[left], flux_basepool[right]]
+            	wlb = [wl_basepool[left], wl_basepool[right]]
+            	fluxb = [flux_basepool[left], flux_basepool[right]]
+            	stdb = [std_basepool[left], std_basepool[right]]
 				base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
 				indl = where(wl gt base_range[0] and wl lt base_range[3])
-				wll = wl[indl] & fluxl = flux[indl]
+				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 			endif 
 			if left[0] eq -1 and right[0] ne -1 then begin
-                wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
+                wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]] & stdb = [std_basepool[right]]
 				base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
 				indl = where(wl gt min(wl) and wl lt base_range[2])
-				wll = wl[indl] & fluxl = flux[indl]
+				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 			endif
 			if left[0] ne -1 and right[0] eq -1 then begin
-				wlb = [wl_basepool[left]] & fluxb = [flux_basepool[left]]
+				wlb = [wl_basepool[left]] & fluxb = [flux_basepool[left]] & stdb = [std_basepool[left]]
 				base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
 				indl = where(wl gt base_range[0] and wl lt max(wl))
-				wll = wl[indl] & fluxl = flux[indl]
+				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 			endif
-			fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
-			;extract the wave and flux for plottng that is for better visualization of the fitting results.
+			fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+			; extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
-			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
+			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
 			plot_base = [[wlb],[fluxb]]
-			;Substract the baseline from the spectrum
-			;First, calculate the baseline
-			;base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
+			; Subtract the baseline from the spectrum
+			; First, calculate the baseline
+			; base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
 			base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
-			;Substract
+			; Subtract
 			fluxx = fluxl - base
+			stdd = stdl
 			; line = [cen1,ran1,ran1,cen2,ran2,ran2]
 			line = [line_dg[*,2*i],line_dg[*,2*i+1]]
 			; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
-			;Fitting part
-			;Different fitting keyword for fixed width and test arguement
+			; Fitting part
+			; Different fitting keyword for fixed width and test arguement
 
 			; Using band 3 resolution for some of WISH sources
 			b3a = 0
 			if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
-			fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
+			fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
 				noiselevel=3,base_range=base_range,plot_base=plot_base,b3a=b3a,/fix_dg
 			if status eq 0 then begin
 				printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
@@ -542,8 +542,8 @@ endelse
     ; print, '--> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
     name = filename+'_lines'
     if keyword_set(linescan) then name = name+'_LS'
-    ;if keyword_set(localbaseline) then name = name+'_localbaseline'
-    ;if keyword_set(fixed_width) then name = name+'_fixwidth'
+    ; if keyword_set(localbaseline) then name = name+'_localbaseline'
+    ; if keyword_set(fixed_width) then name = name+'_fixwidth'
     if not keyword_set(current_pix) then begin
     	readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
     		line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, /silent, skipline=1
@@ -685,8 +685,9 @@ endelse
     	set_plot, 'ps'
 		!p.font = 0
 		loadct,12,/silent
-		if keyword_set(fixed_width) then msg = '_fixed_width'
-		if not keyword_set(fixed_width) then msg =''
+		; if keyword_set(fixed_width) then msg = '_fixed_width'
+		; if not keyword_set(fixed_width) then msg =''
+		msg = ''
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
 		!p.thick=3 & !x.thick=3 & !y.thick=3
 		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
@@ -699,28 +700,23 @@ endelse
 			oplot, wl[trim2], flux[trim2]/1e-22
 			oplot, wl[trim2], flux_sub[trim2]/1e-22, color=200
 		endif
-		;oplot, wl, continuum/1e-22, color=50
-		;al_legend,['Data','lines_subtracted','Data_smooth','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,50,100,10],/right
+		; oplot, wl, continuum/1e-22, color=50
+		; al_legend,['Data','lines_subtracted','Data_smooth','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,50,100,10],/right
 		al_legend,['Data','lines_subtracted'],textcolors=[0,200],/right
 		al_legend,[object],textcolors=[0],/left
 		device, /close_file, decomposed = 1
 		!p.multi = 0
     endif
-    ; Delete unnecessary files in the end
-	; Delete the global noise evaluated fitting results of each spaxel for instance
-;	if keyword_set(glo_print_only) and not keyword_set(global_noise) then begin
-;		file_delete, outdir+name+'.txt',/allow_nonexistent,/recursive
-;	endif
     
-    ;Calculate the line subtracted spectrum
-    ;Calculate the flat/featureless spectrum using the line subtracted spectrum subtracted by the smoothed spectrum
-    
+    ; Second fitting to use the results of the previous one to better estimate the noise
     if keyword_set(global_noise) then begin
     	print, '---> Re-calculating the noise level...'
     	name = filename+'_lines'
     	if keyword_set(linescan) then name = name+'_LS'
     	;if keyword_set(localbaseline) then name = name+'_localbaseline'
     	;if keyword_set(fixed_width) then name = name+'_fixwidth'
+
+    	; Read in the results of first fitting
     	if not keyword_set(current_pix) then begin
     		readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
@@ -728,21 +724,11 @@ endelse
     		readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, lowest_E_n, /silent
     	endelse
-    	; Delete unnecessary files in the end
-		; Delete the global noise evaluated fitting results of each spaxel for instance
-;		if keyword_set(glo_print_only) then begin
-;			file_delete, outdir+name+'.txt',/allow_nonexistent,/recursive
-;		endif
-    	flux_sub = flux
-;    	cleanplot
-;    	set_plot,'x'
-;    	plot, wl,flux,xrange=[119,120],psym=2
 
+    	; Line subtraction
+    	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
-    		
     		if abs(snr_n[line]) ge noiselevel-1.5 then begin
-				;if (line ne 0 and (cen_wl_n[line]-cen_wl_n[line-1])/cen_wl_n[line] lt 1e-4) or line_name_n[line] eq 'p-H2O4_13-3_22' or line_name_n[line] eq 'p-H2O8_44-7_53' then continue
-				;if line_name_n[line] eq 'CO16-15' then stop
 				if (blend_flag_n[line] ne 'x') and (lowest_E_n[line] ne 1) then continue
     			ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
     			wl_n = wl[ind]
@@ -763,25 +749,26 @@ endelse
 				endif
     		endif
     	endfor
-    	;Smooth the line subtracted spectrum
+    	; Smooth the line subtracted spectrum
     	sbin=10
     	if keyword_set(linescan) then sbin=10
     	spec_continuum_smooth,wl,flux_sub,continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
     	spec_continuum_smooth,wl,flux,continuum, continuum_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9, lower=0.9
     	flat_noise = flux_sub - continuum_sub
+    	; Do I want to output the unceratinty with the continuum and flat spectrum?
     	if keyword_set(continuum_sub) then begin
     		openw, sed, outdir+filename+'_continuum.txt', /get_lun
-    		printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+    		printf, sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
-    		for k =0, n_elements(wl)-1 do printf, sed, format='(2(g16.6,2x))', wl[k],continuum_sub[k]
+    		for k =0, n_elements(wl)-1 do printf, sed, format='(3(g16.6,2x))', wl[k],continuum_sub[k],std[k]
     		free_lun, sed
     		close, sed
     	endif
     	if keyword_set(flat) then begin
     		openw, flat_sed, outdir+filename+'_flat_spectrum.txt',/get_lun
-    		printf, flat_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+    		printf, flat_sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		flat = flux*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23-continuum_sub
-    		for k =0, n_elements(wl)-1 do printf, flat_sed, format='(2(g16.6,2x))',wl[k],flat[k]
+    		for k =0, n_elements(wl)-1 do printf, flat_sed, format='(3(g16.6,2x))',wl[k],flat[k],std[k]
     		free_lun, flat_sed
     		close,flat_sed
     	endif
@@ -789,39 +776,40 @@ endelse
     	set_plot, 'ps'
 		!p.font = 0
 		loadct,12,/silent
-		if keyword_set(fixed_width) then msg = '_fixed_width'
-		if not keyword_set(fixed_width) then msg =''
+		; if keyword_set(fixed_width) then msg = '_fixed_width'
+		; if not keyword_set(fixed_width) then msg =''
+		msg = ''
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 		!p.thick=3 & !x.thick=3 & !y.thick=3
 		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
 		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata
 		if trim1[0] ne -1 then begin
 			oplot, wl[trim1], flux[trim1]/1e-22
-			;oplot, wl[trim1], flux_sub[trim1]/1e-22, color=200
+			; oplot, wl[trim1], flux_sub[trim1]/1e-22, color=200
 			oplot, wl[trim1], continuum_sub[trim1]/1e-22, color=100
 			oplot, wl[trim1], flat_noise[trim1]/1e-22+min(flux)/1e-22, color=10
 		endif
 		if trim2[0] ne -1 then begin
 			oplot, wl[trim2], flux[trim2]/1e-22
-			;oplot, wl[trim2], flux_sub[trim2]/1e-22, color=200
+			; oplot, wl[trim2], flux_sub[trim2]/1e-22, color=200
 			oplot, wl[trim2], continuum_sub[trim2]/1e-22, color=100
 			oplot, wl[trim2], flat_noise[trim2]/1e-22+min(flux)/1e-22, color=10
 		endif
-		;oplot, wl, continuum/1e-22, color=50
-		;al_legend,['Data','lines_subtracted','Data_smooth','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,50,100,10],/right
-		;al_legend,['Data','lines_subtracted','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,100,10],/right
+		; oplot, wl, continuum/1e-22, color=50
+		; al_legend,['Data','lines_subtracted','Data_smooth','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,50,100,10],/right
+		; al_legend,['Data','lines_subtracted','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,100,10],/right
 		al_legend,['data','continuum', 'flat/featureless'],textcolors=[0,100,10],/right
 		al_legend,[object],textcolors=[0],/left
 		device, /close_file, decomposed = 1
 		!p.multi = 0
 
-		;Do the same fitting again but using the global noise value
-		;Define the name of the output data of fitting results
+		; Do the same fitting again but using the global noise value
+		; Define the name of the output data of fitting results
 		name = outdir+filename+'_lines'
 		if keyword_set(linescan) then name = name+'_LS'
-		;if keyword_set(localbaseline) then name = name+'_localbaselin
-		;if keyword_set(fixed_width) then name = name+'_fixwidth'
-		;name = name+'_global_noise'
+		; if keyword_set(localbaseline) then name = name+'_localbaselin
+		; if keyword_set(fixed_width) then name = name+'_fixwidth'
+		; name = name+'_global_noise'
 		openw, secondfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
 			printf, secondfit, format='(16(a16,2x))',$
@@ -833,7 +821,7 @@ endelse
     
     	for i = 0, n_elements(line_name)-1 do begin
     		if (keyword_set(double_gauss)) and ((where(excluded_line eq line_name[i]))[0] ne -1) then continue
-			;select the baseline
+			; select the baseline
 			dl = interpol(dl_ins, wl_ins, line_center[i])
         
 			if not keyword_set(localbaseline) then indb = where((wl gt cont[0,i] and wl lt cont[1,i]) or (wl gt cont[2,i] and wl lt cont[3,i]))
@@ -842,34 +830,46 @@ endelse
 				dlb = localbaseline*dl
 				wl_diff = wl[1:-1]-wl[0:-2]
 				numb = ceil(dlb/(wl_diff[where(wl ge line_center[i])])[0])
-				if line_center[i] le 95.08 then left = where(wl_basepool lt range[0,i] and wl_basepool ge min(wl)) & right = where(wl_basepool gt range[1,i] and wl_basepool le 95.08)
-				if line_center[i] ge 102 then left = where(wl_basepool lt range[0,i] and wl_basepool ge 102) & right = where(wl_basepool gt range[1,i] and wl_basepool le max(wl))
+				if line_center[i] le 95.08 then begin
+					left = where(wl_basepool lt range[0,i] and wl_basepool ge min(wl)) 
+					right = where(wl_basepool gt range[1,i] and wl_basepool le 95.08)
+				endif
+				if line_center[i] ge 102 then begin
+					left = where(wl_basepool lt range[0,i] and wl_basepool ge 102)
+					right = where(wl_basepool gt range[1,i] and wl_basepool le max(wl))
+				endif
 				if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
 				if n_elements(right) gt numb then right = right[0:numb-1]
 				if left[0] ne -1 and right[0] ne -1 then begin
-                	wlb = [wl_basepool[left], wl_basepool[right]] & fluxb = [flux_basepool[left], flux_basepool[right]]
+                	wlb = [wl_basepool[left], wl_basepool[right]]
+                	fluxb = [flux_basepool[left], flux_basepool[right]]
+                	stdb = [std_basepool[left], std_basepool[right]]
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
 				endif 
 				if left[0] eq -1 and right[0] ne -1 then begin
-                	wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
+                	wlb = [wl_basepool[right]]
+                	fluxb = [flux_basepool[right]]
+                	stdb = [std_basepool[right]]
 					base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
 				endif
 				if left[0] ne -1 and right[0] eq -1 then begin
-                	wlb = [wl_basepool[left]] & fluxb = [flux_basepool[left]]
+                	wlb = [wl_basepool[left]]
+                	fluxb = [flux_basepool[left]]
+                	stdb = [std_basepool[left]]
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
 				endif
 			endif
 
 			; Fit the baseline and return the baseline parameter in 'base_para'
-			fit_line, filename, line_name[i], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
+			fit_line, filename, line_name[i], wlb, fluxb, stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
 			; Select the line+baseline
 			if not keyword_set(localbaseline) then begin
         		if i le 39 then begin
         	    	indl = where(wl gt cont[0,i] and wl lt cont[3,i])
-					wll = wl[indl] & fluxl = flux[indl]
+					wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 				endif else begin
         	    	indl = where(wl gt range[0,i]-0.5 and wl lt range[1,i]+0.5)
-					wll = wl[indl] & fluxl = flux[indl]
+					wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 				endelse
 			endif
 			
@@ -877,11 +877,11 @@ endelse
 				indl = where(wl gt base_range[0] and wl lt base_range[3])
 				if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
 				if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
-				wll = wl[indl] & fluxl = flux[indl]
+				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 			endif
 			; Extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
-			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
+			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
 			plot_base = [[wlb],[fluxb]]
 			; Substract the baseline from the spectrum
 			; First, calculate the baseline
@@ -889,13 +889,14 @@ endelse
 			base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
 			; Subtract
 			fluxx = fluxl - base
+			stdd =  stdl
 			line = [line_center[i],range[0,i],range[1,i]]                      ;[line_center, line profile lower limit, line profile upper limit]
 			
 			; Calculate the noise level at the line using the flat noise spectrum
 			limit_low = max([min(wl), range[0,i]-global_noise*dl]) & limit_hi = min([max(wl), range[1,i]+global_noise*dl])
 			ind_n = where(wl gt limit_low and wl lt limit_hi)
-			wl_n = wl[ind_n] & flux_n = flat_noise[ind_n]
-			flat_noise_smooth = [[wl_n],[flux_n]]
+			wl_n = wl[ind_n] & flux_n = flat_noise[ind_n] & std_n = std[ind_n]
+			flat_noise_smooth = [[wl_n],[flux_n],[std_n]]
 			;dl_array = interpol(dl_ins, wl_ins, line_center[i])/(wl[5]-wl[4])
 			;flat_noise_smooth = [[wl_n],[smooth(flux_n, ceil(dl_array),/edge_mirror)]]
 			;global_noise = stddev(flat_noise_smooth)
@@ -907,33 +908,33 @@ endelse
 			if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
 			if keyword_set(fixed_width) and keyword_set(opt_width) then begin
         		if line_name[i] eq 'OI3P1-3P2'then begin
-        			if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        			if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot,b3a=b3a
-				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot,b3a=b3a
 			    endif else begin
-				    if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				    if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
-				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot,b3a=b3a
 			    endelse
 			endif else if keyword_set(fixed_width) and (not keyword_set(opt_width)) then begin
-					if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+					if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
-				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				    if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot,b3a=b3a
 			endif else begin
-        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         											/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot
-				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 													/single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot
 			endelse
-			;Print the fittng result into text file
+			; Print the fittng result into text file
 
         	if status le 0 then begin
 				printf, secondfit, format = '((a16,2X),(a50))', line_name[i], errmsg
 			endif else begin
-            	;The read_line_ref procedure read the g, A, E_u from another file
+            	; The read_line_ref procedure read the g, A, E_u from another file
             	read_line_ref, line_name[i], E_u, A, g
             	base_str = interpol(base, wll, cen_wl);*fwhm
             	if not keyword_set(ra) then ra = 0
@@ -967,7 +968,7 @@ endelse
 				endif
 				; blend flag = 0: no blend; blend_flag = 1: Red blend; blend_flag = 2: Red/Blue blend; blend_flag = 3: Blue blend.
 				;
-				; Ignore the bogus results due to the missing segment in the spectrum
+				; Throw away the bogus results due to the missing segment in the spectrum
 				if finite(snr,/nan) eq 1 then continue
 				if not keyword_set(current_pix) then begin
 					printf, secondfit, format = '((a16,2X),9(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
@@ -990,49 +991,52 @@ endelse
 				if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
 				if n_elements(right) gt numb then right = right[0:numb-1]
 				if left[0] ne -1 and right[0] ne -1 then begin
-            		wlb = [wl_basepool[left], wl_basepool[right]] & fluxb = [flux_basepool[left], flux_basepool[right]]
+            		wlb = [wl_basepool[left], wl_basepool[right]]
+            		fluxb = [flux_basepool[left], flux_basepool[right]]
+            		stdb = [std_basepool[left], std_basepool[right]]
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
 					indl = where(wl gt base_range[0] and wl lt base_range[3])
-					wll = wl[indl] & fluxl = flux[indl]
+					wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 				endif 
 				if left[0] eq -1 and right[0] ne -1 then begin
-                	wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
+                	wlb = [wl_basepool[right]]
+                	fluxb = [flux_basepool[right]]
+                	stdb = [std_basepool[right]]
 					base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
 					indl = where(wl gt min(wl) and wl lt base_range[2])
-					wll = wl[indl] & fluxl = flux[indl]
+					wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 				endif
 				if left[0] ne -1 and right[0] eq -1 then begin
-                	wlb = [wl_basepool[left]] & fluxb = [flux_basepool[left]]
+                	wlb = [wl_basepool[left]]
+                	fluxb = [flux_basepool[left]]
+                	stdb = [std_basepool[left]]
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
 					indl = where(wl gt base_range[0] and wl lt max(wl))
-					wll = wl[indl] & fluxl = flux[indl]
+					wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 				endif
-				fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
-				;extract the wave and flux for plottng that is for better visualization of the fitting results.
+				fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
-				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
+				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
 				plot_base = [[wlb],[fluxb]]
-				flat_noise_smooth = [[wl_n],[flux_n]]
 				; Calculate the gloe noise spectrum
 				limit_low = max([min(wl), range_dg[0,i]-global_noise*dl]) & limit_hi = min([max(wl), range_dg[1,i]+global_noise*dl])
 				ind_n = where(wl gt limit_low and wl lt limit_hi)
-				wl_n = wl[ind_n] & flux_n = flat_noise[ind_n]
-				flat_noise_smooth = [[wl_n],[flux_n]]
-				;Substract the baseline from the spectrum
-				;First, calculate the baseline
-				;base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
+				wl_n = wl[ind_n] & flux_n = flat_noise[ind_n] & std_n = std[ind_n]
+				flat_noise_smooth = [[wl_n],[flux_n],[std_n]]
+				; Subtract the baseline from the spectrum
+				; First, calculate the baseline
+				; base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
 				base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
-				;Substract
+				; Subtract
 				fluxx = fluxl - base
-				; line = [cen1,ran1,ran1,cen2,ran2,ran2]
 				line = [line_dg[*,2*i],line_dg[*,2*i+1]]
-				; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
-				;Fitting part
-				;Different fitting keyword for fixed width and test arguement
+				; Fitting part
+				; Different fitting keyword for fixed width and test arguement
 				; Using band 3 resolution for some of the WISH sources
         		b3a = 0
 		        if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
-				fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
+				fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
 					 noiselevel=3,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,b3a=b3a,/fix_dg
 				if status eq 0 then begin
 					printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
@@ -1054,14 +1058,14 @@ endelse
 					read_line_ref, line_name_dg[2*i+1], E_u2, A2, g2
 					if keyword_set(current_pix) then begin
 						ra = interpol(ra_tot, wl_coord, line[0])
-							dec = interpol(dec_tot, wl_coord, line[0])
+						dec = interpol(dec_tot, wl_coord, line[0])
 					endif
 					E_u = [E_u1,E_u2]
 					A = [A1,A2]
 					g = [g1,g2]
 					base_str = [interpol(base, wll, cen_wl[0]), interpol(base, wll, cen_wl[1])]
 					blend_msg = 'x'
-					; Ignore the bogus results due to the missing segment in the spectrum
+					; Throw away the bogus results due to the missing segment in the spectrum
 					if (finite(snr,/nan))[0] eq 1 then continue
 					if not keyword_set(current_pix) then begin
 						printf, firstfit, format = '((a16,2X),9(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
@@ -1147,7 +1151,7 @@ endelse
 				endif
 			endelse	
 		endfor
-		;openw, secondfit, outdir+name+'_global_noise.txt', /get_lun
+		; openw, secondfit, outdir+name+'_global_noise.txt', /get_lun
 		openw, secondfit, outdir+name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
 			printf, secondfit, format='(17(a16,2x))', $
@@ -1206,8 +1210,6 @@ endelse
 		flux_sub = flux
 		for line = 0, n_elements(line_name_n)-1 do begin
 			if snr_n[line] ge noiselevel then begin
-				;if (line_name_n[line] eq 'p-H2O2_02-1_11') and (pixelname[j] eq 'SSWE4_i') then stop
-				;if (line ne 0 and (cen_wl_n[line]-cen_wl_n[line-1])/cen_wl_n[line] lt 5e-4) or line_name_n[line] eq 'o-H2O7_25-8_18' then continue
 				if blend_flag_n[line] ne 'x' and lowest_E_n[line] ne 1 then continue
 				ind = where((wl gt cen_wl_n[line]-5*fwhm_n[line]) and (wl lt cen_wl_n[line]+5*fwhm_n[line]))
 				wl_n = wl[ind]
@@ -1227,16 +1229,17 @@ endelse
 				endif
 			endif
 		endfor
-		;Smooth the line subtracted spectrum
+		; Smooth the line subtracted spectrum
 		sbin=10
 		spec_continuum_smooth,wl,flux_sub,continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
 		flat_noise = flux_sub - continuum_sub
-		;Plot the results
+		; Plot the results
 		set_plot, 'ps'
 		!p.font = 0
 		loadct,12,/silent
 		; if keyword_set(fixed_width) then msg = '_fixed_width'
 		; if not keyword_set(fixed_width) then msg =''
+		msg = ''
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 		!p.thick=3 & !x.thick=3 & !y.thick=3
 		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',ystyle=2
@@ -1250,11 +1253,6 @@ endelse
 		!p.multi = 0
 		
 	endif
-	; Delete unnecessary files in the end
-	; Delete the global noise evaluated fitting results of each spaxel for instance
-;	if keyword_set(glo_print_only) then begin
-;		file_delete, outdir+name+'_global_noise.txt',/allow_nonexistent,/recursive
-;	endif
 end
 
 

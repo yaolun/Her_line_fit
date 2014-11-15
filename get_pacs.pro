@@ -14,7 +14,7 @@ if keyword_set(general) then begin
 		for foo = 0, n_elements(filename)-1 do begin
 			wl_dum = readfits(filename[foo], exten=8,/silent)
 			flux_dum = readfits(filename[foo], exten=1,/silent)
-			weight_dum = readfits(filename[foo], exten=5,/silent)
+			std_dum = readfits(filename[foo], exten=5,/silent)
 			ra_dum = readfits(filename[foo], exten=2,/silent)
 			dec_dum = readfits(filename[foo], exten=3,/silent)
 			hdr = headfits(filename[foo],/silent)
@@ -30,7 +30,7 @@ if keyword_set(general) then begin
 		for i = 0, n_elements(ifile)-1 do begin
 			wl_dum = readfits(filename[ifile[i]], exten=8,/silent)
 			flux_dum = readfits(filename[ifile[i]], exten=1,/silent)
-			weight_dum = readfits(filename[ifile[i]], exten=5,/silent)
+			std_dum = readfits(filename[ifile[i]], exten=5,/silent)
 			ra_dum = readfits(filename[ifile[i]], exten=2,/silent)
 			dec_dum = readfits(filename[ifile[i]], exten=3,/silent)
 			hdr = headfits(filename[ifile[i]],/silent)
@@ -43,11 +43,13 @@ if keyword_set(general) then begin
 				flux = flux[*,*,sort(wl)]
 				wl = wl[sort(wl)]
 				flux_dum = flux_dum[*,*,sort(wl_dum)]
+				std_dum = std_dum[*,*,sort(wl_dum)]
 				ra_dum = ra_dum[*,*,sort(wl_dum)]
 				dec_dum = dec_dum[*,*,sort(wl_dum)]
 				wl_dum = wl_dum[sort(wl_dum)]
 				if (where(wl gt min(wl_dum) and wl lt max(wl_dum)))[0] eq -1 then begin
 					flux = [[[flux]],[[flux_dum]]]
+					std = [[[std]],[[std_dum]]]
 					ra = [[[ra]],[[ra_dum]]]
 					dec = [[[dec]],[[dec_dum]]]
 					wl = [wl,wl_dum]
@@ -56,12 +58,14 @@ if keyword_set(general) then begin
 						max(wl) le min(wl_dum): begin
 							wl = [wl,wl_dum]
 							flux = [[[flux]],[[flux_dum]]]
+							std = [[[std]],[[std_dum]]]
 							ra = [[[ra]],[[ra_dum]]]
 							dec = [[[dec]],[[dec_dum]]]
 						end
 						min(wl) ge max(wl_dum): begin
 							wl = [wl_dum,wl]
 							flux = [[[flux_dum]],[[flux]]]
+							std = [[[std_dum]],[[std]]]
 							ra = [[[ra]],[[ra_dum]]]
 							dec = [[[dec]],[[dec_dum]]]
 						end
@@ -69,6 +73,7 @@ if keyword_set(general) then begin
 							;flux = [flux,flux_dum[where(wl_dum gt max(wl))]]
 							;wl = [wl,wl_dum[where(wl_dum gt max(wl))]]
 							flux = [[[flux[*,*,where(wl lt min(wl_dum))]]], [[flux_dum]]]
+							std = [[[std[*,*,where(wl lt min(wl_dum))]]],[[std_dum]]]
 							ra = [[[ra[*,*,where(wl lt min(wl_dum))]]], [[ra_dum]]]
 							dec = [[[dec[*,*,where(wl lt min(wl_dum))]]], [[dec_dum]]]
 							wl = [wl[where(wl lt min(wl_dum))], wl_dum]
@@ -77,6 +82,7 @@ if keyword_set(general) then begin
 							;flux = [flux_dum,flux[where(wl gt max(wl_dum))]]
 							;wl = [wl_dum,wl[where(wl gt max(wl_dum))]]
 							flux = [[[flux_dum[*,*,where(wl_dum lt min(wl))]]], [[flux]]]
+							std = [[[std_dum[*,*,where(wl_dum lt min(wl))]]],[[std]]]
 							ra = [[[ra_dum[*,*,where(wl_dum lt min(wl))]]], [[ra]]]
 							dec = [[[dec_dum[*,*,where(wl_dum lt min(wl))]]], [[dec]]]
 							wl = [wl_dum[where(wl_dum lt min(wl))], wl]
@@ -87,12 +93,13 @@ if keyword_set(general) then begin
 		endfor
 	endfor
 	flux = flux[*,*,sort(wl)]
+	std = std[*,*,sort(wl)]
 	wl = wl[sort(wl)]
 	pix = 1
 	for x = 0, 4 do begin
 		for y = 0, 4 do begin
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.txt',/get_lun
-			for dum = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2x))',wl[dum],flux[x,y,dum]
+			for dum = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2x))',wl[dum],flux[x,y,dum],std[x,y,dum]
 			free_lun, lun
 			close, lun
 			
@@ -119,7 +126,7 @@ endif else begin
 	for i = 0, n_elements(filename)-1 do begin
 		wl_dum = readfits(filename[i], exten=8,/silent)
 		flux_dum = readfits(filename[i], exten=1,/silent)
-		weight_dum = readfits(filename[i], exten=5,/silent)
+		std_dum = readfits(filename[i], exten=5,/silent)
 		ra_dum = readfits(filename[i], exten=2,/silent)
 		dec_dum = readfits(filename[i], exten=3,/silent)
 		hdr = headfits(filename[i],/silent)
@@ -154,7 +161,7 @@ endif else begin
 		for x = 0, 4 do begin
 			for y = 0, 4 do begin
 				flux_dum[x,y,*] = flux_dum[x,y,sort(wl_dum)]
-				weight_dum[x,y,*] = weight_dum[x,y,sort(wl_dum)]
+				std_dum[x,y,*] = std_dum[x,y,sort(wl_dum)]
 				wl_dum = wl_dum[sort(wl_dum)]
 				ra_dum[x,y,*] = ra_dum[x,y,sort(wl_dum)]
 				dec_dum[x,y,*] = dec_dum[x,y,sort(wl_dum)]
@@ -162,11 +169,13 @@ endif else begin
 					band eq 'B2A': begin
 						if objname ne 'HD150193' then begin
 							flux_b2a[x,y,*] = flux_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 72.3)]
+							std_b2a[x,y,*] = std_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 72.3)]
 							wl_b2a[x,y,*] = wl_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
 							ra_b2a[x,y,*] = ra_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 72.3)]
 							dec_b2a[x,y,*] = dec_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 72.3)]
 						endif else begin
 							flux_b2a[x,y,*] = flux_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 71.75)]
+							std_b2a[x,y,*] = std_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 71.75)]
 							wl_b2a[x,y,*] = wl_dum[where(wl_dum ge 54.80 and wl_dum le 71.75)]
 							ra_b2a[x,y,*] = ra_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 71.75)]
 							dec_b2a[x,y,*] = dec_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 71.75)]
@@ -174,6 +183,7 @@ endif else begin
 					end
 					band eq 'B2B': begin
 						flux_b2b[x,y,*] = flux_dum[x,y,where(wl_dum gt 72.3 and wl_dum le 95.05)]
+						std_b2b[x,y,*] = std_dum[x,y,where(wl_dum gt 72.3 and wl_dum le 95.05)]
 						wl_b2b[x,y,*] = wl_dum[where(wl_dum gt 72.3 and wl_dum le 95.05)]
 						ra_b2b[x,y,*] = ra_dum[x,y,where(wl_dum gt 72.3 and wl_dum le 95.05)]
 						dec_b2b[x,y,*] = dec_dum[x,y,where(wl_dum gt 72.3 and wl_dum le 95.05)]
@@ -181,11 +191,13 @@ endif else begin
 					band eq 'R1': begin
 						if min(wl_dum) lt 130 then begin
 							flux_r1s[x,y,*] = flux_dum[x,y,where(wl_dum ge 103 and wl_dum le 143)]
+							std_r1s[x,y,*] = std_dum[x,y,where(wl_dum ge 103 and wl_dum le 143)]
 							wl_r1s[x,y,*] = wl_dum[where(wl_dum ge 103 and wl_dum le 143)]
 							ra_r1s[x,y,*] = ra_dum[x,y,where(wl_dum ge 103 and wl_dum le 143)]
 							dec_r1s[x,y,*] = dec_dum[x,y,where(wl_dum ge 103 and wl_dum le 143)]
 						endif else begin
 							flux_r1l[x,y,*] = flux_dum[x,y,where(wl_dum gt 143 and wl_dum le 190.31)]
+							std_r1l[x,y,*] = std_dum[x,y,where(wl_dum gt 143 and wl_dum le 190.31)]
 							wl_r1l[x,y,*] = wl_dum[where(wl_dum gt 143 and wl_dum le 190.31)]
 							ra_r1l[x,y,*] = ra_dum[x,y,where(wl_dum gt 143 and wl_dum le 190.31)]
 							dec_r1l[x,y,*] = dec_dum[x,y,where(wl_dum gt 143 and wl_dum le 190.31)]
@@ -204,25 +216,26 @@ endif else begin
 		for y = 0, 4 do begin
 			wl = []
 			flux = []
+			std = []
 			ra = []
 			dec = []
 			; Write into ACSII file
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.txt',/get_lun
 			if n_elements(wl_b2a) ne 0 then begin
-				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(2(g16.6,2x))',wl_b2a[x,y,dum],flux_b2a[x,y,dum]
-				wl = [wl,reform(wl_b2a[x,y,*])] & flux = [flux,reform(flux_b2a[x,y,*])]
+				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_b2a[x,y,dum],flux_b2a[x,y,dum],std_b2a[x,y,dum]
+				wl = [wl,reform(wl_b2a[x,y,*])] & flux = [flux,reform(flux_b2a[x,y,*])] & std = [std,reform(std_b2a[x,y,*])]
 			endif
 			if n_elements(wl_b2b) ne 0 then begin
-				for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(2(g16.6,2x))',wl_b2b[x,y,dum],flux_b2b[x,y,dum]
-				wl = [wl,reform(wl_b2b[x,y,*])] & flux = [flux,reform(flux_b2b[x,y,*])]
+				for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_b2b[x,y,dum],flux_b2b[x,y,dum],std_b2b[x,y,dum]
+				wl = [wl,reform(wl_b2b[x,y,*])] & flux = [flux,reform(flux_b2b[x,y,*])] & std = [std,reform(std_b2b[x,y,*])]
 			endif
 			if n_elements(wl_r1s) ne 0 then begin
-				for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(2(g16.6,2x))',wl_r1s[x,y,dum],flux_r1s[x,y,dum]
-				wl = [wl,reform(wl_r1s[x,y,*])] & flux = [flux,reform(flux_r1s[x,y,*])]
+				for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_r1s[x,y,dum],flux_r1s[x,y,dum],std_r1s[x,y,dum]
+				wl = [wl,reform(wl_r1s[x,y,*])] & flux = [flux,reform(flux_r1s[x,y,*])] & std = [std,reform(std_r1s[x,y,*])]
 			endif
 			if n_elements(wl_r1l) ne 0 then begin
-				for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(2(g16.6,2x))',wl_r1l[x,y,dum],flux_r1l[x,y,dum]
-				wl = [wl,reform(wl_r1l[x,y,*])] & flux = [flux,reform(flux_r1l[x,y,*])]
+				for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_r1l[x,y,dum],flux_r1l[x,y,dum],std_r1l[x,y,dum]
+				wl = [wl,reform(wl_r1l[x,y,*])] & flux = [flux,reform(flux_r1l[x,y,*])] & std = [std,reform(std_r1l[x,y,*])]
 			endif
 			free_lun, lun
 			close, lun
@@ -295,7 +308,9 @@ if keyword_set(general) then begin
 		data = readfits(filename[foo],hdr,exten=1,/silent)
 		wl_dum = tbget(hdr, data,1)
 		flux_dum = tbget(hdr,data,4)
+		std_dum = tbget(hdr,data,5)
 		wl_dum = wl_dum[where(finite(flux_dum) eq 1)]
+		std_dum = std_dum[where(finite(flux_dum) eq 1)]
 		flux_dum = flux_dum[where(finite(flux_dum) eq 1)]
 		;print, filename[foo]+'   '+sxpar(hdr, 'BAND')
 		;print, min(wl_dum), max(wl_dum)
@@ -312,39 +327,49 @@ if keyword_set(general) then begin
 		data = readfits(filename[ifile[i]],hdr,exten=1,/silent)
 		wl_dum = tbget(hdr, data,1)
 		flux_dum = tbget(hdr,data,4)
+		std_dum = tbgeT(hdr,data,5)
 		wl_dum = wl_dum[where(finite(flux_dum) eq 1)]
+		std_dum = std_dum[where(finite(flux_dum) eq 1)]
 		flux_dum = flux_dum[where(finite(flux_dum) eq 1)]
 		if n_elements(wl) eq 0 then begin
 			wl = [wl,wl_dum]
 			flux = [flux,flux_dum]
+			std = [std,std_dum]
 		endif else begin
 			flux = flux[sort(wl)]
+			std = std[sort(wl)]
 			wl = wl[sort(wl)]
 			flux_dum = flux_dum[sort(wl_dum)]
+			std_dum = std_dum[sort(wl_dum)]
 			wl_dum = wl_dum[sort(wl_dum)]
 			if (where(wl gt min(wl_dum) and wl lt max(wl_dum)))[0] eq -1 then begin
 				flux = [flux,flux_dum]
+				std = [std,std_dum]
 				wl = [wl,wl_dum]
 			endif else begin
 				case 1 of
 					max(wl) le min(wl_dum): begin
 						wl = [wl,wl_dum]
 						flux = [flux,flux_dum]
+						std = [std,std_dum]
 					end
 					min(wl) ge max(wl_dum): begin
 						wl = [wl_dum,wl]
 						flux = [flux_dum,flux]
+						std = [std_dum,std]
 					end
 					(max(wl) gt min(wl_dum)) and (min(wl) lt min(wl_dum)): begin
 						;flux = [flux,flux_dum[where(wl_dum gt max(wl))]]
 						;wl = [wl,wl_dum[where(wl_dum gt max(wl))]]
 						flux = [flux[where(wl lt min(wl_dum))], flux_dum]
+						std = [std[where(wl lt min(wl_dum))], std_dum]
 						wl = [wl[where(wl lt min(wl_dum))], wl_dum]
 					end
 					(min(wl) lt max(wl_dum)) and (max(wl) gt max(wl_dum)): begin
 						;flux = [flux_dum,flux[where(wl gt max(wl_dum))]]
 						;wl = [wl_dum,wl[where(wl gt max(wl_dum))]]
 						flux = [flux_dum[where(wl_dum lt min(wl))], flux]
+						std = [std_dum[where(wl_dum lt min(wl))], std]
 						wl = [wl_dum[where(wl_dum lt min(wl))], wl]
 					end
 				endcase
@@ -352,6 +377,7 @@ if keyword_set(general) then begin
 		endelse
 	endfor
 	flux = flux[sort(wl)]
+	std = std[sort(wl)]
 	wl = wl[sort(wl)]
 	if keyword_set(central9) then name = '_central9Spaxels_PointSourceCorrected'
 	if keyword_set(centralyes) then name = '_centralSpaxel_PointSourceCorrected_CorrectedYES'
@@ -365,7 +391,7 @@ if keyword_set(general) then begin
 	device, /close_file,decomposed=1
 	!p.multi = 0
 	openw, lun, outdir+objname+name+'_trim.txt',/get_lun
-	for i = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2X))',wl[i],flux[i]
+	for i = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2X))',wl[i],flux[i],std[i]
 	free_lun, lun
 	close, lun
 endif else begin
@@ -373,10 +399,10 @@ endif else begin
 	ra = float(sxpar(hdr,'RA'))
 	dec = float(sxpar(hdr,'Dec'))
 	objname = strcompress(objname,/remove_all)
-	wl_b2a = [] & flux_b2a = []
-	wl_b2b = [] & flux_b2b = []
-	wl_r1s = [] & flux_r1s = []
-	wl_r1l = [] & flux_r1l = []
+	wl_b2a = [] & flux_b2a = [] & std_b2a = []
+	wl_b2b = [] & flux_b2b = [] & std_b2b = []
+	wl_r1s = [] & flux_r1s = [] & std_r1s = []
+	wl_r1l = [] & flux_r1l = [] & std_r1l = []
 	if not keyword_set(linescan) then begin
 		for i = 0, n_elements(filename)-1 do begin
 			data = readfits(filename[i], hdr, exten=1,/silent)
@@ -384,27 +410,31 @@ endif else begin
 			band = strcompress(band,/remove_all)
 			wl_dum = tbget(hdr, data, 1)
 			flux_dum = tbget(hdr, data, 4)
-			weight_dum = tbget(hdr, data, 5)
+			std_dum = tbget(hdr, data, 5)
 			flux_dum = flux_dum[sort(wl_dum)]
-			weight_dum = weight_dum[sort(wl_dum)]
+			std_dum = std_dum[sort(wl_dum)]
 			wl_dum = wl_dum[sort(wl_dum)]
 			;print, filename[i]+'   '+sxpar(hdr, 'BAND')
 			;print, min(wl_dum), max(wl_dum)
 			case 1 of
 				band eq 'B2A' or band eq 'B3A': begin
 					flux_b2a = flux_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
+					std_b2a = std_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
 					wl_b2a = wl_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
 				end
 				band eq 'B2B': begin
 					flux_b2b = flux_dum[where(wl_dum ge 72.3 and wl_dum le 95.05)]
+					std_b2b = std_dum[where(wl_dum ge 72.3 and wl_dum le 95.05)]
 					wl_b2b = wl_dum[where(wl_dum ge 72.3 and wl_dum le 95.05)]
 				end
 				band eq 'R1': begin
 					if min(wl_dum) lt 130 then begin
 						flux_r1s = flux_dum[where(wl_dum ge 103 and wl_dum le 143)]
+						std_r1s = std_dum[where(wl_dum ge 103 and wl_dum le 143)]
 						wl_r1s = wl_dum[where(wl_dum ge 103 and wl_dum le 143)]
 					endif else begin
 						flux_r1l = flux_dum[where(wl_dum ge 143 and wl_dum le 190.31)]
+						std_r1l = std_dum[where(wl_dum ge 143 and wl_dum le 190.31)]
 						wl_r1l = wl_dum[where(wl_dum ge 143 and wl_dum le 190.31)]
 					endelse
 				end
@@ -412,7 +442,9 @@ endif else begin
 		endfor
 		wl = [wl_b2a, wl_b2b, wl_r1s, wl_r1l]
 		flux = [flux_b2a, flux_b2b, flux_r1s, flux_r1l]
+		std = [std_b2a, std_b2b, std_r1s, std_r1l]
 		wl = wl[where(flux gt 0)]
+		std = std[where(flux gt 0)]
 		flux = flux[where(flux gt 0)]
 		if keyword_set(central9) then name = '_central9Spaxels_PointSourceCorrected'
 		if keyword_set(centralyes) then name = '_centralSpaxel_PointSourceCorrected_CorrectedYES'
@@ -432,7 +464,7 @@ endif else begin
 		device, /close_file,decomposed=1
 		!p.multi = 0
 		openw, lun, outdir+objname+name+'_trim.txt',/get_lun
-		for i = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2X))',wl[i],flux[i]
+		for i = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2X))',wl[i],flux[i],std[i]
 		free_lun, lun
 		close, lun
 	endif
@@ -495,13 +527,13 @@ if (where(special_list eq objname))[0] ne -1 then begin
 	
 	wl = [] & flux = []
 	
-	wl_b3a = [] & flux_b3a = []
-	wl_b2b_1 = [] & flux_b2b_1 = []
-	wl_b2b_2 = [] & flux_b2b_2 = []
-	wl_r1_1 = [] & flux_r1_1 = []
-	wl_r1_2 = [] & flux_r1_2 = []
-	wl_r1_3 = [] & flux_r1_3 = []
-	wl_r1_4 = [] & flux_r1_4 = []
+	wl_b3a = [] & flux_b3a = [] & std_b3a = []
+	wl_b2b_1 = [] & flux_b2b_1 = [] & std_b2b_1 = []
+	wl_b2b_2 = [] & flux_b2b_2 = [] & std_b2b_2 = []
+	wl_r1_1 = [] & flux_r1_1 = [] & std_r1_1 = []
+	wl_r1_2 = [] & flux_r1_2 = [] & std_r1_2 = []
+	wl_r1_3 = [] & flux_r1_3 = [] & std_r1_3 = []
+	wl_r1_4 = [] & flux_r1_4 = [] & std_r1_4 = []
 	if not keyword_set(linescan) then begin
 		for i = 0, n_elements(filename)-1 do begin
 			data = readfits(filename[i], hdr, exten=1,/silent)
@@ -509,26 +541,30 @@ if (where(special_list eq objname))[0] ne -1 then begin
 			band = strcompress(band,/remove_all)
 			wl_dum = tbget(hdr, data, 1)
 			flux_dum = tbget(hdr, data, 4)
-			weight_dum = tbget(hdr, data, 5)
+			std_dum = tbget(hdr, data, 5)
 			flux_dum = flux_dum[sort(wl_dum)]
-			weight_dum = weight_dum[sort(wl_dum)]
+			std_dum = std_dum[sort(wl_dum)]
 			wl_dum = wl_dum[sort(wl_dum)]
 			;print, filename[i]+'   '+sxpar(hdr, 'BAND')
 			;print, min(wl_dum), max(wl_dum)
 			if i eq 0 then begin
 				wl = [wl, wl_dum]
 				flux = [flux, flux_dum]
+				std = [std,std_dum]
 			endif else begin
 				wl = [wl[where(wl lt min(wl_dum))], wl_dum]
 				flux = [flux[where(wl lt min(wl_dum))], flux_dum]
+				std = [std[where(wl lt min(wl_dum))], std_dum]
 			endelse
 			
 		endfor
 		wl = wl[where(flux gt 0)]
+		std = std[where(flux gt 0)]
 		flux = flux[where(flux gt 0)]
 		ind = where((wl ge 54.80 and wl le 95.05) or (wl ge 103 and wl le 190.31))
 		wl = wl[ind]
 		flux = flux[ind]
+		std = std[ind]
 		set_plot, 'ps'
 		!p.font=0
 		loadct,13,/silent
@@ -543,7 +579,7 @@ if (where(special_list eq objname))[0] ne -1 then begin
 		if keyword_set(centralno) then name = '_centralSpaxel_PointSourceCorrected_CorrectedNO'
 		
 		openw, lun, outdir+objname+name+'_trim.txt',/get_lun
-		for i = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2X))',wl[i],flux[i]
+		for i = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2X))',wl[i],flux[i],std[i]
 		free_lun, lun
 		close, lun
 	endif
@@ -553,9 +589,9 @@ if keyword_set(linescan) then begin
 	data = readfits(indir+filename+'.fits', hdr, exten=1)
 	wl = tbget(hdr, data, 1) & print, min(wl), max(wl)
 	flux = tbget(hdr, data, 4)
-	weight = tbget(hdr, data, 5)
+	std = tbget(hdr, data, 5)
 	flux = flux[sort(wl)]
-	weight = flux[sort(wl)]
+	std = std[sort(wl)]
 	wl = wl[sort(wl)]
 	;suffix = strtrim(string(min(wl)),1)+'_'+strtrim(string(max(wl)),1)
 	openw, lun, indir+'linescan_'+filename+'.txt', /get_lun
