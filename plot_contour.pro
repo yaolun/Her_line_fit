@@ -1,0 +1,572 @@
+pro plot_contour, noise=noise, no_plot=no_plot,indir=indir,plotdir=plotdir,objname=objname,spire=spire,pacs=pacs
+if file_test(plotdir,/directory) eq 0 then file_mkdir,plotdir
+;Construct the data structure in each band
+if keyword_set(spire) then begin
+	;SPIRE
+	;SLW
+	pixelname = ['SLWA1','SLWA2','SLWA3','SLWB1','SLWB2','SLWB3','SLWB4','SLWC1','SLWC2','SLWC3','SLWC4','SLWC5','SLWD1','SLWD2','SLWD3','SLWD4','SLWE1','SLWE2','SLWE3']
+	suffix = '_lines.txt'
+	if file_test(indir+objname+'_SLWC3'+suffix) eq 0 then suffix = '_lines.txt'
+	readcol, indir+objname+'_SLWC3'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+	ra_cen_slw = ra
+	dec_cen_slw = dec
+	data_slw = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)), fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str))},n_elements(pixelname))
+	for pix = 0, n_elements(pixelname)-1 do begin
+    	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str,snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+		data_slw[pix].line = name
+		data_slw[pix].lab_wl = lab_wl
+		data_slw[pix].wl = wl
+		data_slw[pix].flux = str
+		data_slw[pix].flux_sig = sig_str
+		data_slw[pix].fwhm = fwhm
+		data_slw[pix].ra = ra
+		data_slw[pix].dec = dec
+		data_slw[pix].snr = snr
+		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
+		data_slw[pix].base_str = base_str*fwhm;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
+	endfor
+	;SSW
+	pixelname = ['SSWA1','SSWA2','SSWA3','SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3','SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
+	readcol, indir+objname+'_SSWD4'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+	ra_cen_ssw = ra
+	dec_cen_ssw = dec
+	data_ssw = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)), fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str))}, n_elements(pixelname))
+	for pix = 0, n_elements(pixelname)-1 do begin
+    	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+		data_ssw[pix].line = name
+		data_ssw[pix].lab_wl = lab_wl
+		data_ssw[pix].wl = wl
+		data_ssw[pix].flux = str
+		data_ssw[pix].flux_sig = sig_str
+		data_ssw[pix].fwhm = fwhm
+		data_ssw[pix].ra = ra
+		data_ssw[pix].dec = dec
+		data_ssw[pix].snr = snr
+		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
+		data_ssw[pix].base_str = base_str*fwhm;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
+	endfor
+endif
+if keyword_set(pacs) then begin
+	;PACS
+	;readcol, '~/bhr71/data/pacs_coord.txt', format='D,D,D', pix_ind, ra, dec  ;read the coordinate
+	suffix = '_os8_sf7_lines.txt'
+	if file_test(indir+objname+'_pacs_pixel13'+suffix) eq 0 then suffix = '_os8_sf7_lines.txt'
+	readcol, indir+objname+'_pacs_pixel13'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+	ra_cen_pacs = ra
+	dec_cen_pacs = dec
+	;if objname eq 'HD245906' then stop
+	data_pacs = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)),$
+		fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str))}, 25)
+
+	for pix = 0, 24 do begin
+    	readcol, indir+objname+'_pacs_pixel'+strtrim(string(pix+1),1)+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str,snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+		data_pacs[pix].line = name
+		data_pacs[pix].lab_wl = lab_wl
+		data_pacs[pix].wl = wl
+		data_pacs[pix].flux = str
+		data_pacs[pix].flux_sig = sig_str
+		data_pacs[pix].fwhm = fwhm
+		data_pacs[pix].ra = ra
+		data_pacs[pix].dec = dec
+		data_pacs[pix].snr = snr
+		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
+		data_pacs[pix].base_str = base_str*fwhm;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
+	endfor
+
+endif
+if not keyword_set(no_plot) then begin
+;Plot the contour for each band
+	if keyword_set(spire) then begin
+		;SPIRE
+		;Create the line name 
+		line_name_oh2o = ['o-H2O5_23-5_14','o-H2O6_25-5_32','o-H2O8_45-9_18','o-H2O8_27-7_34','o-H2O7_43-6_52','o-H2O8_54-7_61','o-H2O3_21-3_12','o-H2O6_34-5_41','o-H2O3_12-2_21','o-H2O7_25-8_18',$
+                      	  'o-H2O3_12-3_03','o-H2O5_32-4_41','o-H2O1_10-1_01'];,'o-H2O4_23-3_30'
+		line_center_oh2o = [212.5309344,226.7664669,229.2112944,231.2537873,234.5364534,256.5992833,257.8011350,258.8222114,259.9887495,261.4637873,$
+							273.1998800,483.0021428,538.3023584];,669.1946510
+    
+		line_name_ph2o = ['p-H2O7_26-6_33','p-H2O9_46-10_1_9','p-H2O7_44-8_17','p-H2O2_20-2_11','p-H2O4_22-4_13','p-H2O8_53-7_62','p-H2O7_44-6_51','p-H2O1_11-0_00','p-H2O2_02-1_11','p-H2O5_24-4_31',$
+						  'p-H2O4_22-3_31','p-H2O9_28-8_35','p-H2O2_11-2_02','p-H2O6_24-7_17','p-H2O5_33-4_40','p-H2O6_42-5_51']
+		line_center_ph2o = [208.0814648,208.9186114,222.9532762,243.9800446,248.2530166,251.7573722,255.6872873,269.2790845,303.4638096,308.9717523,$
+                        	327.2312598,330.8298372,398.6525967,613.7265992,631.5709820,636.6680083]
+    
+		line_name_co = ['CO13-12','CO12-11','CO11-10','CO10-9','CO9-8','CO8-7','CO7-6','CO6-5','CO5-4','CO4-3']
+		line_center_co = [200.27751475,216.93275100,236.61923625,260.24634206,289.12760810,325.23334516,371.65973939,433.56713410,520.24411585,650.26787364]
+    
+    	line_name_13co = ['13CO13-12','13CO12-11','13CO11-10','13CO10-9','13CO9-8','13CO8-7','13CO7-6','13CO6-5','13CO5-4']
+		line_center_13co = [209.481440501,226.903680083,247.496622503,272.21147644,302.422210195,340.18977646,388.752815449,453.509061166,544.174435197]
+    
+    	line_name_hco = ['HCO+16-15','HCO+15-14','HCO+14-13','HCO+13-12','HCO+12-11','HCO+11-10','HCO+10-9','HCO+9-8','HCO+8-7','HCO+7-6','HCO+6-5']
+		line_center_hco = [210.28816791,224.28135601,240.27541266,258.73206751,280.26711943,305.71952487,336.26530802,373.60195435,420.27521465,480.28810368,560.30913387]
+    
+    	line_name_other = ['NII_205','CI3P2-3P0','CI3P2-3P1','CI3P1-3P0'];,'Unknown_221.3','Unknown_225.2']
+		line_center_other = [205.178,230.349132,370.424383,609.150689];,221.3,225.2]
+
+    	line_name_spire = [line_name_oh2o,line_name_ph2o,line_name_co,line_name_13co,line_name_hco,line_name_other]
+		line_center_spire = [line_center_oh2o,line_center_ph2o,line_center_co,line_center_13co,line_center_hco,line_center_other]
+		line_name_slw = line_name_spire[where(line_center_spire gt 314)]
+		line_name_ssw = line_name_spire[where(line_center_spire lt 314)]
+		;SLW
+		;line_name = ['p-H2O2_02-1_11','CO8-7','13CO8-7','CO7-6','CI370','13CO7-6','p-H2O2_11-2_02','CO6-5','13CO6-5','HCO+P7-6','CO5-4','o-H2O1_10-1_01','13CO5-4','CI610','CO4-3']
+		line_name = line_name_slw
+		for i = 0, n_elements(line_name)-1 do begin
+			wl = []
+			flux = []
+			flux_sig = []
+			base_str = []
+			snr = []
+			ra = []
+			ra_tot = []
+			dec = []
+			dec_tot = []
+			for pix = 0, n_elements(data_slw[*].ra[0])-1 do begin
+				; read in the central position
+				if pix eq 9 then begin
+					ra_cen = ra_cen_slw[where(data_slw[pix].line eq line_name[i])]
+					dec_cen = dec_cen_slw[where(data_slw[pix].line eq line_name[i])]
+				endif
+
+				data_ind = where(data_slw[pix].line eq line_name[i])
+				ra_tot = [ra_tot, data_slw[pix].ra[data_ind]]
+				dec_tot = [dec_tot, data_slw[pix].dec[data_ind]]
+				base_str = [base_str, data_slw[pix].base_str[data_ind]]
+				; exclude absorption lines
+				; set every absorption line to zero
+				if (data_slw[pix].flux[data_ind] lt 0) or (data_slw[pix].snr[data_ind] lt 3d0) or (data_ind eq -1) then begin
+					wl = [wl, data_slw[pix].wl[data_ind]]
+					flux = [flux, 0]
+					flux_sig = [flux_sig, 0]
+					snr = [snr, data_slw[pix].snr[data_ind]]
+					ra = [ra, data_slw[pix].ra[data_ind]]
+					dec = [dec, data_slw[pix].dec[data_ind]]
+				endif else begin
+					wl = [wl, data_slw[pix].wl[data_ind]]
+					flux = [flux, data_slw[pix].flux[data_ind]]
+					flux_sig = [flux_sig, data_slw[pix].flux_sig[data_ind]]
+					snr = [snr, data_slw[pix].snr[data_ind]]
+					ra = [ra, data_slw[pix].ra[data_ind]]
+					dec = [dec, data_slw[pix].dec[data_ind]]
+				endelse
+			endfor
+
+			if (n_elements(flux[where(flux ne 0)]) ge 1) and ((where(flux ne 0))[0] ne -1) then begin
+;				set_plot, 'ps'
+;				!p.font = 0
+;				device, filename = plotdir+objname+'_'+line_name[i]+'_contour.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
+;				loadct,13,/silent
+;				!p.thick = 4 & !x.thick = 5 & !y.thick = 5
+;				if (where(flux_sig gt 1))[0] ne -1 then flux_sig[where(flux_sig gt 1)] = 0
+;				noisefloor = median(flux/snr*noise)
+;;				noisefloor = max(flux/snr*noise)
+;				level = indgen(11)/10.*(max(flux)-min(flux[where(flux ne 0)]))+min(flux[where(flux ne 0)])
+;;				level = level[where(level ge noisefloor)]
+;				;level = indgen(11)/10.*(max(flux)-max([min(flux),noisefloor]))+max([min(flux),noisefloor]); > noisefloor  create a 10% contour
+;				level = level[sort(level)]
+;				level = level[2:-1]
+;				ra = (ra-ra_cen[0])*3600*cos(dec*!pi/180.)
+;				;if objname eq 'L1157' then stop
+;				;ra = (ra_cen_slw*cos(dec_cen_slw*!pi/180.)-ra*cos(dec*!pi/180.))*3600
+;				dec = (dec-dec_cen[0])*3600
+;				ra_tot = (ra_tot-ra_cen[0])*3600*cos(dec_tot*!pi/180.)
+;				;ra_tot = (ra_cen_slw*cos(dec_cen_slw*!PI/180.)-ra_tot*cos(dec_tot*!pi/180.))*3600
+;				dec_tot = (dec_tot-dec_cen[0])*3600
+;				flux_smooth = min_curve_surf(flux,ra,dec,/double)
+;				base_str_smooth = min_curve_surf(base_str,ra_tot,dec_tot,/double)
+;				base_str_smooth[where(base_str_smooth lt 0)] = 0
+;				base_str_smooth = rotate(base_str_smooth,5)
+;				ra_smooth = min_curve_surf(ra,ra,dec,/double)
+;				dec_smooth = min_curve_surf(dec,ra,dec,/double)
+;				ra_tot_smooth = min_curve_surf(ra_tot,ra_tot,dec_tot,/double)
+;				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double)
+;				;if line_name[i] eq 'o-H2O5_32-4_41' then stop
+;				;if objname eq 'L1157' then stop
+;        		plotposition = aspect(1.)
+;        		colorFile = '~/programs/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
+;        		loadct, 0, /silent
+;        		plot, ra_tot, dec_tot, psym=1,xrange=[140,-140],yrange=[-140,140], position=plotposition,/nodata,color=255
+;        		oplot, ra_tot, dec_tot, psym=1,color=0
+;				cgloadct, 10, /reverse, file=colorfile, /silent
+;				cgimage, base_str_smooth/1e-22, ra_tot_smooth[-1,0], dec_tot_smooth[0,0], position=[ra_tot_smooth[-1,0], dec_tot_smooth[0,0],ra_tot_smooth[0,0], dec_tot_smooth[0,-1]],/overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
+;					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes
+;				p = plotposition
+;				; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+;				if (objname eq 'BHR71') and (line_name[i] eq 'o-H2O1_10-1_01') then stop
+;				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+;				loadct, 13, /silent
+;				device,font_size=14
+;				catch, error_status
+;		        if error_status ne 0 then begin
+;		        	print, 'Object: ', objname, ' Line: ',line_name[i]
+;		        	print, !error_state.msg
+;		        	file_delete, plotdir+line_name[i]+'_contour.eps',/allow_nonexistent,/verbose
+;					continue
+;		        endif
+;				contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+;				contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=70,xrange=[140,-140],yrange=[-140,140],/overplot
+;				oplot, ra_tot, dec_tot, psym=1,color=0;,xrange=[140,-140],yrange=[-140,140]
+;				oplot, [0], [0], psym=1, color=250
+;				loadct, 0, /silent
+;				;xyouts, -20, 125, title_name(line_name[i]),color=255
+;				al_legend,[title_name(line_name[i])],textcolors=[0],/right,box=0
+;				al_legend,[objname],textcolors=[0],/left,box=0
+;				device, /close_file, decomposed = 1
+;				!p.multi = 0
+				set_plot, 'ps'
+				!p.font = 0
+				device, filename = plotdir+objname+'_'+line_name[i]+'_contour.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
+				loadct,13,/silent
+				!p.thick = 4 & !x.thick = 5 & !y.thick = 5
+				if (where(flux_sig gt 1))[0] ne -1 then flux_sig[where(flux_sig gt 1)] = 0
+				noisefloor = median(flux/snr*noise)
+;				noisefloor = max(flux/snr*noise)
+				level = indgen(6)/5.*(max(flux)-min(flux[where(flux ne 0)]))+min(flux[where(flux ne 0)])
+;				level = level[where(level ge noisefloor)]
+				level = level[sort(level)]
+				 if max(flux) ne min(flux[where(flux ne 0)]) then begin
+		        	level = level[1:-1]
+		        endif else begin
+		        	ind = where(flux eq max(flux))
+		        	noise = flux[ind]/snr[ind]
+		        	level = indgen(6)/5.*max(flux)
+		        	level = level[where(level ge 3*noise[0])]
+		        	if 3*noise ge max(flux) then stop
+		        endelse
+				ra = (ra-ra_cen[0])*3600*cos(dec*!pi/180.)
+				;ra = (ra_cen_ssw*cos(dec_cen_ssw*!pi/180.)-ra*cos(dec*!pi/180.))*3600
+				dec = (dec-dec_cen[0])*3600
+				ra_tot = (ra_tot-ra_cen[0])*3600*cos(dec_tot*!pi/180.)
+				;ra_tot = (ra_cen_ssw*cos(dec_cen_ssw*!pi/180.)-ra_tot*cos(dec_tot*!pi/180.))*3600
+				dec_tot = (dec_tot-dec_cen[0])*3600
+				flux_smooth = min_curve_surf(flux,ra,dec,/double);,nx=100,ny=100)
+				base_str_smooth = min_curve_surf(base_str,ra_tot,dec_tot,/double);,nx=100,ny=100)
+				base_str_smooth[where(base_str_smooth lt 0)] = 0
+				base_str_smooth = rotate(base_str_smooth,5)
+				ra_smooth = min_curve_surf(ra,ra,dec,/double);,nx=100,ny=100)
+				dec_smooth = min_curve_surf(dec,ra,dec,/double);,nx=100,ny=100)
+				ra_tot_smooth = min_curve_surf(ra_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
+				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
+				
+        		plotposition = aspect(1.)
+        		colorFile = '~/programs/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
+        		loadct, 0, /silent
+        		plot, ra_tot, dec_tot, psym=1,xrange=[140,-140],yrange=[-140,140], position=plotposition,/nodata,color=255
+        		oplot, ra_tot, dec_tot, psym=1,color=0
+				cgloadct, 10, /reverse, file=colorfile, /silent
+				cgimage, base_str_smooth/1e-22, ra_tot_smooth[-1,0], dec_tot_smooth[0,0], position=[ra_tot_smooth[-1,0], dec_tot_smooth[0,0],ra_tot_smooth[0,0], dec_tot_smooth[0,-1]],/overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
+					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes
+				p = plotposition
+				; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+				loadct, 13, /silent
+				device,font_size=14
+				catch, error_status
+		        if error_status ne 0 then begin
+		        	print, 'Object: ', objname, ' Line: ',line_name[i]
+		        	print, !error_state.msg
+		        	file_delete, plotdir+line_name[i]+'_contour.eps',/allow_nonexistent,/verbose
+					goto, exit_slw
+		        endif 
+		        if n_elements(flux[where(flux ne 0)]) ge 3 then begin
+		        	oplot, ra_tot, dec_tot, psym=1,color=0;,xrange=[140,-140],yrange=[-140,140], position=plotposition
+		        	oplot, [0], [0], psym=1, color=250
+		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=70,xrange=[140,-140],yrange=[-140,140],/overplot
+		        endif else begin
+		        	oplot, ra_tot, dec_tot, psym=1,color=0
+		        	oplot, [0], [0], psym=1, color=250
+		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+		        endelse
+				;xyouts, -20, 125, title_name(line_name[i]),color=255
+				al_legend,[title_name(line_name[i])],textcolors=[0],/right,box=0
+				al_legend,[objname],textcolors=[0],/left,box=0
+				exit_slw: 
+				device, /close_file, decomposed = 1
+				!p.multi = 0
+				cleanplot,/silent
+			endif
+		endfor
+		;SSW
+		;line_name = ['CO13-12','NII205','CO12-11','CO11-10','13CO11-10','o-H2O3_21-3_12','CO10-9','p-H2O1_11-0_00','13CO10-9','CO9-8']
+		line_name = line_name_ssw
+		for i = 0, n_elements(line_name)-1 do begin
+			wl = []
+			flux = []
+			flux_sig = []
+			base_str = []
+			snr = []
+			ra = []
+			ra_tot = []
+			dec = []
+			dec_tot = []
+			for pix = 0, n_elements(data_ssw[*].ra[0])-1 do begin
+				; read in the central position
+				if pix eq 18 then begin
+					ra_cen = ra_cen_ssw[where(data_ssw[pix].line eq line_name[i])]
+					dec_cen = dec_cen_ssw[where(data_ssw[pix].line eq line_name[i])]
+				endif		
+
+				data_ind = where(data_ssw[pix].line eq line_name[i])
+				ra_tot = [ra_tot, data_ssw[pix].ra[data_ind]]
+				dec_tot = [dec_tot, data_ssw[pix].dec[data_ind]]
+				base_str = [base_str, data_ssw[pix].base_str[data_ind]]
+				; exclude absorption lines
+				; set every absorption line to zero
+				if (data_ssw[pix].flux[data_ind] lt 0) or (data_ssw[pix].snr[data_ind] lt 3) or (data_ind eq -1) then begin
+					wl = [wl, data_ssw[pix].wl[data_ind]]
+					flux = [flux, 0]
+					flux_sig = [flux_sig, 0]
+					snr = [snr, data_ssw[pix].snr[data_ind]]
+					ra = [ra, data_ssw[pix].ra[data_ind]]
+					dec = [dec, data_ssw[pix].dec[data_ind]]
+				endif else begin
+					wl = [wl, data_ssw[pix].wl[data_ind]]
+					flux = [flux, data_ssw[pix].flux[data_ind]]
+					flux_sig = [flux_sig, data_ssw[pix].flux_sig[data_ind]]
+					snr = [snr, data_ssw[pix].snr[data_ind]]
+					ra = [ra, data_ssw[pix].ra[data_ind]]
+					dec = [dec, data_ssw[pix].dec[data_ind]]
+				endelse
+			endfor
+;			if objname eq 'L1551-IRS5' then print, snr, line_name[i]
+;			if (objname eq 'BHR71') then begin
+;				if (line_name[i] eq 'p-H2O5_24-4_31') or (line_name[i] eq 'p-H2O2_02-1_11') or (line_name[i] eq 'p-H2O9_46-10_1_9') then stop
+;			endif
+			if (n_elements(flux[where(flux ne 0)]) ge 1) and ((where(flux ne 0))[0] ne -1) then begin
+				set_plot, 'ps'
+				!p.font = 0
+				device, filename = plotdir+objname+'_'+line_name[i]+'_contour.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
+				loadct,13,/silent
+				!p.thick = 4 & !x.thick = 5 & !y.thick = 5
+				if (where(flux_sig gt 1))[0] ne -1 then flux_sig[where(flux_sig gt 1)] = 0
+				noisefloor = median(flux/snr*noise)
+;				noisefloor = max(flux/snr*noise)
+				level = indgen(6)/5.*(max(flux)-min(flux[where(flux ne 0)]))+min(flux[where(flux ne 0)])
+;				level = level[where(level ge noisefloor)]
+				level = level[sort(level)]
+				if max(flux) ne min(flux[where(flux ne 0)]) then begin
+		        	level = level[1:-1]
+		        endif else begin
+		        	ind = where(flux eq max(flux))
+		        	noise = flux[ind]/snr[ind]
+		        	level = indgen(6)/5.*max(flux)
+		        	level = level[where(level ge 3*noise[0])]
+		        	if 3*noise ge max(flux) then stop
+		        endelse
+				ra = (ra-ra_cen[0])*3600*cos(dec*!pi/180.)
+				;ra = (ra_cen_ssw*cos(dec_cen_ssw*!pi/180.)-ra*cos(dec*!pi/180.))*3600
+				dec = (dec-dec_cen[0])*3600
+				ra_tot = (ra_tot-ra_cen[0])*3600*cos(dec_tot*!pi/180.)
+				;ra_tot = (ra_cen_ssw*cos(dec_cen_ssw*!pi/180.)-ra_tot*cos(dec_tot*!pi/180.))*3600
+				dec_tot = (dec_tot-dec_cen[0])*3600
+				flux_smooth = min_curve_surf(flux,ra,dec,/double);,nx=100,ny=100)
+				base_str_smooth = min_curve_surf(base_str,ra_tot,dec_tot,/double);,nx=100,ny=100)
+				base_str_smooth[where(base_str_smooth lt 0)] = 0
+				base_str_smooth = rotate(base_str_smooth,5)
+				ra_smooth = min_curve_surf(ra,ra,dec,/double);,nx=100,ny=100)
+				dec_smooth = min_curve_surf(dec,ra,dec,/double);,nx=100,ny=100)
+				ra_tot_smooth = min_curve_surf(ra_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
+				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
+				
+        		plotposition = aspect(1.)
+        		colorFile = '~/programs/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
+        		loadct, 0, /silent
+        		plot, ra_tot, dec_tot, psym=1,xrange=[140,-140],yrange=[-140,140], position=plotposition,/nodata,color=255
+        		oplot, ra_tot, dec_tot, psym=1,color=0
+				cgloadct, 10, /reverse, file=colorfile, /silent
+				cgimage, base_str_smooth/1e-22, ra_tot_smooth[-1,0], dec_tot_smooth[0,0], position=[ra_tot_smooth[-1,0], dec_tot_smooth[0,0],ra_tot_smooth[0,0], dec_tot_smooth[0,-1]],/overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
+					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes
+				p = plotposition
+				; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+				loadct, 13, /silent
+				device,font_size=14
+				catch, error_status
+		        if error_status ne 0 then begin
+		        	print, 'Object: ', objname, ' Line: ',line_name[i]
+		        	print, !error_state.msg
+		        	file_delete, plotdir+line_name[i]+'_contour.eps',/allow_nonexistent,/verbose
+					goto, exit_ssw
+		        endif
+		        if n_elements(flux[where(flux ne 0)]) ge 3 then begin
+		        	oplot, ra_tot, dec_tot, psym=1,color=0;,xrange=[140,-140],yrange=[-140,140], position=plotposition
+		        	oplot, [0], [0], psym=1, color=250
+		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=70,xrange=[140,-140],yrange=[-140,140],/overplot
+		        endif else begin
+		        	oplot, ra_tot, dec_tot, psym=1,color=0
+		        	oplot, [0], [0], psym=1, color=250
+		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+		        endelse
+				;xyouts, -20, 125, title_name(line_name[i]),color=255
+				al_legend,[title_name(line_name[i])],textcolors=[0],/right,box=0
+				al_legend,[objname],textcolors=[0],/left,box=0
+				exit_ssw: 
+				device, /close_file, decomposed = 1
+				!p.multi = 0
+				cleanplot,/silent
+			endif
+		endfor
+	endif
+	;PACS
+	if keyword_set(pacs) then begin
+    	;Create the line name list first
+	    line_name_oh2o = ['o-H2O8_27-7_16','o-H2O10_29-10_110','o-H2O9_09-8_18','o-H2O7_52-8_27','o-H2O4_32-3_21','o-H2O5_41-6_16','o-H2O9_18-9_09','o-H2O8_18-7_07','o-H2O6_61-6_52','o-H2O7_61-7_52',$
+	                      'o-H2O6_25-5_14','o-H2O7_16-6_25','o-H2O3_30-2_21','o-H2O3_30-3_03','o-H2O8_27-8_18','o-H2O7_07-6_16','o-H2O7_25-6_34','o-H2O3_21-2_12','o-H2O8_54-8_45','o-H2O6_52-6_43',$
+	                      'o-H2O5_50-5_41','o-H2O7_52-7_43','o-H2O4_23-3_12','o-H2O9_27-9_18','o-H2O6_16-5_05','o-H2O8_36-8_27','o-H2O7_16-7_07','o-H2O8_45-8_36','o-H2O6_43-6_34','o-H2O6_25-6_16',$
+	                      'o-H2O4_41-4_32','o-H2O6_34-6_25','o-H2O2_21-1_10','o-H2O7_43-7_34','o-H2O4_41-5_14','o-H2O4_14-3_03','o-H2O9_27-10_110','o-H2O8_36-9_09','o-H2O7_34-6_43','o-H2O4_32-4_23',$
+	                      'o-H2O9_36-9_27','o-H2O7_25-7_16','o-H2O9_45-9_36','o-H2O4_23-4_14','o-H2O8_36-7_43','o-H2O5_14-5_05','o-H2O3_30-3_21','o-H2O5_23-4_32','o-H2O8_45-7_52','o-H2O6_34-7_07',$
+	                      'o-H2O5_32-5_23','o-H2O7_34-7_25','o-H2O3_03-2_12','o-H2O4_32-5_05','o-H2O2_12-1_01','o-H2O2_21-2_12','o-H2O8_54-9_27']
+						  ;'o-H2O5_41-5_32','o-H2O5_05-4_14','o-H2O5_14-4_23'
+	    line_name_ph2o = ['p-H2O6_51-7_26','p-H2O7_71-7_62','p-H2O10_19-10_010','p-H2O4_31-3_22','p-H2O9_19-8_08','p-H2O4_22-3_13','p-H2O8_17-7_26','p-H2O6_42-7_17','p-H2O7_26-6_15','p-H2O8_26-7_35',$
+	                      'p-H2O7_62-8_35','p-H2O4_31-4_04','p-H2O4_40-5_15','p-H2O9_28-9_19','p-H2O8_08-7_17','p-H2O7_62-7_53','p-H2O3_31-2_20','p-H2O5_24-4_13','p-H2O7_17-6_06','p-H2O5_51-6_24',$
+	                      'p-H2O8_17-8_08','p-H2O9_37-9_28','p-H2O5_51-5_42','p-H2O7_53-7_44','p-H2O6_51-6_42','p-H2O6_15-5_24','p-H2O9_46-9_37','p-H2O8_53-8_44','p-H2O7_26-7_17','p-H2O8_35-7_44',$
+	                      'p-H2O6_06-5_15','p-H2O3_22-2_11','p-H2O7_44-7_35','p-H2O5_42-5_33','p-H2O6_42-6_33','p-H2O6_15-6_06','p-H2O5_24-5_15','p-H2O5_33-5_24','p-H2O9_46-8_53','p-H2O9_37-8_44',$
+	                      'p-H2O8_44-8_35','p-H2O4_04-3_13','p-H2O3_31-3_22','p-H2O7_53-8_26','p-H2O7_35-8_08','p-H2O3_13-2_02','p-H2O8_44-7_53','p-H2O4_13-3_22','p-H2O4_31-4_22','p-H2O8_35-8_26',$
+	                      'p-H2O5_42-6_15','p-H2O3_22-3_13','p-H2O3_31-4_04','p-H2O8_26-9_19','p-H2O6_24-6_15','p-H2O7_35-6_42','p-H2O6_33-6_24','p-H2O5_33-6_06','p-H2O4_13-4_04']
+	                      ;,'p-H2O5_15-4_04','p-H2O4_40-4_31','p-H2O9_37-10_010','p-H2O8_26-8_17','p-H2O2_20-1_11','p-H2O6_24-5_33'
+	    line_name_co = ['CO40-39','CO39-38','CO38-37','CO37-36','CO36-35','CO35-34','CO34-33','CO33-32','CO32-31','CO31-30',$
+	                    'CO30-29','CO29-28','CO28-27','CO25-24','CO24-23','CO23-22','CO22-21','CO21-20','CO20-19',$;'CO27-26',
+	                    'CO19-18','CO18-17','CO17-16','CO16-15','CO15-14','CO14-13']
+	    line_name_oh = ['OH19-14','OH18-15','OH13-9','OH12-8','OH14-10','OH15-11','OH5-1','OH4-0','OH9-3','OH8-2',$
+				    'OH10-8','OH11-9','OH3-1','OH2-0','OH14-12','OH15-13','OH19-16','OH18-17','OH7-5','OH6-4']
+	    line_name_other = ['OI3P1-3P2','NII','OI3P0-3P1','CII2P3_2-2P1_2']
+	    line_name_pacs = [line_name_oh2o, line_name_ph2o, line_name_co, line_name_oh, line_name_other]
+		
+		line_name = line_name_pacs
+		for i = 0, n_elements(line_name)-1 do begin
+		    wl = []
+		    flux = []
+		    flux_sig = []
+		    base_str = []
+		    snr = []
+		    ra = []
+		    ra_tot = []
+		    dec = []
+		    dec_tot = []
+		    for pix = 0, n_elements(data_pacs[*].ra[0])-1 do begin
+				; read in the central position
+				if pix eq 12 then begin
+					;print, 'Setting the central position'
+					ra_cen = ra_cen_pacs[where(data_pacs[pix].line eq line_name[i])]
+					dec_cen = dec_cen_pacs[where(data_pacs[pix].line eq line_name[i])]
+				endif
+
+		        data_ind = where(data_pacs[pix].line eq line_name[i])
+		        ra_tot = [ra_tot, data_pacs[pix].ra[data_ind]]
+				dec_tot = [dec_tot, data_pacs[pix].dec[data_ind]]
+				base_str = [base_str, data_pacs[pix].base_str[data_ind]]
+				; exclude absorption lines
+				; set every absorption line to zero
+		        if (data_pacs[pix].flux[data_ind] lt 0) or (data_pacs[pix].snr[data_ind] lt 3d0) or (data_ind eq -1) then begin
+		        	wl = [wl, data_pacs[pix].wl[data_ind]]
+			        flux = [flux, 0]
+			        flux_sig = [flux_sig, 0]
+					snr = [snr, data_pacs[pix].snr[data_ind]]
+					ra = [ra, data_pacs[pix].ra[data_ind]]
+					dec = [dec, data_pacs[pix].dec[data_ind]]
+		        endif else begin
+		        	wl = [wl, data_pacs[pix].wl[data_ind]]
+			        flux = [flux, data_pacs[pix].flux[data_ind]]
+			        flux_sig = [flux_sig, data_pacs[pix].flux_sig[data_ind]]
+					snr = [snr, data_pacs[pix].snr[data_ind]]
+					ra = [ra, data_pacs[pix].ra[data_ind]]
+					dec = [dec, data_pacs[pix].dec[data_ind]]
+		        endelse
+		    endfor
+		    if (n_elements(flux[where(flux ne 0)]) ge 1) and ((where(flux ne 0))[0] ne -1) then begin
+		    	;if line_name[i] eq 'o-H2O9_09-8_18' then stop
+		        set_plot, 'ps'
+		        !p.font = 0
+		        device, filename = plotdir+objname+'_'+line_name[i]+'_contour.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
+		        loadct,13,/silent
+		        !p.thick = 4 & !x.thick = 5 & !y.thick = 5
+		        if (where(flux_sig gt 1))[0] ne -1 then flux_sig[where(flux_sig gt 1)] = 0
+		        noisefloor = median(flux/snr*noise)
+;		        noisefloor = max(flux/snr*noise)
+				level = indgen(6)/5.*(max(flux)-min(flux[where(flux ne 0)]))+min(flux[where(flux ne 0)])
+;				level = level[where(level ge noisefloor)]
+		        level = level[sort(level)]
+		        if max(flux) ne min(flux[where(flux ne 0)]) then begin
+		        	level = level[1:-1]
+		        endif else begin
+		        	ind = where(flux eq max(flux))
+		        	noise = flux[ind]/snr[ind]
+		        	level = indgen(6)/5.*max(flux)
+		        	level = level[where(level ge 3*noise[0])]
+		        	if 3*noise ge max(flux) then stop
+		        endelse
+		        ;if line_name[i] eq 'CII2P3_2-2P1_2' then stop
+		        ra = (ra-ra_cen[0])*3600*cos(dec*!pi/180.)
+				;ra = (ra_cen_pacs*cos(dec_cen_pacs*!pi/180.)-ra*cos(dec*!pi/180.))*3600
+				dec = (dec-dec_cen[0])*3600
+				ra_tot = (ra_tot-ra_cen[0])*3600*cos(dec_tot*!pi/180.)
+				;ra_tot = (ra_cen_pacs*cos(dec_cen_pacs*!pi/180.)-ra_tot*cos(dec_tot*!pi/180.))*3600
+				dec_tot = (dec_tot-dec_cen[0])*3600
+		        flux_smooth = min_curve_surf(flux,ra,dec,/double);,nx=100,ny=100)
+		        base_str_smooth = min_curve_surf(base_str,ra_tot,dec_tot,/double);,nx=100,ny=100)
+				base_str_smooth[where(base_str_smooth lt 0)] = 0
+				base_str_smooth = rotate(base_str_smooth,5)
+		        ra_smooth = min_curve_surf(ra,ra,dec,/double);,nx=100,ny=100)
+		        dec_smooth = min_curve_surf(dec,ra,dec,/double);,nx=100,ny=100)
+		        ra_tot_smooth = min_curve_surf(ra_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
+				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
+				;if line_name[i] eq 'CO20-19' then stop
+		        ;plotposition = aspect(1.)
+		        ;plot, ra, dec, psym=1,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)',xrange=[40,-40],yrange=[-40,40], position=plotposition
+		        ;contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /overplot, position=plotposition, color=250
+		        ;xyouts, -10, 30, title_name(line_name[i])
+		        plotposition = aspect(1.)
+				p = plotposition
+		        colorFile = '~/programs/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
+		        loadct, 0, /silent
+        		plot, ra_tot, dec_tot, psym=1,xrange=[40,-40],yrange=[-40,40], position=plotposition,/nodata,color=255
+        		oplot, ra_tot, dec_tot, psym=1,color=0
+				cgloadct, 10, /reverse, file=colorfile, /silent
+		        cgimage, base_str_smooth/1e-22, ra_tot_smooth[0,0], dec_tot_smooth[0,0], /overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
+					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes		        p = plotposition
+		        ; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+		        loadct, 13, /silent
+		        device,font_size=14
+		        ; if encounter an error skip this one and keep going
+		        catch, error_status
+		        if error_status ne 0 then begin
+		        	;stop
+		        	print, 'Object: ', objname, ' Line: ',line_name[i]
+		        	print, !error_state.msg
+		        	file_delete, plotdir+objname+'_'+line_name[i]+'_contour.eps',/allow_nonexistent,/verbose
+					goto, exit_pacs
+		        endif
+		        if n_elements(flux[where(flux ne 0)]) ge 3 then begin
+		        	oplot, ra_tot, dec_tot, psym=1,color=0;,xrange=[140,-140],yrange=[-140,140], position=plotposition
+		        	oplot, [0], [0], psym=1, color=250
+		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[40,-40],yrange=[-40,40],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=70,xrange=[40,-40],yrange=[-40,40],/overplot
+		        endif else begin
+		        	oplot, ra_tot, dec_tot, psym=1,color=0
+		        	oplot, [0], [0], psym=1, color=250
+		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[40,-40],yrange=[-40,40],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+		        endelse
+		        loadct, 0, /silent
+		        ;xyouts, 0, 30, title_name(line_name[i]),color=255
+		        al_legend,[title_name(line_name[i])],textcolors=[0],/right,box=0
+		        al_legend,[objname],textcolors=[0],/left,box=0
+		        exit_pacs: 
+		        device, /close_file, decomposed = 1
+		        !p.multi = 0
+		        cleanplot,/silent
+		        ;stop
+		    endif
+		endfor
+	endif
+endif
+end
+
+pro run_plot_contour
+plot_contour, slw, ssw, pacs, noise=[1,1,1],indir='~/bhr71/data/',plotdir='~/bhr71/plots/contour/',objname='BHR71'
+end
