@@ -136,23 +136,33 @@ endif else begin
 	
 		case 1 of
 			band eq 'B2A': begin
-				wl_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3))) & flux_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
+				wl_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
+				flux_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
+				std_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
 				ra_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3))) & dec_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
 				if objname eq 'HD150193' then begin
-					wl_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 71.75))) & flux_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 71.75)))
+					wl_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 71.75)))
+					flux_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 71.75)))
+					std_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 71.75)))
 					ra_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 71.75))) & dec_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 71.75)))
 				endif
 			end
 			band eq 'B2B': begin
-				wl_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05))) & flux_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05)))
+				wl_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05)))
+				flux_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05)))
+				std_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05)))
 			    ra_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05))) & dec_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05)))
 			end
 			band eq 'R1': begin
 				if min(wl_dum) lt 130 then begin
-					wl_r1s = fltarr(5,5,n_elements(where(wl_dum ge 103 and wl_dum le 143))) & flux_r1s = fltarr(5,5,n_elements(where(wl_dum ge 103 and wl_dum le 143)))
+					wl_r1s = fltarr(5,5,n_elements(where(wl_dum ge 103 and wl_dum le 143)))
+					flux_r1s = fltarr(5,5,n_elements(where(wl_dum ge 103 and wl_dum le 143)))
+					std_r1s = fltarr(5,5,n_elements(where(wl_dum ge 103 and wl_dum le 143)))
 					ra_r1s = fltarr(5,5,n_elements(where(wl_dum ge 103 and wl_dum le 143))) & dec_r1s = fltarr(5,5,n_elements(where(wl_dum ge 103 and wl_dum le 143)))
 				endif else begin
-					wl_r1l = fltarr(5,5,n_elements(where(wl_dum ge 143 and wl_dum le 190.31))) & flux_r1l = fltarr(5,5,n_elements(where(wl_dum ge 143 and wl_dum le 190.31)))
+					wl_r1l = fltarr(5,5,n_elements(where(wl_dum ge 143 and wl_dum le 190.31)))
+					flux_r1l = fltarr(5,5,n_elements(where(wl_dum ge 143 and wl_dum le 190.31)))
+					std_r1l = fltarr(5,5,n_elements(where(wl_dum ge 143 and wl_dum le 190.31)))
 					ra_r1l = fltarr(5,5,n_elements(where(wl_dum ge 143 and wl_dum le 190.31))) & dec_r1l = fltarr(5,5,n_elements(where(wl_dum ge 143 and wl_dum le 190.31)))
 				endelse
 			end
