@@ -1030,6 +1030,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
 				; Subtract
 				fluxx = fluxl - base
+				stdd = stdl
 				line = [line_dg[*,2*i],line_dg[*,2*i+1]]
 				; Fitting part
 				; Different fitting keyword for fixed width and test arguement
