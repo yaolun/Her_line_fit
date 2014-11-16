@@ -177,7 +177,11 @@ if not keyword_set(baseline) then begin
       if keyword_set(single_gauss) then begin
         rms2 = total((gauss(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
         rms = sqrt(rms2)
-        sigma = sigma*rms
+        ; Additional procedure for using the actual uncertainty from the data
+        ; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
+        if keyword_set(std) then begin
+          sigma = sigma*rms
+        endif
         cen_wl = p[1] + median(wl) & sig_cen_wl = sigma[1]
         height = p[0]/factor & sig_height = sigma[0]/factor
         fwhm = 2.354*abs(p[2]) & sig_fwhm = 2.354*abs(sigma[2])
@@ -212,7 +216,11 @@ if not keyword_set(baseline) then begin
         ;print, 'Finishing double Gaussian fit for '+linename
         rms2 = total((gauss_double(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
         rms = sqrt(rms2)
-        sigma = sigma*rms
+        ; Additional procedure for using the actual uncertainty from the data
+        ; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
+        if keyword_set(std) then begin
+          sigma = sigma*rms
+        endif
         cen_wl = [p[1]+median(wl), p[4]+median(wl)] & sig_cen_wl = [sigma[1],sigma[4]]
         height = [p[0],p[3]]/factor & sig_height = [sigma[0],sigma[3]]/factor
         fwhm = 2.354*[abs(p[2]), abs(p[5])] & sig_fwhm = 2.354*[abs(sigma[2]), abs(sigma[5])]
@@ -234,7 +242,7 @@ if not keyword_set(baseline) then begin
           ;   noise = std_noise
           ; endif
         endif
-		    if (linename eq 'p-H2O9_37-8_44_CO22-21') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel9_os8_sf7')then stop
+		    ; if (linename eq 'p-H2O9_37-8_44_CO22-21') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel9_os8_sf7')then stop
   		  snr = str/noise/fwhm
   		  ; Account for the oversample in spire band
   		  if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
