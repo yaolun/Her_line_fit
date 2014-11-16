@@ -246,7 +246,7 @@ if not keyword_set(no_plot) then begin
 				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				
         		plotposition = aspect(1.)
-        		colorFile = '~/programs/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
+        		colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
         		loadct, 0, /silent
         		plot, ra_tot, dec_tot, psym=1,xrange=[140,-140],yrange=[-140,140], position=plotposition,/nodata,color=255
         		oplot, ra_tot, dec_tot, psym=1,color=0
@@ -369,7 +369,7 @@ if not keyword_set(no_plot) then begin
 				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				
         		plotposition = aspect(1.)
-        		colorFile = '~/programs/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
+        		colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
         		loadct, 0, /silent
         		plot, ra_tot, dec_tot, psym=1,xrange=[140,-140],yrange=[-140,140], position=plotposition,/nodata,color=255
         		oplot, ra_tot, dec_tot, psym=1,color=0
@@ -520,7 +520,7 @@ if not keyword_set(no_plot) then begin
 		        ;xyouts, -10, 30, title_name(line_name[i])
 		        plotposition = aspect(1.)
 				p = plotposition
-		        colorFile = '~/programs/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
+		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
 		        loadct, 0, /silent
         		plot, ra_tot, dec_tot, psym=1,xrange=[40,-40],yrange=[-40,40], position=plotposition,/nodata,color=255
         		oplot, ra_tot, dec_tot, psym=1,color=0
