@@ -14,14 +14,14 @@ if file_test(outdir+'double_gauss/',/directory) eq 0 then file_mkdir, outdir+'do
   ; weight = 1+0*flux
   wl = double(wl)
   flux = double(flux)
-  if keyword_set(std) then begin
-    weight = double(std)
-  endif else begin
-    weight = 1+0*flux
-  endelse
   expo = round(alog10(abs(median(flux))))*(-1)+1
   factor = 10d^expo
   nwl = wl - median(wl)
+  if keyword_set(std) then begin
+    weight = double(std)*factor
+  endif else begin
+    weight = 1+0*flux
+  endelse
   fluxx = flux*factor
   nflux = fluxx - median(fluxx)
   
@@ -227,12 +227,12 @@ if not keyword_set(baseline) then begin
         ;         if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
         if keyword_set(global_noise) then begin
           noise = stddev(global_noise[*,1])
-          ; Use Eq. 4.57 from Robinson's note
-          if n_elements(global_noise[0,*]) eq 3 then begin
-            mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
-            std_noise = (1/n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
-            noise = std_noise
-          endif
+          ; Use Eq. 4.57 from Robinson's notec
+          ; if n_elements(global_noise[0,*]) eq 3 then begin
+          ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
+          ;   std_noise = (double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2))^0.5
+          ;   noise = std_noise
+          ; endif
         endif
 		    if (linename eq 'p-H2O9_37-8_44_CO22-21') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel9_os8_sf7')then stop
   		  snr = str/noise/fwhm
