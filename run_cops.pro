@@ -126,7 +126,7 @@ while i eq 1 do begin
 
 		; Copy the fits files into the archive directory
 		if file_test(outdir+current_obj+'/spire/data/fits/') eq 0 then file_mkdir, outdir+current_obj+'/spire/data/fits'
-		file_copy, filename, outdir+current_obj+'/spire/data/fits/'
+		file_copy, filename, outdir+current_obj+'/spire/data/fits/',/overwrite
 	endif
 	
 	if keyword_set(single) then if current_obj ne single then continue  
