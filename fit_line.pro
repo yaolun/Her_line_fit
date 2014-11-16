@@ -197,11 +197,11 @@ if not keyword_set(baseline) then begin
         if keyword_set(global_noise) then begin
           noise = stddev(global_noise[*,1])
           ; Use Eq. 4.57 from Robinson's note
-          if n_elements(global_noise[0,*]) eq 3 then begin
-            mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
-            std_noise = (1/n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
-            noise = std_noise
-          endif
+          ; if n_elements(global_noise[0,*]) eq 3 then begin
+          ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
+          ;   std_noise = (1/n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
+          ;   noise = std_noise
+          ; endif
         endif
         snr = str/noise/fwhm
         if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
