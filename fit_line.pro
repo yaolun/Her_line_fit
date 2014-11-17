@@ -193,13 +193,13 @@ if not keyword_set(baseline) then begin
         residual = flux - gauss
         noise = stddev(residual)
 		    ;if pixelname eq 'SSWA1' and linename eq 'HCO+11-10' and keyword_set(global_noise) then stop
-		    ;if linename eq 'CO11-10' and keyword_set(global_noise) then stop
+		    ; if linename eq 'CO11-10' and keyword_set(global_noise) then stop
         if keyword_set(global_noise) then begin
           noise = stddev(global_noise[*,1])
           ; Use Eq. 4.57 from Robinson's note
           ; if n_elements(global_noise[0,*]) eq 3 then begin
           ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
-          ;   std_noise = (1/n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
+          ;   std_noise = (double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
           ;   noise = std_noise
           ; endif
         endif
@@ -242,7 +242,7 @@ if not keyword_set(baseline) then begin
           ;   noise = std_noise
           ; endif
         endif
-		    ; if (linename eq 'p-H2O9_37-8_44_CO22-21') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel9_os8_sf7')then stop
+		    if (linename eq 'CO23-22_o-H2O4_14-3_03') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel20_os8_sf7')then stop
   		  snr = abs(str/noise/fwhm)
   		  ; Account for the oversample in spire band
   		  if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
