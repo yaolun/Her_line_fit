@@ -141,25 +141,26 @@ if not keyword_set(baseline) then begin
     parinfo[*].value = start
     if height_lim le 0 then begin
     	parinfo[0].limited = [1,0] & parinfo[0].limits[0] = 0                     ; Constrain the line flux to be positive
-		parinfo[3].limited = [1,0] & parinfo[3].limits[0] = 0
-	endif else begin
-    	parinfo[0].limited = [1,1] & parinfo[0].limits = [0,height_lim]
-		parinfo[3].limited = [1,1] & parinfo[3].limits = [0,height_lim]
-	endelse
-	if not keyword_set(fix_dg) then begin
-    	parinfo[1].limited = [1,1] & parinfo[1].limits = line[1:2]-median(wl)     ; Restrict the range of the line center can be varied
-		parinfo[4].limited = [1,1] & parinfo[4].limits = line[4:5]-median(wl)
-	endif else begin
-		parinfo[1].fixed = 1
-		parinfo[4].fixed = 1
-	endelse
+		  parinfo[3].limited = [1,0] & parinfo[3].limits[0] = 0
+	  endif else begin
+      ; Temperory remove the upper limit of the height to test the sigma evaluation
+    	parinfo[0].limited = [1,0] & parinfo[0].limits = [0,height_lim]
+		  parinfo[3].limited = [1,0] & parinfo[3].limits = [0,height_lim]
+	  endelse
+  	if not keyword_set(fix_dg) then begin
+      parinfo[1].limited = [1,1] & parinfo[1].limits = line[1:2]-median(wl)     ; Restrict the range of the line center can be varied
+  		parinfo[4].limited = [1,1] & parinfo[4].limits = line[4:5]-median(wl)
+  	endif else begin
+  		parinfo[1].fixed = 1
+  		parinfo[4].fixed = 1
+  	endelse
     ;if keyword_set(fixed_width) then begin
     ;	parinfo[2].fixed = 1
     ;	parinfo[5].fixed = 1
     ;endif else begin
     if dl eq 0 then stop
     parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
-	parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
+	  parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
 	;endelse
   endif
   ;if linename eq 'CO22-21' then stop
