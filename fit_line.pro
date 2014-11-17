@@ -203,7 +203,7 @@ if not keyword_set(baseline) then begin
           ;   noise = std_noise
           ; endif
         endif
-        snr = str/noise/fwhm
+        snr = abs(str/noise/fwhm)
         if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
         ;snr = height/noise
         ;
@@ -243,7 +243,7 @@ if not keyword_set(baseline) then begin
           ; endif
         endif
 		    ; if (linename eq 'p-H2O9_37-8_44_CO22-21') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel9_os8_sf7')then stop
-  		  snr = str/noise/fwhm
+  		  snr = abs(str/noise/fwhm)
   		  ; Account for the oversample in spire band
   		  if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
            ;snr = height/noise
@@ -294,7 +294,7 @@ if not keyword_set(baseline) then begin
 			device, filename = outdir+'double_gauss/'+pixelname+'_'+linename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 		endelse
       
-      	loadct ,13,/silent
+    loadct ,13,/silent
 		!p.thick = 3 & !x.thick = 3 & !y.thick = 3
 		maxx = max([max(flux), height])
 		minn = min([0,min(flux)])
