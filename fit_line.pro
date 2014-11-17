@@ -243,7 +243,7 @@ if not keyword_set(baseline) then begin
           ;   noise = std_noise
           ; endif
         endif
-		    if (linename eq 'CO23-22_o-H2O4_14-3_03') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel20_os8_sf7')then stop
+		    ; if (linename eq 'CO23-22_o-H2O4_14-3_03') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel20_os8_sf7')then stop
   		  snr = abs(str/noise/fwhm)
   		  ; Account for the oversample in spire band
   		  if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
