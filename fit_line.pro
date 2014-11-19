@@ -18,6 +18,8 @@ if file_test(outdir+'double_gauss/',/directory) eq 0 then file_mkdir, outdir+'do
   factor = 10d^expo
   nwl = wl - median(wl)
   if keyword_set(std) then begin
+  	; Prevent the ncertainty has zero in the array
+  	std[where(std eq 0)] = mean(std)
     weight = double(std)*factor
   endif else begin
     weight = 1+0*flux
