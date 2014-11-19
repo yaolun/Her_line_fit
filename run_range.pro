@@ -200,11 +200,11 @@ while i eq 1 do begin
 	;if current_obj ne 'HBC722_379' and current_obj ne 'HBC722_173' then continue
 	if keyword_set(single) then if current_obj ne single then continue ; Uncomment this line for all objects fitting
 	;if current_obj ne 'TMC1A' then continue
-	if current_obj ne 'BHR71' then begin
-		free_lun, tot_list
-		close, tot_list 
-		continue
-	endif
+;	if current_obj ne 'BHR71' then begin
+;		free_lun, tot_list
+;		close, tot_list 
+;		continue
+;	endif
 
 	if file_test(outdir+current_obj+'/pacs/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/pacs/data'
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'

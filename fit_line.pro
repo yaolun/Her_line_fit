@@ -200,7 +200,7 @@ if not keyword_set(baseline) then begin
           ; Use Eq. 4.57 from Robinson's note
           ; if n_elements(global_noise[0,*]) eq 3 then begin
           ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
-          ;   std_noise = (double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
+          ;   std_noise = double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
           ;   noise = std_noise
           ; endif
         endif
@@ -211,7 +211,9 @@ if not keyword_set(baseline) then begin
         ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
 		    if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
 		    if keyword_set(fixed_width) then sig_fwhm = -998
-		    if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999 
+		    if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then begin
+		    	sig_fwhm = -999
+		    endif 
       endif
       if keyword_set(double_gauss) then begin
         ;print, 'Finishing double Gaussian fit for '+linename
@@ -243,36 +245,40 @@ if not keyword_set(baseline) then begin
           ;   noise = std_noise
           ; endif
         endif
-		    ; if (linename eq 'CO23-22_o-H2O4_14-3_03') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel20_os8_sf7')then stop
-  		  snr = abs(str/noise/fwhm)
-  		  ; Account for the oversample in spire band
-  		  if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
-           ;snr = height/noise
-  		  ; Making sure the line classification is correct
-  		  if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
-  			  print, 'Line misplacement found'
-  			  cen_wl = reverse(cen_wl)
-  			  sig_cen_wl = reverse(sig_cen_wl)
-  			  str = reverse(str)
-  			  sig_str = reverse(sig_str)
-  			  fwhm = reverse(fwhm)
-  			  sig_fwhm = reverse(sig_fwhm)
-  		   	snr = reverse(snr)
-  		  endif
-  		  ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
-  		  ; 
-  		  if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
-  		  for k = 0, 1 do begin
-  		 	  if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
-  		 		  sig_fwhm[k] = -999
-  		 		  ; if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
-  		 	  endif
-  		 	  if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
-  		 	  if (str[k] eq 0) then begin
-            sig_cen_wl[k] = -998
-            sig_str[k] = -998
-          endif
-        endfor
+	    ; if (linename eq 'CO23-22_o-H2O4_14-3_03') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel20_os8_sf7')then stop
+		snr = abs(str/noise/fwhm)
+		; Account for the oversample in spire band
+		if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
+		;snr = height/noise
+		; Making sure the line classification is correct
+		if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
+		  print, 'Line misplacement found'
+		  cen_wl = reverse(cen_wl)
+		  sig_cen_wl = reverse(sig_cen_wl)
+		  str = reverse(str)
+		  sig_str = reverse(sig_str)
+		  fwhm = reverse(fwhm)
+		  sig_fwhm = reverse(sig_fwhm)
+		  snr = reverse(snr)
+		endif
+		; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
+		; 
+		if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
+		for k = 0, 1 do begin
+	 	  if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
+	 		sig_fwhm[k] = -999
+	 		; if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
+	 	  endif
+	 	  if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then begin
+	 	  	stop
+	 	  	sig_cen_wl[k] = -999
+	 	  endif
+	 	  if (str[k] lt 1e-30) then begin
+		  	sig_cen_wl[k] = -998
+			sig_str[k] = -998
+		  endif
+	    endfor
+	    ; if (where(sig_str eq 0))[0] ne -1 then stop
       endif
       base = base_para[0]*wl^2+base_para[1]*wl+base_para[2]
       msg=''
