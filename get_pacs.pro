@@ -535,7 +535,7 @@ if (where(special_list eq objname))[0] ne -1 then begin
 		end
 	endcase
 	
-	wl = [] & flux = []
+	wl = [] & flux = [] & std = []
 	
 	wl_b3a = [] & flux_b3a = [] & std_b3a = []
 	wl_b2b_1 = [] & flux_b2b_1 = [] & std_b2b_1 = []
