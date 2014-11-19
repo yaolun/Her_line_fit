@@ -37,6 +37,7 @@ if keyword_set(general) then begin
 			if i eq 0 then begin
 				wl = [wl_dum]
 				flux = [flux_dum]
+				std = [std_dum]
 				ra = [ra_dum]
 				dec = [dec_dum]
 			endif else begin
