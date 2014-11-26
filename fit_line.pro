@@ -11,7 +11,6 @@ c = 2.998d10
 ; make the unit consist with each other. Change F_nu (Jy) -> F_lambda (W cm-2 um-1)
 ; flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26
 
-<<<<<<< HEAD
 ; weight = 1+0*flux
 wl = double(wl)
 flux = double(flux)
@@ -19,15 +18,15 @@ expo = round(alog10(abs(median(flux))))*(-1)+1
 factor = 10d^expo
 nwl = wl - median(wl)
 if keyword_set(std) then begin
-weight = double(std)*factor
+	weight = double(std)*factor
 endif else begin
-weight = 1+0*flux
+	weight = 1+0*flux
 endelse
 fluxx = flux*factor
 nflux = fluxx - median(fluxx)
 
 ; baseline part
-=======
+; 
   ; weight = 1+0*flux
   wl = double(wl)
   flux = double(flux)
@@ -45,7 +44,6 @@ nflux = fluxx - median(fluxx)
   nflux = fluxx - median(fluxx)
   
   ;baseline part
->>>>>>> 8a6d053684b31e85f2eac834a2f30a7967a9a102
 if keyword_set(baseline) then begin
     ; Fit the baseline with 2nd order polynomial
     start = dblarr(3)
@@ -194,7 +192,6 @@ if not keyword_set(baseline) then begin
     if status gt 0 then begin
     ;This if statement is to make sure that the fitting routine actually gets the converged result.
     ;Recover everything since they are changed at first.  And calculate the physical quantities
-<<<<<<< HEAD
     ;----------------------------------------------------------------
         if keyword_set(single_gauss) then begin
             rms2 = total((gauss(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
@@ -294,7 +291,6 @@ if not keyword_set(baseline) then begin
                     sig_str[k] = -998
                 endif
             endfor
-=======
       ;----------------------------------------------------------------
       if keyword_set(single_gauss) then begin
         rms2 = total((gauss(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
@@ -344,18 +340,15 @@ if not keyword_set(baseline) then begin
         ; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
         if not keyword_set(std) then begin
           sigma = sigma*rms
->>>>>>> 8a6d053684b31e85f2eac834a2f30a7967a9a102
         endif
         base = base_para[0]*wl^2+base_para[1]*wl+base_para[2]
         msg=''
         if keyword_set(test) then begin
             if snr le noiselevel then msg='_below'+strtrim(string(noiselevel),1)+'sigma'
         endif
-<<<<<<< HEAD
         ;if keyword_set(fixed_width) then msg = msg + '_fixwidth'
         ;if keyword_set(global_noise) then msg = msg + '_global_noise'
         ;
-=======
 	    ; if (linename eq 'CO23-22_o-H2O4_14-3_03') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel20_os8_sf7')then stop
 		snr = abs(str/noise/fwhm)
 		; Account for the oversample in spire band
@@ -399,9 +392,7 @@ if not keyword_set(baseline) then begin
       ;if keyword_set(fixed_width) then msg = msg + '_fixwidth'
       ;if keyword_set(global_noise) then msg = msg + '_global_noise'
       ;
->>>>>>> 8a6d053684b31e85f2eac834a2f30a7967a9a102
 	 
-
         ;Make a plot
         ;plot the well-functional fitting result
         if not keyword_set(no_plot) then begin
