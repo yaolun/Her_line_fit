@@ -27,70 +27,71 @@ if keyword_set(general) then begin
 			endelse
 		endfor
 		ifile = ifile[sort(min_wl)]
-		for i = 0, n_elements(ifile)-1 do begin
-			wl_dum = readfits(filename[ifile[i]], exten=8,/silent)
-			flux_dum = readfits(filename[ifile[i]], exten=1,/silent)
-			std_dum = readfits(filename[ifile[i]], exten=5,/silent)
-			ra_dum = readfits(filename[ifile[i]], exten=2,/silent)
-			dec_dum = readfits(filename[ifile[i]], exten=3,/silent)
-			hdr = headfits(filename[ifile[i]],/silent)
-			if i eq 0 then begin
-				wl = [wl_dum]
-				flux = [flux_dum]
-				ra = [ra_dum]
-				dec = [dec_dum]
-			endif else begin
-				flux = flux[*,*,sort(wl)]
-				wl = wl[sort(wl)]
-				flux_dum = flux_dum[*,*,sort(wl_dum)]
-				std_dum = std_dum[*,*,sort(wl_dum)]
-				ra_dum = ra_dum[*,*,sort(wl_dum)]
-				dec_dum = dec_dum[*,*,sort(wl_dum)]
-				wl_dum = wl_dum[sort(wl_dum)]
-				if (where(wl gt min(wl_dum) and wl lt max(wl_dum)))[0] eq -1 then begin
-					flux = [[[flux]],[[flux_dum]]]
-					std = [[[std]],[[std_dum]]]
-					ra = [[[ra]],[[ra_dum]]]
-					dec = [[[dec]],[[dec_dum]]]
-					wl = [wl,wl_dum]
-				endif else begin
-					case 1 of
-						max(wl) le min(wl_dum): begin
-							wl = [wl,wl_dum]
-							flux = [[[flux]],[[flux_dum]]]
-							std = [[[std]],[[std_dum]]]
-							ra = [[[ra]],[[ra_dum]]]
-							dec = [[[dec]],[[dec_dum]]]
-						end
-						min(wl) ge max(wl_dum): begin
-							wl = [wl_dum,wl]
-							flux = [[[flux_dum]],[[flux]]]
-							std = [[[std_dum]],[[std]]]
-							ra = [[[ra]],[[ra_dum]]]
-							dec = [[[dec]],[[dec_dum]]]
-						end
-						(max(wl) gt min(wl_dum)) and (min(wl) lt min(wl_dum)): begin
-							;flux = [flux,flux_dum[where(wl_dum gt max(wl))]]
-							;wl = [wl,wl_dum[where(wl_dum gt max(wl))]]
-							flux = [[[flux[*,*,where(wl lt min(wl_dum))]]], [[flux_dum]]]
-							std = [[[std[*,*,where(wl lt min(wl_dum))]]],[[std_dum]]]
-							ra = [[[ra[*,*,where(wl lt min(wl_dum))]]], [[ra_dum]]]
-							dec = [[[dec[*,*,where(wl lt min(wl_dum))]]], [[dec_dum]]]
-							wl = [wl[where(wl lt min(wl_dum))], wl_dum]
-						end
-						(min(wl) lt max(wl_dum)) and (max(wl) gt max(wl_dum)): begin
-							;flux = [flux_dum,flux[where(wl gt max(wl_dum))]]
-							;wl = [wl_dum,wl[where(wl gt max(wl_dum))]]
-							flux = [[[flux_dum[*,*,where(wl_dum lt min(wl))]]], [[flux]]]
-							std = [[[std_dum[*,*,where(wl_dum lt min(wl))]]],[[std]]]
-							ra = [[[ra_dum[*,*,where(wl_dum lt min(wl))]]], [[ra]]]
-							dec = [[[dec_dum[*,*,where(wl_dum lt min(wl))]]], [[dec]]]
-							wl = [wl_dum[where(wl_dum lt min(wl))], wl]
-						end
-					endcase
-				endelse
-			endelse
-		endfor
+	endfor
+	for i = 0, n_elements(ifile)-1 do begin
+		wl_dum = readfits(filename[ifile[i]], exten=8,/silent)
+		flux_dum = readfits(filename[ifile[i]], exten=1,/silent)
+		std_dum = readfits(filename[ifile[i]], exten=5,/silent)
+		ra_dum = readfits(filename[ifile[i]], exten=2,/silent)
+		dec_dum = readfits(filename[ifile[i]], exten=3,/silent)
+		hdr = headfits(filename[ifile[i]],/silent)
+		if i eq 0 then begin
+			wl = [wl_dum]
+			flux = [flux_dum]
+			std = [std_dum]
+			ra = [ra_dum]
+			dec = [dec_dum]
+		endif else begin
+			flux = flux[*,*,sort(wl)]
+			wl = wl[sort(wl)]
+			flux_dum = flux_dum[*,*,sort(wl_dum)]
+			std_dum = std_dum[*,*,sort(wl_dum)]
+			ra_dum = ra_dum[*,*,sort(wl_dum)]
+			dec_dum = dec_dum[*,*,sort(wl_dum)]
+			wl_dum = wl_dum[sort(wl_dum)]
+;			if (where(wl gt min(wl_dum) and wl lt max(wl_dum)))[0] eq -1 then begin
+;				flux = [[[flux]],[[flux_dum]]]
+;				std = [[[std]],[[std_dum]]]
+;				ra = [[[ra]],[[ra_dum]]]
+;				dec = [[[dec]],[[dec_dum]]]
+;				wl = [wl,wl_dum]
+;			endif else begin
+				case 1 of
+					max(wl) le min(wl_dum): begin
+						wl = [wl,wl_dum]
+						flux = [[[flux]],[[flux_dum]]]
+						std = [[[std]],[[std_dum]]]
+						ra = [[[ra]],[[ra_dum]]]
+						dec = [[[dec]],[[dec_dum]]]
+					end
+					min(wl) ge max(wl_dum): begin
+						wl = [wl_dum,wl]
+						flux = [[[flux_dum]],[[flux]]]
+						std = [[[std_dum]],[[std]]]
+						ra = [[[ra]],[[ra_dum]]]
+						dec = [[[dec]],[[dec_dum]]]
+					end
+					(max(wl) gt min(wl_dum)) and (min(wl) lt min(wl_dum)): begin
+						;flux = [flux,flux_dum[where(wl_dum gt max(wl))]]
+						;wl = [wl,wl_dum[where(wl_dum gt max(wl))]]
+						flux = [[[flux[*,*,where(wl lt min(wl_dum))]]], [[flux_dum]]]
+						std = [[[std[*,*,where(wl lt min(wl_dum))]]],[[std_dum]]]
+						ra = [[[ra[*,*,where(wl lt min(wl_dum))]]], [[ra_dum]]]
+						dec = [[[dec[*,*,where(wl lt min(wl_dum))]]], [[dec_dum]]]
+						wl = [wl[where(wl lt min(wl_dum))], wl_dum]
+					end
+					(min(wl) lt max(wl_dum)) and (max(wl) gt max(wl_dum)): begin
+						;flux = [flux_dum,flux[where(wl gt max(wl_dum))]]
+						;wl = [wl_dum,wl[where(wl gt max(wl_dum))]]
+						flux = [[[flux_dum[*,*,where(wl_dum lt min(wl))]]], [[flux]]]
+						std = [[[std_dum[*,*,where(wl_dum lt min(wl))]]],[[std]]]
+						ra = [[[ra_dum[*,*,where(wl_dum lt min(wl))]]], [[ra]]]
+						dec = [[[dec_dum[*,*,where(wl_dum lt min(wl))]]], [[dec]]]
+						wl = [wl_dum[where(wl_dum lt min(wl))], wl]
+					end
+				endcase
+;			endelse
+		endelse
 	endfor
 	flux = flux[*,*,sort(wl)]
 	std = std[*,*,sort(wl)]
@@ -307,9 +308,9 @@ endif else begin
 endelse
 end
 
-pro get_pacs_1d, outdir=outdir, objname=objname, filename=filename, central9=central9, centralyes=centralyes, centralno=centralno, linescan=linescan, ra=ra, dec=dec, general=general;, wish=wish
+pro get_pacs_1d, outdir=outdir, objname=objname, filename=filename, central9=central9, centralyes=centralyes, centralno=centralno, linescan=linescan, ra=ra, dec=dec, general=general, datadir=datadir;, wish=wish
 objname = strcompress(objname,/remove_all)
-special_list = ['HGC1333-IRAS2A','Serpens-SMM1','G327-06','DR21(OH)','NGC7538-IRS1','NGC6334-I','G34.3+0.1']
+special_list = ['NGC1333-IRAS2A','Serpens-SMM1','G327-06','DR21(OH)','NGC7538-IRS1','NGC6334-I','G34.3+0.1']
 if (where(special_list eq objname))[0] eq -1 then begin
 if keyword_set(general) then begin
 	wl = []
@@ -487,8 +488,10 @@ if (where(special_list eq objname))[0] ne -1 then begin
 	dec = float(sxpar(hdr,'Dec'))
 	objname = strcompress(objname,/remove_all)
 	
-	;datadir = '~/HSA_archive_data/'
-	datadir = '~/foryaolun/'
+	if not keyword_set(datadir) then begin
+		;datadir = '~/HSA_archive_data/'
+		datadir = '~/foryaolun/'
+	endif
 	if keyword_set(central9) then name = '_central9Spaxels_PointSourceCorrected'
 	if keyword_set(centralyes) then name = '_centralSpaxel_PointSourceCorrected_Corrected3x3YES'
 	if keyword_set(centralno) then name = '_centralSpaxel_PointSourceCorrected_Corrected3x3NO'
@@ -535,7 +538,7 @@ if (where(special_list eq objname))[0] ne -1 then begin
 		end
 	endcase
 	
-	wl = [] & flux = []
+	wl = [] & flux = [] & std = []
 	
 	wl_b3a = [] & flux_b3a = [] & std_b3a = []
 	wl_b2b_1 = [] & flux_b2b_1 = [] & std_b2b_1 = []
