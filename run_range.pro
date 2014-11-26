@@ -163,8 +163,10 @@ if keyword_set(FWD) then begin
 		   'HD97048','HD98922','HH46','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
 		   'L1489','L1527','L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
 		   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
+	; Debugging purpose
+	cdf = ['EC82','NGC1333-IRAS2A','Serpens-SMM1']
 endif
-
+print, objname
 while i eq 1 do begin
 	obj = where(objname eq objname[0])
 	current_obj = strcompress(objname[0],/remove_all)
@@ -214,10 +216,10 @@ while i eq 1 do begin
 	;
 	general = 0
 	if (proj eq 'wish') and (current_obj ne 'NGC1333-IRAS4A') and (current_obj ne 'NGC1333-IRAS4B') then general = 1
-	if keyword_set(central9) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/central9,ra=ra,dec=dec,general=general
-	if keyword_set(centralyes) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralyes,ra=ra,dec=dec,general=general
-	if keyword_set(centralno) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralno,ra=ra,dec=dec,general=general
-	if keyword_set(cube) then get_pacs, outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename, suffix='os8_sf7',general=general
+	if keyword_set(central9) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/central9,ra=ra,dec=dec,general=general,datadir=indir
+	if keyword_set(centralyes) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralyes,ra=ra,dec=dec,general=general,datadir=indir
+	if keyword_set(centralno) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralno,ra=ra,dec=dec,general=general,datadir=indir
+	if keyword_set(cube) then get_pacs, outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename, suffix='os8_sf7',general=general;,datadir=indir
 	suffix='os8_sf7'
 
 	; Set the name of the ascii file containing the spectrum
