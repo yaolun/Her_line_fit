@@ -1,7 +1,7 @@
 pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filename, test=test,fixed_width=fixed_width,slw=slw,ssw=ssw,$
 				   localbaseline=localbaseline,global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,brightness=brightness,fx=fx,object=object,current_pix=current_pix,$
 				   print_all=print_all,flat=flat,continuum_sub=continuum_sub,plot_subtraction=plot_subtraction,no_plot=no_plot,coordpix=coordpix,double_gauss=double_gauss
-	;Test if the target path is valid. If not, create them.
+	; Test if the target path is valid. If not, create them.
 	if file_test(outdir,/directory) eq 0 then file_mkdir, outdir
 	if not keyword_set(no_plot) then begin
 		if file_test(plotdir+'base',/directory) eq 0 then file_mkdir,plotdir+'base'
@@ -12,7 +12,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	endif else begin
 		no_plot = 0
 	endelse
-	;The indir should include every letter except for the pixel name.
+	; The indir should include every letter except for the pixel name.
 	if keyword_set(brightness) then begin
 		; suffix = '_b'
 		ylabel = 'Brightness (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
@@ -33,7 +33,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				dec_dum = [dec_dum, dec[where(coordpix eq pixelname[ipix])]]
 			endfor
 			ra = ra_dum & dec = dec_dum
-			;get_radec_slw, coord, plot_coord & ra = coord[0,*] & dec = coord[1,*]
+			; get_radec_slw, coord, plot_coord & ra = coord[0,*] & dec = coord[1,*]
 		endif
 		if keyword_set(ssw) then begin
 			pixelname = ['SSWA1','SSWA2','SSWA3','SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3','SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
@@ -43,7 +43,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				dec_dum = [dec_dum, dec[where(coordpix eq pixelname[ipix])]]
 			endfor
 			ra = ra_dum & dec = dec_dum
-			;get_radec_ssw, coord, plot_coord & ra = coord[0,*] & dec = coord[1,*]
+			; get_radec_ssw, coord, plot_coord & ra = coord[0,*] & dec = coord[1,*]
 		endif
 	endif else begin
 		pixelname = ['spire_corrected']
@@ -51,7 +51,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	plot_pixelname = pixelname
 	pixelname = pixelname;+suffix
 	c = 2.998d8
-    ;Information about the line that you want to fit including the range for baseline fitting.  SLW and SSW included
+    ; Information about the line that you want to fit including the range for baseline fitting.  SLW and SSW included
     line_name_oh2o = ['o-H2O5_23-5_14','o-H2O6_25-5_32','o-H2O8_45-9_18','o-H2O8_27-7_34','o-H2O7_43-6_52','o-H2O8_54-7_61','o-H2O3_21-3_12','o-H2O6_34-5_41','o-H2O3_12-2_21','o-H2O7_25-8_18',$
     				  'o-H2O3_12-3_03','o-H2O5_32-4_41','o-H2O1_10-1_01'];,'o-H2O4_23-3_30'
     line_center_oh2o = [212.5309344,226.7664669,229.2112944,231.2537873,234.5364534,256.5992833,257.8011350,258.8222114,259.9887495,261.4637873,$
@@ -77,16 +77,16 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	line_name = [line_name_oh2o, line_name_ph2o, line_name_co, line_name_13co, line_name_hco, line_name_other]
 	line_center = [line_center_oh2o, line_center_ph2o, line_center_co, line_center_13co, line_center_hco, line_center_other]
 	
-	;Define the range of line center by setting the range within 5 times of the resolution elements of the line center
+	; Define the range of line center by setting the range within 2 times of the resolution elements of the line center
 	range = []
 	range_factor=2
 	line_name = line_name[sort(line_center)]
 	line_center = line_center[sort(line_center)]
-	;cont = cont[*,sort(line_center)]
+	; cont = cont[*,sort(line_center)]
 	for i = 0, n_elements(line_center)-1 do begin
 		dl = 1.2*1e9*(line_center[i]*1e-4)^2/2.998d10*1e4
 
-		;range = [[range], [[line_center[i]-range_factor*dl, line_center[i]+(range_factor+2)*dl]]]
+		; range = [[range], [[line_center[i]-range_factor*dl, line_center[i]+(range_factor+2)*dl]]]
 		if i eq 0 then begin
 			lower = line_center[i]-range_factor*dl
 			if (range_factor)*dl gt 0.5*(line_center[i+1]-line_center[i]) then begin
@@ -119,7 +119,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			range = [[range], [[lower, upper]]]
 		endif
 	endfor
-	; Perform double Gaussian fit on 370 um CI & CO blended lines
+	; Perform double Gaussian fit on blended lines
 	; Modified the line list
 	line_name_dg = [['o-H2O3_12-2_21','CO10-9'],['CI3P2-3P1','CO7-6'],['CI3P1-3P0','p-H2O6_24-7_17'],['13CO10-9','o-H2O3_12-3_03'],['13CO9-8','p-H2O2_02-1_11']];['p-H2O9_46-10_19','13CO13-12'],['o-H2O3_21-3_12','HCO+13-12'],
 	line_center_dg = []
@@ -182,8 +182,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		endif
 		; The path to the output file for print out the fitting result.
 		name = outdir+object+'_'+pixelname[j]+'_lines'
-		;if keyword_set(linescan) then name = name+'_LS'
-		;if keyword_set(localbaseline) then name = name+''
+		; if keyword_set(linescan) then name = name+'_LS'
+		; if keyword_set(localbaseline) then name = name+''
 		if keyword_set(fixed_width) then name = name+'_fixwidth'
 		openw, firstfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
@@ -195,8 +195,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
     	endelse
 		for i = 0, n_elements(line_name)-1 do begin
 			if (keyword_set(double_gauss)) and ((where(excluded_line eq line_name[i]))[0] ne -1) then continue
-        	;select the baseline
-        	;Using the localbaseline setting as the default
+        	; select the baseline
+        	; Using the localbaseline setting as the default
 			dlb = localbaseline*dl
 			wl_diff = wl[1:-1]-wl[0:-2]
 			numb = ceil(dlb/(wl_diff[where(wl ge line_center[i])])[0])
@@ -222,41 +222,35 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
                 wll = wl[indl] & fluxl = flux[indl]
             endif
 
-			;fit the baseline and return the baseline parameter in 'base_para'
-			fit_line, pixelname[j], line_name[i], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+			; fit the baseline and return the baseline parameter in 'base_para'
+			; 7 % of flux uncertainty in SPIRE spectrometer (Observer manual 5.3.6)
+			fit_line, pixelname[j], line_name[i], wlb, fluxb, std=abs(fluxb)*0.07 status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
 			
-			;extract the wave and flux for plottng that is for better visualization of the fitting results.
+			; extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
 			plot_base = [[wlb],[fluxb]]
-			;Substract the baseline from the spectrum
-			;First, calculate the baseline
-			;base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
+			; Subtract the baseline from the spectrum
+			; First, calculate the baseline
+			; base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
 			base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
-			;Substract
+			; Subtract
 			fluxx = fluxl - base
 			line = [line_center[i],range[0,i],range[1,i]]                      ;[line_center, line profile lower limit, line profile upper limit]
-			;Fitting part
-			;Different fitting keyword for fixed width and test arguement
-			;Fitting part
-			;if line_name[i] eq 'CO11-10' then stop
-			;stop
+			; Fitting part
+			; Different fitting keyword for fixed width and test arguement
 			if keyword_set(fixed_width) then begin
-				if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-				if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 			endif else begin
-        		if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        		if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-				if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 			endelse
-			
-			
-			;if keyword_set(test) then fit_line, obj_name[obj]+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, /single_gauss, /test, outdir=plotdir, noiselevel=3
-			;if not keyword_set(test) then fit_line, obj_name[obj]+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, /single_gauss, outdir=plotdir, noiselevel=3
-			;Print the fittng result into text file
+			; Print the fittng result into text file
 			if status le 0 then begin
             	printf, firstfit, format = '((a16,2X),(a50))', line_name[i], errmsg
 			endif else begin
@@ -303,7 +297,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				if (min(wl) gt mean_wl) or (max(wl) lt mean_wl) then continue
 				dlb = localbaseline*dl
 				wl_diff = wl[1:-1]-wl[0:-2]
-			numb = ceil(dlb/(wl_diff[where(wl ge line_center_dg[2*i])])[0])
+				numb = ceil(dlb/(wl_diff[where(wl ge line_center_dg[2*i])])[0])
 				left = where(wl_basepool lt range_dg[0,i] and wl_basepool ge min(wl)) & right = where(wl_basepool gt range_dg[1,i] and wl_basepool le max(wl))
 				if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
 				if n_elements(right) gt numb then right = right[0:numb-1]
@@ -325,23 +319,22 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					indl = where(wl gt base_range[0] and wl lt max(wl))
 					wll = wl[indl] & fluxl = flux[indl]
 				endif
-				fit_line, pixelname[j], line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
-				;extract the wave and flux for plottng that is for better visualization of the fitting results.
+				fit_line, pixelname[j], line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
 				plot_base = [[wlb],[fluxb]]
-				;Substract the baseline from the spectrum
-				;First, calculate the baseline
-				;base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
+				; Substract the baseline from the spectrum
+				; First, calculate the baseline
+				; base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
 				base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
-				;Substract
+				; Subtract
 				fluxx = fluxl - base
-				; line = [cen1,ran1,ran1,cen2,ran2,ran2]
 				line = [line_dg[*,2*i],line_dg[*,2*i+1]]
 				; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
-				;Fitting part
-				;Different fitting keyword for fixed width and test arguement
-				fit_line,pixelname[j],line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
+				; Fitting part
+				; Different fitting keyword for fixed width and test arguement
+				fit_line,pixelname[j],line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,std=abs(fluxx)*0.07,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
 					 noiselevel=3,base_range=base_range,plot_base=plot_base,/fix_dg,/spire
 				if status eq 0 then begin
 					printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
@@ -498,8 +491,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		if not keyword_set(global_noise) then begin
     		name = filename+'_lines'
 			if keyword_set(linescan) then name = name+'_LS'
-			;if keyword_set(localbaseline) then name = name+''
-			if keyword_set(fixed_width) then name = name+'_fixwidth'
+			; if keyword_set(localbaseline) then name = name+''
+			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
     			readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I', $
     				line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
@@ -532,8 +525,9 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			set_plot, 'ps'
 			!p.font = 0
 			loadct,12,/silent
-			if keyword_set(fixed_width) then msg = '_fixed_width'
-			if not keyword_set(fixed_width) then msg =''
+			; if keyword_set(fixed_width) then msg = '_fixed_width'
+			; if not keyword_set(fixed_width) then msg =''
+			msg = ''
 			device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			!p.thick=3 & !x.thick=3 & !y.thick=3
 			trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
@@ -546,8 +540,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				oplot, wl[trim2], flux[trim2]/1e-22
 				oplot, wl[trim2], flux_sub[trim2]/1e-22, color=200
 			endif
-			;oplot, wl, continuum/1e-22, color=50
-			;al_legend,['Data','lines_subtracted','Data_smooth','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,50,100,10],/right
+			; oplot, wl, continuum/1e-22, color=50
+			; al_legend,['Data','lines_subtracted','Data_smooth','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,50,100,10],/right
 			al_legend,['Data','lines_subtracted'],textcolors=[0,200],/right
 			al_legend,[object],textcolors=[0],/left
 			device, /close_file, decomposed = 1
@@ -559,7 +553,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		if keyword_set(global_noise) then begin
 			print, '---> Re-calculating the noise level...'
 			name = outdir+object+'_'+pixelname[j]+'_lines'
-			if keyword_set(fixed_width) then name = name+'_fixwidth'
+			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
 				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I',$
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
@@ -591,8 +585,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				endif
 			endfor
 
-			;Smooth the line subtracted spectrum
-			sbin=30
+			; Smooth the line subtracted spectrum
+			sbin=20
 			spec_continuum_smooth,wl,flux_sub,continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
 			spec_continuum_smooth,wl,flux,continuum, continuum_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9, lower=0.9
 			flat_noise = flux_sub - continuum_sub
@@ -615,30 +609,31 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				close,flat_sed
 			endif
 			cleanplot,/silent
-			;Plot the results
+			; Plot the results
 			set_plot, 'ps'
 			!p.font = 0
 			loadct,12,/silent
-			if keyword_set(fixed_width) then msg = '_fixed_width'
-			if not keyword_set(fixed_width) then msg =''
+			; if keyword_set(fixed_width) then msg = '_fixed_width'
+			; if not keyword_set(fixed_width) then msg =''
+			msg = ''
 			device, filename = plotdir+'spectrum_line_subtracted_'+pixelname[j]+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			!p.thick=3 & !x.thick=3 & !y.thick=3
 			plot, wl, flux/1e-22, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, ystyle=2
-			;oplot, wl, flux_sub/1e-22, color=200
+			; oplot, wl, flux_sub/1e-22, color=200
 			oplot, wl, continuum_sub/1e-22, color=100
 			oplot, wl, flat_noise/1e-22+min(flux)/1e-22, color=10
-			;al_legend,['Data','lines_subtracted','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,100,10],/right
+			; al_legend,['Data','lines_subtracted','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,100,10],/right
 			al_legend,['data','continuum','flat/featureless'],textcolors=[0,100,10],/right
 			al_legend,[object+' '+plot_pixelname[j]],textcolors= [0],/left
 			device, /close_file, decomposed = 1
 			cleanplot,/silent
 			!p.multi = 0
-			;The path to the output file for print out the fitting result.
+			; The path to the output file for print out the fitting result.
 			name = outdir+object+'_'+pixelname[j]+'_lines'
-			;if keyword_set(linescan) then name = name+'_LS'
-			;if keyword_set(localbaseline) then name = name+''
+			; if keyword_set(linescan) then name = name+'_LS'
+			; if keyword_set(localbaseline) then name = name+''
 			if keyword_set(fixed_width) then name = name+'_fixwidth'
-			;openw, secondfit, name+'_global_noise.txt', /get_lun
+			; openw, secondfit, name+'_global_noise.txt', /get_lun
 			openw, secondfit, name+'.txt', /get_lun
 			if not keyword_set(current_pix) then begin
 				printf, secondfit, format='(16(a16,2x))',$
@@ -650,8 +645,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
     		
 			for i = 0, n_elements(line_name)-1 do begin
 				if (keyword_set(double_gauss)) and ((where(excluded_line eq line_name[i]))[0] ne -1) then continue
-        		;select the baseline
-				;Using the localbaseline setting as the default
+        		; select the baseline
+				; Using the localbaseline setting as the default
 				dlb = localbaseline*dl
 				wl_diff = wl[1:-1]-wl[0:-2]
 				numb = ceil(dlb/(wl_diff[where(wl ge line_center[i])])[0])
@@ -679,46 +674,39 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				endif
 			
 
-				;fit the baseline and return the baseline parameter in 'base_para'
-				fit_line, pixelname[j], line_name[i], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
-				;extract the wave and flux for plottng that is for better visualization of the fitting results.
+				; fit the baseline and return the baseline parameter in 'base_para'
+				fit_line, pixelname[j], line_name[i], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
 				plot_base = [[wlb],[fluxb]]
-				;Substract the baseline from the spectrum
-				;First, calculate the baseline
-				;base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
+				; Subtract the baseline from the spectrum
+				; First, calculate the baseline
+				; base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
 				base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
-				;Substract
+				; Subtract
 				fluxx = fluxl - base
 				line = [line_center[i],range[0,i],range[1,i]]                      ;[line_center, line profile lower limit, line profile upper limit]
-				
-				;Calculate the noise level at the line using the flat noise spectrum
+				; Calculate the noise level at the line using the flat noise spectrum
 				limit_low = max([min(wl), range[0,i]-global_noise*dl]) & limit_hi = min([max(wl), range[1,i]+global_noise*dl])
 				ind_n = where(wl gt limit_low and wl lt limit_hi)
 				wl_n = wl[ind_n] & flux_n = flat_noise[ind_n]
 				flat_noise_smooth = [[wl_n],[flux_n]]
-				;Fitting part
-				;Different fitting keyword for fixed width and test arguement
-				;Fitting part
-				;stop
+				; Fitting part
+				; Different fitting keyword for fixed width and test arguement
 				if keyword_set(fixed_width) then begin
-					if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+					if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-					if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+					if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 				endif else begin
-        			if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+        			if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
         						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-					if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+					if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
 										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 				endelse
-			
-			
-			
-				;if keyword_set(test) then fit_line, obj_name[obj]+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, /single_gauss, /test, outdir=plotdir, noiselevel=3
-				;if not keyword_set(test) then fit_line, obj_name[obj]+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, /single_gauss, outdir=plotdir, noiselevel=3
-				;Print the fittng result into text file
+						
+				; Print the fittng result into text file
 				if status le 0 then begin
             		printf, secondfit, format = '((a16,2X),(a50))', line_name[i], errmsg
 				endif else begin
@@ -788,8 +776,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						indl = where(wl gt base_range[0] and wl lt max(wl))
 						wll = wl[indl] & fluxl = flux[indl]
 					endif
-					fit_line, pixelname[j], line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
-					;extract the wave and flux for plottng that is for better visualization of the fitting results.
+					fit_line, pixelname[j], line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+					; extract the wave and flux for plottng that is for better visualization of the fitting results.
 					ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 					plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
 					plot_base = [[wlb],[fluxb]]
@@ -799,18 +787,17 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					ind_n = where(wl gt limit_low and wl lt limit_hi)
 					wl_n = wl[ind_n] & flux_n = flat_noise[ind_n]
 					flat_noise_smooth = [[wl_n],[flux_n]]
-					;Substract the baseline from the spectrum
-					;First, calculate the baseline
-					;base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
+					; Subtract the baseline from the spectrum
+					; First, calculate the baseline
+					; base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
 					base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
-					;Substract
+					; Subtract
 					fluxx = fluxl - base
-					; line = [cen1,ran1,ran1,cen2,ran2,ran2]
 					line = [line_dg[*,2*i],line_dg[*,2*i+1]]
 					; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
-					;Fitting part
-					;Different fitting keyword for fixed width and test arguement
-					fit_line,pixelname[j],line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
+					; Fitting part
+					; Different fitting keyword for fixed width and test arguement
+					fit_line,pixelname[j],line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,std=abs(fluxx)*0.07,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
 					 	noiselevel=3,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,/fix_dg,/spire
 					if status eq 0 then begin
 						printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
@@ -856,19 +843,18 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; print, '----> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
 			name = filename+'_lines'
 			if keyword_set(linescan) then name = name+'_LS'
-			;if keyword_set(localbaseline) then name = name+''
-			if keyword_set(fixed_width) then name = name+'_fixwidth'
+			; if keyword_set(localbaseline) then name = name+''
+			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
-				;readcol, outdir+name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A', $
+				; readcol, outdir+name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A', $
 				readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, /silent, skipline=1
 			endif else begin
-				;readcol, outdir+name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A', $
+				; readcol, outdir+name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A', $
 				readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, /silent, skipline=1
 			endelse
 			
-    		    	
 			blend_subgroup = []
 			blend_msg_all = []
 			possible_all = []
@@ -925,7 +911,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; if (where(possible_all eq 'CO7-6'))[0] eq -1 then possible_all = [possible_all,'CO7-6']
 			; if (where(possible_all eq 'CI3P2-3P1'))[0] ne -1 then possible_all = possible_all[where(possible_all ne 'CI3P2-3P1')]
 			; 
-			;openw, secondfit, outdir+name+'_global_noise.txt', /get_lun
+			; openw, secondfit, outdir+name+'_global_noise.txt', /get_lun
 			openw, secondfit, outdir+name+'.txt', /get_lun
 			if not keyword_set(current_pix) then begin
 				printf, secondfit, format='(17(a16,2x))', $
@@ -971,7 +957,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			close, secondfit
 			; Calculate the line subtracted spectrum again
 			name = outdir+object+'_'+pixelname[j]+'_lines'
-			if keyword_set(fixed_width) then name = name+'_fixwidth'
+			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
 				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I',$
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
@@ -983,8 +969,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			flux_sub = flux
 			for line = 0, n_elements(line_name_n)-1 do begin
     			if snr_n[line] ge noiselevel then begin
-    				;if (line_name_n[line] eq 'p-H2O2_02-1_11') and (pixelname[j] eq 'SSWE4_i') then stop
-    				;if (line ne 0 and (cen_wl_n[line]-cen_wl_n[line-1])/cen_wl_n[line] lt 5e-4) or line_name_n[line] eq 'o-H2O7_25-8_18' then continue
     				if blend_flag_n[line] ne 'x' and lowest_E_n[line] ne 1 then continue
     				ind = where((wl gt cen_wl_n[line]-5*fwhm_n[line]) and (wl lt cen_wl_n[line]+5*fwhm_n[line]))
 					wl_n = wl[ind]
@@ -1004,23 +988,24 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					endif
 				endif
 			endfor
-			;Smooth the line subtracted spectrum
+			; Smooth the line subtracted spectrum
 			sbin=20
 			spec_continuum_smooth,wl,flux_sub,continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
 			flat_noise = flux_sub - continuum_sub
-			;Plot the results
+			; Plot the results
 			set_plot, 'ps'
 			!p.font = 0
 			loadct,12,/silent
-			if keyword_set(fixed_width) then msg = '_fixed_width'
-			if not keyword_set(fixed_width) then msg =''
+			; if keyword_set(fixed_width) then msg = '_fixed_width'
+			; if not keyword_set(fixed_width) then msg =''
+			msg = ''
 			device, filename = plotdir+'spectrum_line_subtracted_'+pixelname[j]+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			!p.thick=3 & !x.thick=3 & !y.thick=3
 			plot, wl, flux/1e-22, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel,ystyle=2
-			;oplot, wl, flux_sub/1e-22, color=200
+			; oplot, wl, flux_sub/1e-22, color=200
 			oplot, wl, continuum_sub/1e-22, color=100
 			oplot, wl, flat_noise/1e-22+min(flux)/1e-22, color=10
-			;al_legend,['Data','lines_subtracted','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,100,10],/right
+			; al_legend,['Data','lines_subtracted','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,100,10],/right
 			al_legend,['data','continuum', 'flat/featureless'],textcolors=[0,100,10],/right
 			al_legend,[object+' '+plot_pixelname[j]],textcolors= [0],/left
 			device, /close_file, decomposed = 1
