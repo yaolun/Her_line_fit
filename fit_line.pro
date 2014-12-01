@@ -181,14 +181,12 @@ if not keyword_set(baseline) then begin
 		parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
 		;endelse
     endif
-    ;if linename eq 'CO22-21' then stop
     ;-------------------------------------------
     ;Fit it!
     if keyword_set(single_gauss) then func = 'gauss'
     if keyword_set(double_gauss) then func = 'gauss_double'
     result = mpfitfun(func, nwl, nflux, weight, start, /quiet, perror=sigma, status = status, errmsg = errmsg, parinfo=parinfo, /nan)
     p = result
-    ; if linename eq 'HCO+11-10' and keyword_set(global_noise) then stop
     if status gt 0 then begin
     ;This if statement is to make sure that the fitting routine actually gets the converged result.
     ;Recover everything since they are changed at first.  And calculate the physical quantities
@@ -211,8 +209,6 @@ if not keyword_set(baseline) then begin
             base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
             residual = flux - gauss
             noise = stddev(residual)
-            ;if pixelname eq 'SSWA1' and linename eq 'HCO+11-10' and keyword_set(global_noise) then stop
-            ; if linename eq 'CO11-10' and keyword_set(global_noise) then stop
             if keyword_set(global_noise) then begin
             	noise = stddev(global_noise[*,1])
                 ; Use Eq. 4.57 from Robinson's note
@@ -229,7 +225,9 @@ if not keyword_set(baseline) then begin
             ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
             if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
             if keyword_set(fixed_width) then sig_fwhm = -998
-            if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999 
+            if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
+            ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
+            if sig_str eq 0 then sig_str = -999
         endif
         if keyword_set(double_gauss) then begin
             ; print, 'Finishing double Gaussian fit for '+linename
@@ -250,8 +248,7 @@ if not keyword_set(baseline) then begin
             gauss_fine = height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)
             base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
             residual = flux - gauss
-            noise = stddev(residual)
-            ; if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
+            noise = stddev(residual)            ; if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
             if keyword_set(global_noise) then begin
                 noise = stddev(global_noise[*,1])
                 ; Use Eq. 4.57 from Robinson's notec
@@ -261,7 +258,6 @@ if not keyword_set(baseline) then begin
                 ;   noise = std_noise
                 ; endif
             endif
-            ; if (linename eq 'CO23-22_o-H2O4_14-3_03') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel20_os8_sf7')then stop
             snr = abs(str/noise/fwhm)
             ; Account for the oversample in spire band
             if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
@@ -290,101 +286,103 @@ if not keyword_set(baseline) then begin
                     sig_cen_wl[k] = -998
                     sig_str[k] = -998
                 endif
+                ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
+                if sig_str[k] eq 0 then sig_str[k] = -999 
             endfor
 		endif
-		;----------------------------------------------------------------
-		if keyword_set(single_gauss) then begin
-			rms2 = total((gauss(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
-			rms = sqrt(rms2)
-			; Additional procedure for using the actual uncertainty from the data
-			; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
-			if not keyword_set(std) then begin
-				sigma = sigma*rms
-			endif
-			cen_wl = p[1] + median(wl) & sig_cen_wl = sigma[1]
-			height = p[0]/factor & sig_height = sigma[0]/factor
-			fwhm = 2.354*abs(p[2]) & sig_fwhm = 2.354*abs(sigma[2])
-			str = (2*!PI)^0.5*height*abs(p[2]) & sig_str = str*((sig_height/height)^2+(abs(sigma[2])/abs(p[2]))^2)^0.5
-			gauss = height*exp(-(wl-cen_wl)^2/2/p[2]^2)
-			fine_wl = (findgen(5001)-2500)/5000.*(max(wl)-min(wl))+(max(wl)+min(wl))/2
-			gauss_fine = height*exp(-(fine_wl-cen_wl)^2/2/p[2]^2)
-			base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
-			residual = flux - gauss
-			noise = stddev(residual)
-			;	if pixelname eq 'SSWA1' and linename eq 'HCO+11-10' and keyword_set(global_noise) then stop
-			; if linename eq 'CO11-10' and keyword_set(global_noise) then stop
-			if keyword_set(global_noise) then begin
-				noise = stddev(global_noise[*,1])
-				; Use Eq. 4.57 from Robinson's note
-				; if n_elements(global_noise[0,*]) eq 3 then begin
-				;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
-				;   std_noise = double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
-				;   noise = std_noise
-				; endif
-			endif
-			snr = abs(str/noise/fwhm)
-			if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
-			;snr = height/noise
-			;
-			; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
-			if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
-			if keyword_set(fixed_width) then sig_fwhm = -998
-			if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then begin
-				sig_fwhm = -999
-			endif 
-		endif
-		if keyword_set(double_gauss) then begin
-			;print, 'Finishing double Gaussian fit for '+linename
-			rms2 = total((gauss_double(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
-			rms = sqrt(rms2)
-			; Additional procedure for using the actual uncertainty from the data
-			; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
-			if not keyword_set(std) then begin
-				sigma = sigma*rms
-			endif
-			base = base_para[0]*wl^2+base_para[1]*wl+base_para[2]
-			msg=''
-			if keyword_set(test) then begin
-				if snr le noiselevel then msg='_below'+strtrim(string(noiselevel),1)+'sigma'
-			endif
-			;if keyword_set(fixed_width) then msg = msg + '_fixwidth'
-			;if keyword_set(global_noise) then msg = msg + '_global_noise'
-			;
-			; if (linename eq 'CO23-22_o-H2O4_14-3_03') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel20_os8_sf7')then stop
-			snr = abs(str/noise/fwhm)
-			; Account for the oversample in spire band
-			if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
-			;snr = height/noise
-			; Making sure the line classification is correct
-			if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
-				print, 'Line misplacement found'
-				cen_wl = reverse(cen_wl)
-				sig_cen_wl = reverse(sig_cen_wl)
-				str = reverse(str)
-				sig_str = reverse(sig_str)
-				fwhm = reverse(fwhm)
-				sig_fwhm = reverse(sig_fwhm)
-				snr = reverse(snr)
-			endif
-			; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
-			; 
-			if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
-			for k = 0, 1 do begin
-				if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
-					sig_fwhm[k] = -999
-					; if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
-				endif
-				if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then begin
-					stop
-					sig_cen_wl[k] = -999
-				endif
-				if (str[k] lt 1e-30) then begin
-					sig_cen_wl[k] = -998
-					sig_str[k] = -998
-				endif
-			endfor
-			; if (where(sig_str eq 0))[0] ne -1 then stop
-		endif
+;		;----------------------------------------------------------------
+;		if keyword_set(single_gauss) then begin
+;			rms2 = total((gauss(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
+;			rms = sqrt(rms2)
+;			; Additional procedure for using the actual uncertainty from the data
+;			; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
+;			if not keyword_set(std) then begin
+;				sigma = sigma*rms
+;			endif
+;			cen_wl = p[1] + median(wl) & sig_cen_wl = sigma[1]
+;			height = p[0]/factor & sig_height = sigma[0]/factor
+;			fwhm = 2.354*abs(p[2]) & sig_fwhm = 2.354*abs(sigma[2])
+;			str = (2*!PI)^0.5*height*abs(p[2]) & sig_str = str*((sig_height/height)^2+(abs(sigma[2])/abs(p[2]))^2)^0.5
+;			gauss = height*exp(-(wl-cen_wl)^2/2/p[2]^2)
+;			fine_wl = (findgen(5001)-2500)/5000.*(max(wl)-min(wl))+(max(wl)+min(wl))/2
+;			gauss_fine = height*exp(-(fine_wl-cen_wl)^2/2/p[2]^2)
+;			base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
+;			residual = flux - gauss
+;			noise = stddev(residual)
+;			;	if pixelname eq 'SSWA1' and linename eq 'HCO+11-10' and keyword_set(global_noise) then stop
+;			; if linename eq 'CO11-10' and keyword_set(global_noise) then stop
+;			if keyword_set(global_noise) then begin
+;				noise = stddev(global_noise[*,1])
+;				; Use Eq. 4.57 from Robinson's note
+;				; if n_elements(global_noise[0,*]) eq 3 then begin
+;				;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
+;				;   std_noise = double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
+;				;   noise = std_noise
+;				; endif
+;			endif
+;			snr = abs(str/noise/fwhm)
+;			if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
+;			;snr = height/noise
+;			;
+;			; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
+;			if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
+;			if keyword_set(fixed_width) then sig_fwhm = -998
+;			if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then begin
+;				sig_fwhm = -999
+;			endif 
+;		endif
+;		if keyword_set(double_gauss) then begin
+;			;print, 'Finishing double Gaussian fit for '+linename
+;			rms2 = total((gauss_double(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
+;			rms = sqrt(rms2)
+;			; Additional procedure for using the actual uncertainty from the data
+;			; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
+;			if not keyword_set(std) then begin
+;				sigma = sigma*rms
+;			endif
+;			base = base_para[0]*wl^2+base_para[1]*wl+base_para[2]
+;			msg=''
+;			if keyword_set(test) then begin
+;				if snr le noiselevel then msg='_below'+strtrim(string(noiselevel),1)+'sigma'
+;			endif
+;			;if keyword_set(fixed_width) then msg = msg + '_fixwidth'
+;			;if keyword_set(global_noise) then msg = msg + '_global_noise'
+;			;
+;			; if (linename eq 'CO23-22_o-H2O4_14-3_03') and keyword_set(global_noise) and (pixelname eq 'BHR71_pacs_pixel20_os8_sf7')then stop
+;			snr = abs(str/noise/fwhm)
+;			; Account for the oversample in spire band
+;			if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
+;			;snr = height/noise
+;			; Making sure the line classification is correct
+;			if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
+;				print, 'Line misplacement found'
+;				cen_wl = reverse(cen_wl)
+;				sig_cen_wl = reverse(sig_cen_wl)
+;				str = reverse(str)
+;				sig_str = reverse(sig_str)
+;				fwhm = reverse(fwhm)
+;				sig_fwhm = reverse(sig_fwhm)
+;				snr = reverse(snr)
+;			endif
+;			; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
+;			; 
+;			if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
+;			for k = 0, 1 do begin
+;				if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
+;					sig_fwhm[k] = -999
+;					; if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
+;				endif
+;				if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then begin
+;					stop
+;					sig_cen_wl[k] = -999
+;				endif
+;				if (str[k] lt 1e-30) then begin
+;					sig_cen_wl[k] = -998
+;					sig_str[k] = -998
+;				endif
+;			endfor
+;			; if (where(sig_str eq 0))[0] ne -1 then stop
+;		endif
 		base = base_para[0]*wl^2+base_para[1]*wl+base_para[2]
 		msg=''
 		if keyword_set(test) then begin
