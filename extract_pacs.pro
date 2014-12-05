@@ -166,8 +166,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	readcol, '~/bhr71/data/spectralresolution_order2.txt', format='D,D', wl2, res2,/silent
 	readcol, '~/bhr71/data/spectralresolution_order3.txt', format='D,D', wl3, res3,/silent
 	fwhm1 = wl1/res1 & fwhm2 = wl2/res2 & fwhm3 = wl3/res3
-	wl_ins = [wl2, wl1[where(wl1 eq max(wl2)):*]]
-	dl_ins = [fwhm2, fwhm1[where(wl1 eq max(wl2)):*]]/2.354
+	wl_ins = [wl2[where(wl2 lt min(wl1))], wl1]
+	dl_ins = [fwhm2[where(wl2 lt min(wl1))], fwhm1]/2.354
 	; Define the range of line center by setting the range within -2-2 times of the resolution elements of the line center
 	; Since the [OI] 63 um lines are usually wider, we use -3-3 times of the resolution for this line.
 	range = []
@@ -1234,7 +1234,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		endfor
 		; Smooth the line subtracted spectrum
 		sbin=10
-		spec_continuum_smooth,wl,flux_sub,continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
+		spec_continuum_smooth,wl, flux_sub, continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
 		flat_noise = flux_sub - continuum_sub
 		; Plot the results
 		set_plot, 'ps'
@@ -1245,10 +1245,18 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		msg = ''
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 		!p.thick=3 & !x.thick=3 & !y.thick=3
-		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',ystyle=2
-		;oplot, wl, flux_sub/1e-22, color=200
-		oplot, wl, continuum_sub/1e-22, color=100
-		oplot, wl, flat_noise/1e-22+min(flux)/1e-22, color=10
+		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
+		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',ystyle=2, /nodata
+		if trim1[0] ne -1 then begin
+			oplot, wl[trim1], flux[trim1]/1e-22
+			oplot, wl[trim1], continuum_sub[trim1]/1e-22, color=100
+			oplot, wl[trim1], flat_noise[trim1]/1e-22 + min(flux)/1e-22, color=10
+		endif
+		if trim2[0] ne -1 then begin
+			oplot, wl[trim2], flux[trim2]/1e-22
+			oplot, wl[trim2], continuum_sub[trim2]/1e-22, color=100
+			oplot, wl[trim2], flat_noise[trim2]/1e-22 + min(flux)/1e-22, color=10
+		endif
 		;al_legend,['Data','lines_subtracted','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,100,10],/right
 		al_legend,['data','continuum', 'flat/featureless'],textcolors=[0,100,10],/right
 		al_legend,[object],textcolors= [0],/left

@@ -1001,10 +1001,18 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			msg = ''
 			device, filename = plotdir+'spectrum_line_subtracted_'+pixelname[j]+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			!p.thick=3 & !x.thick=3 & !y.thick=3
-			plot, wl, flux/1e-22, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel,ystyle=2
-			; oplot, wl, flux_sub/1e-22, color=200
-			oplot, wl, continuum_sub/1e-22, color=100
-			oplot, wl, flat_noise/1e-22+min(flux)/1e-22, color=10
+			trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
+			plot, wl, flux/1e-22, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel,ystyle=2,/nodata
+			if trim1[0] ne -1 then begin
+				oplot, wl[trim1], flux[trim1]/1e-22
+				oplot, wl[trim1], continuum_sub[trim1]/1e-22, color=100
+				oplot, wl[trim1], flat_noise[trim1]/1e-22 + min(flux)/1e-22, color=10
+			endif
+			if trim2[0] ne -1 then begin
+				oplot, wl[trim2], flux[trim2]/1e-22
+				oplot, wl[trim2], continuum_sub[trim2]/1e-22, color=200
+				oplot, wl[trim2], flat_noise[trim2]/1e-22 + min(flux)/1e-22, color=10
+			endif
 			; al_legend,['Data','lines_subtracted','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,100,10],/right
 			al_legend,['data','continuum', 'flat/featureless'],textcolors=[0,100,10],/right
 			al_legend,[object+' '+plot_pixelname[j]],textcolors= [0],/left
