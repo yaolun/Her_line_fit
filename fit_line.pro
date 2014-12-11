@@ -437,7 +437,7 @@ if not keyword_set(baseline) then begin
 			endif
 			if keyword_set(global_noise) then begin
       			;al_legend, ['Data','Fit','Residual','Noise'],colors=[0,80,250,160], linestyle=[0,0,0,0], /bottom
-				al_legend, ['Data','Fit','Noise'],colors=[0,80,160], linestyle=[0,0,0], /bottom
+				al_legend, ['Data','Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom
 			endif else begin
       			;al_legend, ['Data','Fit','Residual'],colors=[0,80,250], linestyle=[0,0,0], /bottom
 				al_legend, ['Data','Fit'],colors=[0,80], linestyle=[0,0], /bottom
