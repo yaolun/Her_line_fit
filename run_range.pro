@@ -236,7 +236,6 @@ while i eq 1 do begin
 
 	; For 1D spectra
 	if not keyword_set(cube) and not keyword_set(no_fit) then begin
-		if current_obj eq 'BHR71' then stop
 		if (n_elements(filename) eq 4 and (where(exception_obj eq current_obj))[0] eq -1) then begin
 			noisetype='Global'
 			outname = '_lines_fixwidth_global_noise'
