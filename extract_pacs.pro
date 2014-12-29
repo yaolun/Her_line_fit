@@ -26,7 +26,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     ; Convert the flux to appropriate unit
     c = 2.998d8
     flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26  ;Change F_nu (Jy) -> F_lambda (W cm-2 um-1)
-    std = std*1d-4*c/(wl*1d-6)^2*1d-6*1d-26
+    std = std*1d-4*c/(wl*1d-6)^2*1d-6*1d-26    
     ; Information about the line that you want to fit including the range for baseline fitting.
     ; every level is equal to LAMDA level-1
     ; In the later version, the 10 times of resolutions is used for determining the baseline. Thus the baseline number here is less important
@@ -762,7 +762,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		openw, sed, outdir+filename+'_continuum.txt', /get_lun
     		printf, sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
-    		for k =0, n_elements(wl)-1 do printf, sed, format='(3(g16.6,2x))', wl[k],continuum_sub[k],std[k]
+    		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
+    		for k =0, n_elements(wl)-1 do printf, sed, format='(3(g16.6,2x))', wl[k],continuum_sub[k],stdd[k]
     		free_lun, sed
     		close, sed
     	endif
@@ -770,6 +771,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		openw, flat_sed, outdir+filename+'_flat_spectrum.txt',/get_lun
     		printf, flat_sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		flat = flux*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23-continuum_sub
+    		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		for k =0, n_elements(wl)-1 do printf, flat_sed, format='(3(g16.6,2x))',wl[k],flat[k],std[k]
     		free_lun, flat_sed
     		close,flat_sed
@@ -1236,6 +1238,26 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		sbin=10
 		spec_continuum_smooth,wl, flux_sub, continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
 		flat_noise = flux_sub - continuum_sub
+
+		if keyword_set(continuum_sub) then begin
+    		openw, sed, outdir+filename+'_continuum.txt', /get_lun
+    		printf, sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
+    		continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
+    		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
+    		for k =0, n_elements(wl)-1 do printf, sed, format='(3(g16.6,2x))', wl[k],continuum_sub[k],stdd[k]
+    		free_lun, sed
+    		close, sed
+    	endif
+    	if keyword_set(flat) then begin
+    		openw, flat_sed, outdir+filename+'_flat_spectrum.txt',/get_lun
+    		printf, flat_sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
+    		flat = flux*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23-continuum_sub
+    		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
+    		for k =0, n_elements(wl)-1 do printf, flat_sed, format='(3(g16.6,2x))',wl[k],flat[k],std[k]
+    		free_lun, flat_sed
+    		close,flat_sed
+    	endif
+    	
 		; Plot the results
 		set_plot, 'ps'
 		!p.font = 0
