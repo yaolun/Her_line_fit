@@ -147,7 +147,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
     	if not keyword_set(filename) then readcol, indir+object+'_'+pixelname[j]+'.txt', format='D,D', wl, flux,/silent
     	if keyword_set(filename) then readcol, indir+filename+'.txt', format='D,D', wl, flux, /silent
 		flux = flux[sort(wl)] & wl = wl[sort(wl)]
-    	; Convert the flux to appropriate unit
+    	; Convert the flux to appropriate unit (W/cm2/um)
 		flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26	
 		if keyword_set(slw) then begin
 			flux = flux[where(wl ge 314)]
