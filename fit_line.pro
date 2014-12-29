@@ -65,7 +65,7 @@ if keyword_set(baseline) then begin
     
     	loadct ,13,/silent
 		!p.thick = 3 & !x.thick = 3 & !y.thick = 3
-		plot, wl, flux/1d-22, psym = 10, xtitle = '!9m!3m', ytitle = '10!u-22!n W/cm!u2!n/!9m!3m'                   ;plot the original data
+		plot, wl, flux/1d-22, psym = 10, xtitle = '!3Wavelength(!9m!3m)', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)'                   ;plot the original data
 		oplot, wl, base/1d-22, color = 40                                                                           ;plot the fitted curve
 		oplot, wl, residual/1d-22, psym = 10, color = 250                                                           ;plot the reidual
 		device, /close_file, decomposed = 1
