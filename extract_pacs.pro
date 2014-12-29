@@ -523,7 +523,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				base_str = [interpol(base, wll, cen_wl[0]), interpol(base, wll, cen_wl[1])]
 				blend_msg = 'x'
 				if (finite(snr,/nan))[0] eq 1 then continue
-				if (line_name_dg[2*i] eq 'CO16-15') and (object eq 'Elias29') then stop
+				if object eq 'Elias29' then stop
 				if not keyword_set(current_pix) then begin
 					printf, firstfit, format = '((a16,2X),9(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
 						line_name_dg[2*i], line[0], cen_wl[0], sig_cen_wl[0], str[0], sig_str[0], fwhm[0], sig_fwhm[0], base_str[0],snr[0], E_u[0], A[0], g[0], ra, dec, blend_msg
