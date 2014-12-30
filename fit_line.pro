@@ -437,27 +437,27 @@ if not keyword_set(baseline) then begin
 			if keyword_set(global_noise) then oplot, global_noise[*,0], (global_noise[*,1]+interpol(base,wl, line[0]))/1e-22, psym=10, color=160
 			if keyword_set(double_gauss) then oplot, [line[3],line[3]], [-1000,1000]/1d-22, linestyle = 2
 			if keyword_set(single_gauss) then begin
-				xyouts, 0.2, 0.85, 'SNR ='+string(snr,format='(g6.3)')+', FWHM ='+string(fwhm,format='(g7.3)'), /normal
+				xyouts, 0.2, 0.75, 'SNR ='+string(snr,format='(g6.3)')+', FWHM ='+string(fwhm,format='(g7.3)'), /normal
 			endif
 			if keyword_set(double_gauss) then begin
-        		xyouts, 0.2, 0.85, 'SNR ='+string(snr[0],format='(g6.3)')+', FWHM ='+string(fwhm[0],format='(g7.3)'), /normal, color=30
-				xyouts, 0.2, 0.8, 'SNR ='+string(snr[1],format='(g6.3)')+', FWHM ='+string(fwhm[1],format='(g7.3)'), /normal, color=225
+        		xyouts, 0.2, 0.75, 'SNR ='+string(snr[0],format='(g6.3)')+', FWHM ='+string(fwhm[0],format='(g7.3)'), /normal, color=30
+				xyouts, 0.2, 0.7, 'SNR ='+string(snr[1],format='(g6.3)')+', FWHM ='+string(fwhm[1],format='(g7.3)'), /normal, color=225
 ;				xyouts, 0.2, 0.75, 'FWHM='+strtrim(string(fwhm[0]),1), /normal
 ;        		xyouts, 0.2, 0.7, '     '+strtrim(string(fwhm[1]),1), /normal
 			endif
 			if keyword_set(global_noise) then begin
                 if not keyword_set(double_gauss) then begin
       			   ;al_legend, ['Data','Fit','Residual','Noise'],colors=[0,80,250,160], linestyle=[0,0,0,0], /bottom
-				    al_legend, ['Data','Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom, /horizontal
+				    al_legend, ['Data','Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /left
                 endif else begin
-                    al_legend, ['Data','Comb. Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom, /horizontal
+                    al_legend, ['Data','Comb. Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /left
                 endelse
 			endif else begin
                 if not keyword_set(double_gauss) then begin
       			   ;al_legend, ['Data','Fit','Residual'],colors=[0,80,250], linestyle=[0,0,0], /bottom
-				    al_legend, ['Data','Fit'],colors=[0,80], linestyle=[0,0], /bottom, /horizontal
+				    al_legend, ['Data','Fit'],colors=[0,80], linestyle=[0,0], /left
                 endif else begin
-                    al_legend, ['Data','Comb. Fit'],colors=[0,80], linestyle=[0,0], /bottom, /horizontal
+                    al_legend, ['Data','Comb. Fit'],colors=[0,80], linestyle=[0,0], /left
                 endelse
 			endelse
             if not keyword_set(double_gauss) then al_legend, [title_name(linename)],textcolors=[0],/right
