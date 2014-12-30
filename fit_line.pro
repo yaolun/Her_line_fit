@@ -86,7 +86,7 @@ if not keyword_set(baseline) then begin
     ; if not keyword_set(fixed_width) then begin
     if max(wl) gt 200 then begin
         dl = 1.4*1e9*(line[0]*1e-4)^2/c*1e4/2.354
-    endif else if max(wl) gt 100 then begin
+    endif else begin
         ;     dl = 0.1/2.354
         ; endif else begin
         ;     dl = 0.03/2.354
@@ -110,7 +110,7 @@ if not keyword_set(baseline) then begin
         		dl = double(interpol(fwhm3,wl3,line[0]))
         	endif
         endif
-    endif
+    endelse
     ; endelse
 
     ;-------------------------------------------e
