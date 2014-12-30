@@ -696,7 +696,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
 		!p.thick=2 & !x.thick=3 & !y.thick=3
 		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata,position=[0.2,0.15,0.85,0.85]
+		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata,position=[0.15,0.1,0.95,0.95]
 		if trim1[0] ne -1 then begin
 			oplot, wl[trim1], flux[trim1]/1e-22
 			oplot, wl[trim1], flux_sub[trim1]/1e-22, color=200
@@ -789,7 +789,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 		!p.thick=2 & !x.thick=3 & !y.thick=3
 		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata, position=[0.2,0.15,0.85,0.85]
+		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata, position=[0.15,0.1,0.95,0.95]
 		if trim1[0] ne -1 then begin
 			oplot, wl[trim1], flux[trim1]/1e-22
 			; oplot, wl[trim1], flux_sub[trim1]/1e-22, color=200
@@ -1272,7 +1272,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 		!p.thick=2 & !x.thick=3 & !y.thick=3
 		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',ystyle=2, /nodata, position=[0.2,0.15,0.85,0.85]
+		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',ystyle=2, /nodata, position=[0.15,0.1,0.95,0.95]
 		if trim1[0] ne -1 then begin
 			oplot, wl[trim1], flux[trim1]/1e-22
 			oplot, wl[trim1], continuum_sub[trim1]/1e-22, color=100

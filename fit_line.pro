@@ -67,8 +67,9 @@ if keyword_set(baseline) then begin
 		!p.thick = 3 & !x.thick = 3 & !y.thick = 3
 		; plot, wl, flux/1d-22, psym = 10, xtitle = '!3Wavelength(!9m!3m)', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)'                   ;plot the original data
         ; plot the actual spectrum instead of the line-free spectrum
-        plot, plot_base[*,0], plot_base[*,1]/1d-22, psym = 10, xtitle = '!3Wavelength(!9m!3m)', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)'                   ;plot the original data
-		oplot, wl, base/1d-22, color = 40                                                                           ;plot the fitted curve
+        plot, plot_base[*,0], plot_base[*,1]/1d-22, psym = 10, xtitle = '!3Wavelength(!9m!3m)', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)',position=[0.15,0.1,0.95,0.95]                   ;plot the original data
+		oplot, wl, flux/1d-22, psym = 2
+        oplot, wl, base/1d-22, color = 40                                                                           ;plot the fitted curve
 		oplot, wl, residual/1d-22, psym = 10, color = 250                                                           ;plot the reidual
         device, /close_file, decomposed = 1
     endif
@@ -420,9 +421,9 @@ if not keyword_set(baseline) then begin
 			;plot, plot_wl, plot_flux/1d-22, psym = 10, xtitle = '!9m!3m', ytitle = '10!u-22!n W/cm!u2!n/!9m!3m', yrange = [min(plot_flux)/1d-22, max(plot_flux)*1.1/1d-22]
 			ylabel = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)'
 			if keyword_set(brightness) then ylabel = '!3Brightness (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
-			if not keyword_set(double_gauss) then plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],position=[0.15,0.1,0.9,0.9]        ;plot the baseline substracted spectrum
+			if not keyword_set(double_gauss) then plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],position=[0.15,0.1,0.95,0.95]        ;plot the baseline substracted spectrum
 			if keyword_set(double_gauss) then begin
-				plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],xrange=[base_range[1],base_range[2]],position=[0.15,0.1,0.9,0.9]
+				plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],xrange=[base_range[1],base_range[2]],position=[0.15,0.1,0.95,0.95]
 				oplot, fine_wl, (height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2)+base_gauss)/1d-22, color=30
 				oplot, fine_wl, (height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)+base_gauss)/1d-22, color=225
 			endif
@@ -495,7 +496,7 @@ if not keyword_set(baseline) then begin
           
           	loadct ,13,/silent
     		!p.thick = 3 & !x.thick = 3 & !y.thick = 3
-    		plot, wl, (flux+base)/1d-22, psym = 10, xtitle = '!3!9m!3m', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)',position=[0.2,0.15,0.85,0.85]  ;plot the baseline substracted spectrum
+    		plot, wl, (flux+base)/1d-22, psym = 10, xtitle = '!3!9m!3m', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)',position=[0.15,0.1,0.95,0.95]  ;plot the baseline substracted spectrum
     		if keyword_set(single_gauss) then begin
             	oplot, [line[1], line[1]], [-1000,1000], linestyle = 2
             	plot, [line[2], line[2]], [-1000,1000], linestyle = 2
