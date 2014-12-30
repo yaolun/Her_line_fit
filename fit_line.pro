@@ -458,7 +458,7 @@ if not keyword_set(baseline) then begin
 			endelse
             if not keyword_set(double_gauss) then al_legend, [title_name(linename)],textcolors=[0],/right
             ; Print the two line names in their corresponding colors
-            if keyword_set(double_gauss) then al_legend, [title_name((strsplit(linename,'+',/extract))[0]), title_name((strsplit(linename,'+',/extract))[1])],$
+            if keyword_set(double_gauss) then al_legend, [title_name((strsplit(linename,'_',/extract))[0]), title_name((strsplit(linename,'_',/extract))[1])],$
                                                 textcolors=[30,225],/right
 			;xyouts, 0.7, 0.85, title_name(linename), /normal
 			device, /close_file, decomposed = 1
