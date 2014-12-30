@@ -181,7 +181,7 @@ if not keyword_set(baseline) then begin
 			parinfo[2].fixed = 1
 			parinfo[5].fixed = 1
         endif else begin
-            let the line width varied flexible
+            ; let the line width varied flexible
             parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
             parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
         endelse
