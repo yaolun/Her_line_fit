@@ -323,7 +323,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				endif
 				; use the plot_base feature to plot the actual spectrum (with line) here
 				plot_base = [[wll],[fluxl]]
-				fit_line, pixelname[j], line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base
+				fit_line, pixelname[j], line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base
 				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
@@ -803,7 +803,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
 					; Fitting part
 					; Different fitting keyword for fixed width and test arguement
-					fit_line,pixelname[j],line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,std=abs(fluxx)*0.07,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
+					fit_line,pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=abs(fluxx)*0.07,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
 					 	noiselevel=3,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,/fix_dg,/spire
 					if status eq 0 then begin
 						printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg

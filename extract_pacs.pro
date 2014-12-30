@@ -475,7 +475,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			endif
 			; use the plot_base feature to plot the actual spectrum (with line) here
 			plot_base = [[wll],[fluxl]]
-			fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
+			fit_line, filename, line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
 			; extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
@@ -496,7 +496,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			; Using band 3 resolution for some of WISH sources
 			b3a = 0
 			if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
-			fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
+			fit_line,filename,line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
 				noiselevel=3,base_range=base_range,plot_base=plot_base,b3a=b3a,/fix_dg
 			if status eq 0 then begin
 				printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
@@ -1022,7 +1022,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				endif
 				; use the plot_base feature to plot the actual spectrum (with line) here
 				plot_base = [[wll],[fluxl]]
-				fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
+				fit_line, filename, line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
 				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
@@ -1045,7 +1045,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				; Using band 3 resolution for some of the WISH sources
         		b3a = 0
 		        if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
-				fit_line,filename,line_name_dg[2*i]+'_'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
+				fit_line,filename,line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
 					 noiselevel=3,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,b3a=b3a,/fix_dg
 				if status eq 0 then begin
 					printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
