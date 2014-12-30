@@ -497,7 +497,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			b3a = 0
 			if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
 			fit_line,filename,line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
-				noiselevel=3,base_range=base_range,plot_base=plot_base,b3a=b3a,/fix_dg
+				noiselevel=3,base_range=base_range,plot_base=plot_base,b3a=b3a,/fix_dg,/fixed_width
 			if status eq 0 then begin
 				printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
 			endif else begin
@@ -1046,7 +1046,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
         		b3a = 0
 		        if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
 				fit_line,filename,line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
-					 noiselevel=3,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,b3a=b3a,/fix_dg
+					 noiselevel=3,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,b3a=b3a,/fix_dg,/fixed_width
 				if status eq 0 then begin
 					printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
 				endif else begin

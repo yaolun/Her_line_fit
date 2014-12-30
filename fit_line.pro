@@ -171,13 +171,15 @@ if not keyword_set(baseline) then begin
         	parinfo[1].limited = [1,1] & parinfo[1].limits = line[1:2]-median(wl)     ; Restrict the range of the line center can be varied
 			parinfo[4].limited = [1,1] & parinfo[4].limits = line[4:5]-median(wl)
 		endif else begin
-    		parinfo[1].fixed = 1
-			parinfo[4].fixed = 1
+            parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
+            parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
+        ; Fixed the line width
 		endelse
-		;if keyword_set(fixed_width) then begin
-		;	parinfo[2].fixed = 1
-		;	parinfo[5].fixed = 1
-		;endif else begin
+		if keyword_set(fixed_width) then begin
+			parinfo[2].fixed = 1
+			parinfo[5].fixed = 1
+        endif
+		; endif else begin
 		if dl eq 0 then stop
         ; let the line width varied flexible
     	; parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
