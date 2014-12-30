@@ -110,7 +110,7 @@ if not keyword_set(baseline) then begin
         		dl = double(interpol(fwhm3,wl3,line[0]))
         	endif
         endif
-    endelse
+    endif
     ; endelse
 
     ;-------------------------------------------e
