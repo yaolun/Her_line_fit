@@ -328,9 +328,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
                 base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
             endif
         endif
+        ; use the plot_base feature to plot the actual spectrum (with line) here
+		plot_base = [[wll],[fluxl]]
         ; fit the baseline and return the baseline parameter in 'base_para'
-		
-        fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
+        fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
         ;select the line+baseline
 		if not keyword_set(localbaseline) then begin
         	if i le 39 then begin
@@ -472,7 +473,9 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				indl = where(wl gt base_range[0] and wl lt max(wl))
 				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 			endif
-			fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+			; use the plot_base feature to plot the actual spectrum (with line) here
+			plot_base = [[wll],[fluxl]]
+			fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
 			; extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
@@ -480,7 +483,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			; Subtract the baseline from the spectrum
 			; First, calculate the baseline
 			; base = base_para[0]*wll +base_para[1]                       ;use 1st order polynomial
-			base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]      ;use 2nd order polynomial
+			base = base_para[0]*wll^2+base_para[1]*wll+base_para[2]       ;use 2nd order polynomial
 			; Subtract
 			fluxx = fluxl - base
 			stdd = stdl
@@ -692,9 +695,9 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		; if not keyword_set(fixed_width) then msg =''
 		msg = ''
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
-		!p.thick=3 & !x.thick=3 & !y.thick=3
+		!p.thick=2 & !x.thick=3 & !y.thick=3
 		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata
+		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata,position=[0.2,0.15,0.85,0.85]
 		if trim1[0] ne -1 then begin
 			oplot, wl[trim1], flux[trim1]/1e-22
 			oplot, wl[trim1], flux_sub[trim1]/1e-22, color=200
@@ -785,9 +788,9 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		; if not keyword_set(fixed_width) then msg =''
 		msg = ''
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
-		!p.thick=3 & !x.thick=3 & !y.thick=3
+		!p.thick=2 & !x.thick=3 & !y.thick=3
 		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata
+		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata, position=[0.2,0.15,0.85,0.85]
 		if trim1[0] ne -1 then begin
 			oplot, wl[trim1], flux[trim1]/1e-22
 			; oplot, wl[trim1], flux_sub[trim1]/1e-22, color=200
@@ -864,9 +867,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
 				endif
 			endif
-
+			; use the plot_base feature to plot the actual spectrum (with line) here
+			plot_base = [[wll],[fluxl]]
 			; Fit the baseline and return the baseline parameter in 'base_para'
-			fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot
+			fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
 			; Select the line+baseline
 			if not keyword_set(localbaseline) then begin
         		if i le 39 then begin
@@ -1019,7 +1023,9 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					indl = where(wl gt base_range[0] and wl lt max(wl))
 					wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 				endif
-				fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+				; use the plot_base feature to plot the actual spectrum (with line) here
+				plot_base = [[wll],[fluxl]]
+				fit_line, filename, line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
 				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
@@ -1267,9 +1273,9 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		; if not keyword_set(fixed_width) then msg =''
 		msg = ''
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
-		!p.thick=3 & !x.thick=3 & !y.thick=3
+		!p.thick=2 & !x.thick=3 & !y.thick=3
 		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',ystyle=2, /nodata
+		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',ystyle=2, /nodata, position=[0.2,0.15,0.85,0.85]
 		if trim1[0] ne -1 then begin
 			oplot, wl[trim1], flux[trim1]/1e-22
 			oplot, wl[trim1], continuum_sub[trim1]/1e-22, color=100

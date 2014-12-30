@@ -65,10 +65,12 @@ if keyword_set(baseline) then begin
     
     	loadct ,13,/silent
 		!p.thick = 3 & !x.thick = 3 & !y.thick = 3
-		plot, wl, flux/1d-22, psym = 10, xtitle = '!3Wavelength(!9m!3m)', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)'                   ;plot the original data
+		; plot, wl, flux/1d-22, psym = 10, xtitle = '!3Wavelength(!9m!3m)', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)'                   ;plot the original data
+        ; plot the actual spectrum instead of the line-free spectrum
+        plot, plot_base[0], plot_base[1]/1d-22, psym = 10, xtitle = '!3Wavelength(!9m!3m)', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)'                   ;plot the original data
 		oplot, wl, base/1d-22, color = 40                                                                           ;plot the fitted curve
 		oplot, wl, residual/1d-22, psym = 10, color = 250                                                           ;plot the reidual
-		device, /close_file, decomposed = 1
+        device, /close_file, decomposed = 1
     endif
 endif
   
@@ -177,8 +179,12 @@ if not keyword_set(baseline) then begin
 		;	parinfo[5].fixed = 1
 		;endif else begin
 		if dl eq 0 then stop
-    	parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
-		parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
+        ; let the line width varied flexible
+    	; parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
+		; parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
+        ; Fixed the line width
+        parinfo[2].fixed = 1
+        parinfo[5].fixed = 1
 		;endelse
     endif
     ;-------------------------------------------
@@ -410,9 +416,9 @@ if not keyword_set(baseline) then begin
 			;plot, plot_wl, plot_flux/1d-22, psym = 10, xtitle = '!9m!3m', ytitle = '10!u-22!n W/cm!u2!n/!9m!3m', yrange = [min(plot_flux)/1d-22, max(plot_flux)*1.1/1d-22]
 			ylabel = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)'
 			if keyword_set(brightness) then ylabel = '!3Brightness (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
-			if not keyword_set(double_gauss) then plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22]        ;plot the baseline substracted spectrum
+			if not keyword_set(double_gauss) then plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],position=[0.2,0.15,0.85,0.85]        ;plot the baseline substracted spectrum
 			if keyword_set(double_gauss) then begin
-				plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],xrange=[base_range[1],base_range[2]]
+				plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],xrange=[base_range[1],base_range[2]],position=[0.2,0.15,0.85,0.85]
 				oplot, fine_wl, (height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2)+base_gauss)/1d-22, color=30
 				oplot, fine_wl, (height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)+base_gauss)/1d-22, color=225
 			endif
@@ -423,26 +429,37 @@ if not keyword_set(baseline) then begin
 			oplot, [base_range[1],base_range[1]], [-1000,1000]/1d-22, linestyle = 1
 			oplot, [base_range[2],base_range[2]], [-1000,1000]/1d-22, linestyle = 1
 			oplot, [base_range[3],base_range[3]], [-1000,1000]/1d-22, linestyle = 1
-			;if keyword_set(plot_base) then oplot, plot_base[*,0],plot_base[*,1]/1d-22,psym=4,symsize=0.5
+			; if keyword_set(plot_base) then oplot, plot_base[*,0],plot_base[*,1]/1d-22,psym=4,symsize=0.5
 			if keyword_set(global_noise) then oplot, global_noise[*,0], (global_noise[*,1]+interpol(base,wl, line[0]))/1e-22, psym=10, color=160
 			if keyword_set(double_gauss) then oplot, [line[3],line[3]], [-1000,1000]/1d-22, linestyle = 2
 			if keyword_set(single_gauss) then begin
 				xyouts, 0.2, 0.85, 'SNR ='+string(snr,format='(g6.3)')+', FWHM ='+string(fwhm,format='(g7.3)'), /normal
 			endif
 			if keyword_set(double_gauss) then begin
-        		xyouts, 0.2, 0.85, 'SNR ='+string(snr[0],format='(g6.3)')+', FWHM ='+string(fwhm[0],format='(g7.3)'), /normal
-				xyouts, 0.2, 0.8, 'SNR ='+string(snr[1],format='(g6.3)')+', FWHM ='+string(fwhm[1],format='(g7.3)'), /normal
+        		xyouts, 0.2, 0.85, 'SNR ='+string(snr[0],format='(g6.3)')+', FWHM ='+string(fwhm[0],format='(g7.3)'), /normal, color=30
+				xyouts, 0.2, 0.8, 'SNR ='+string(snr[1],format='(g6.3)')+', FWHM ='+string(fwhm[1],format='(g7.3)'), /normal, color=225
 ;				xyouts, 0.2, 0.75, 'FWHM='+strtrim(string(fwhm[0]),1), /normal
 ;        		xyouts, 0.2, 0.7, '     '+strtrim(string(fwhm[1]),1), /normal
 			endif
 			if keyword_set(global_noise) then begin
-      			;al_legend, ['Data','Fit','Residual','Noise'],colors=[0,80,250,160], linestyle=[0,0,0,0], /bottom
-				al_legend, ['Data','Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom
+                if not keyword_set(double_gauss) then begin
+      			   ;al_legend, ['Data','Fit','Residual','Noise'],colors=[0,80,250,160], linestyle=[0,0,0,0], /bottom
+				    al_legend, ['Data','Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom
+                endif else begin
+                    al_legend, ['Data','Comb. Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom
+                endelse
 			endif else begin
-      			;al_legend, ['Data','Fit','Residual'],colors=[0,80,250], linestyle=[0,0,0], /bottom
-				al_legend, ['Data','Fit'],colors=[0,80], linestyle=[0,0], /bottom
+                if not keyword_set(double_gauss) then begin
+      			   ;al_legend, ['Data','Fit','Residual'],colors=[0,80,250], linestyle=[0,0,0], /bottom
+				    al_legend, ['Data','Fit'],colors=[0,80], linestyle=[0,0], /bottom
+                endif else begin
+                    al_legend, ['Data','Comb. Fit'],colors=[0,80], linestyle=[0,0], /bottom
+                endelse
 			endelse
-			al_legend, [title_name(linename)],textcolors=[0],/right
+            if not keyword_set(double_gauss) then al_legend, [title_name(linename)],textcolors=[0],/right
+            ; Print the two line names in their corresponding colors
+            if keyword_set(double_gauss) then al_legend, [title_name(strsplit(linename,'+',/extract)[0]), title_name(strsplit(linename,'+',/extract)[1])],$
+                                                textcolors=[30,225],/right
 			;xyouts, 0.7, 0.85, title_name(linename), /normal
 			device, /close_file, decomposed = 1
 			!p.multi = 0
@@ -474,7 +491,7 @@ if not keyword_set(baseline) then begin
           
           	loadct ,13,/silent
     		!p.thick = 3 & !x.thick = 3 & !y.thick = 3
-    		plot, wl, (flux+base)/1d-22, psym = 10, xtitle = '!9m!3m', ytitle = '10!u-22!n W/cm!u2!n/!9m!3m'  ;plot the baseline substracted spectrum
+    		plot, wl, (flux+base)/1d-22, psym = 10, xtitle = '!3!9m!3m', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)',position=[0.2,0.15,0.85,0.85]  ;plot the baseline substracted spectrum
     		if keyword_set(single_gauss) then begin
             	oplot, [line[1], line[1]], [-1000,1000], linestyle = 2
             	plot, [line[2], line[2]], [-1000,1000], linestyle = 2
@@ -489,7 +506,10 @@ if not keyword_set(baseline) then begin
     			xyouts, 0.2, 0.75, strtrim(string(line_str[1]/noise),1), /normal
     		endif
     		xyouts, 0.2, 0.85, 'Fail to Converge', /normal
-    		xyouts, 0.6, 0.85, title_name(linename), /normal
+            if not keyword_set(double_gauss) then al_legend, [title_name(linename)],textcolors=[0],/right
+            ; Print the two line names in their corresponding colors
+            if keyword_set(double_gauss) then al_legend, [title_name(strsplit(linename,'+',/extract)[0]), title_name(strsplit(linename,'+',/extract)[1])],$
+                                                textcolors=[30,225],/right
     		device, /close_file, decomposed = 1
     		!p.multi = 0
         endif

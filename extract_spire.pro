@@ -15,12 +15,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	; The indir should include every letter except for the pixel name.
 	if keyword_set(brightness) then begin
 		; suffix = '_b'
-		ylabel = 'Brightness (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
-		unit = '/as2'
+		ylabel = '!3Brightness (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
+		unit = '!3/as2'
 	endif
 	if keyword_set(fx) then begin
 		; suffix = '_f'
-		ylabel = 'Flux (10!u-22!n W/cm!u2!n/!9m!3m)'
+		ylabel = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)'
 		unit = ''
 		brightness=0
 	endif
@@ -224,7 +224,9 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 
 			; fit the baseline and return the baseline parameter in 'base_para'
 			; 7 % of flux uncertainty in SPIRE spectrometer (Observer manual 5.3.6)
-			fit_line, pixelname[j], line_name[i], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+			; use the plot_base feature to plot the actual spectrum (with line) here
+			plot_base = [[wll],[fluxl]]
+			fit_line, pixelname[j], line_name[i], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
 			
 			; extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
@@ -319,7 +321,9 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					indl = where(wl gt base_range[0] and wl lt max(wl))
 					wll = wl[indl] & fluxl = flux[indl]
 				endif
-				fit_line, pixelname[j], line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+				; use the plot_base feature to plot the actual spectrum (with line) here
+				plot_base = [[wll],[fluxl]]
+				fit_line, pixelname[j], line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base
 				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
@@ -529,9 +533,9 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; if not keyword_set(fixed_width) then msg =''
 			msg = ''
 			device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
-			!p.thick=3 & !x.thick=3 & !y.thick=3
+			!p.thick=2 & !x.thick=3 & !y.thick=3
 			trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-			plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata
+			plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata,position=[0.2,0.15,0.85,0.85]
 			if trim1[0] ne -1 then begin
 				oplot, wl[trim1], flux[trim1]/1e-22
 				oplot, wl[trim1], flux_sub[trim1]/1e-22, color=200
@@ -617,8 +621,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; if not keyword_set(fixed_width) then msg =''
 			msg = ''
 			device, filename = plotdir+'spectrum_line_subtracted_'+pixelname[j]+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
-			!p.thick=3 & !x.thick=3 & !y.thick=3
-			plot, wl, flux/1e-22, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, ystyle=2
+			!p.thick=2 & !x.thick=3 & !y.thick=3
+			plot, wl, flux/1e-22, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, ystyle=2, position=[0.2,0.15,0.85,0.85]
 			; oplot, wl, flux_sub/1e-22, color=200
 			oplot, wl, continuum_sub/1e-22, color=100
 			oplot, wl, flat_noise/1e-22+min(flux)/1e-22, color=10
@@ -672,10 +676,10 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					indl = where(wl gt base_range[0] and wl lt max(wl))
 					wll = wl[indl] & fluxl = flux[indl]
 				endif
-			
-
+				; use the plot_base feature to plot the actual spectrum (with line) here
+				plot_base = [[wll],[fluxl]]
 				; fit the baseline and return the baseline parameter in 'base_para'
-				fit_line, pixelname[j], line_name[i], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+				fit_line, pixelname[j], line_name[i], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base
 				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
@@ -776,7 +780,9 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						indl = where(wl gt base_range[0] and wl lt max(wl))
 						wll = wl[indl] & fluxl = flux[indl]
 					endif
-					fit_line, pixelname[j], line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot
+					; use the plot_base feature to plot the actual spectrum (with line) here
+					plot_base = [[wll],[fluxl]]
+					fit_line, pixelname[j], line_name_dg[2*i]+'_'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base
 					; extract the wave and flux for plottng that is for better visualization of the fitting results.
 					ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 					plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
@@ -1020,9 +1026,9 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; if not keyword_set(fixed_width) then msg =''
 			msg = ''
 			device, filename = plotdir+'spectrum_line_subtracted_'+pixelname[j]+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
-			!p.thick=3 & !x.thick=3 & !y.thick=3
+			!p.thick=2 & !x.thick=3 & !y.thick=3
 			trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-			plot, wl, flux/1e-22, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel,ystyle=2,/nodata
+			plot, wl, flux/1e-22, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel,ystyle=2,/nodata,position=[0.2,0.15,0.85,0.85]
 			if trim1[0] ne -1 then begin
 				oplot, wl[trim1], flux[trim1]/1e-22
 				oplot, wl[trim1], continuum_sub[trim1]/1e-22, color=100
