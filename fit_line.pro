@@ -279,14 +279,19 @@ if not keyword_set(baseline) then begin
                 sig_fwhm = reverse(sig_fwhm)
                 snr = reverse(snr)
             endif
+            stop
             ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
             ; 
             if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
             for k = 0, 1 do begin
-            	if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
-            		sig_fwhm[k] = -999
-            		; if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
-            	endif
+                if (parinfo[2].fixed ne 1) and (parinfo[5].fixed ne 1) then begin
+                	if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
+                		sig_fwhm[k] = -999
+                		; if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
+                	endif
+                endif
+                if (parinfo[2].fixed eq 1) and (parinfo[5].fixed eq 1) then sig_fwhm[k] = -998
+
             	if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
             	if (str[k] eq 0) then begin
                     sig_cen_wl[k] = -998
