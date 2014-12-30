@@ -444,16 +444,16 @@ if not keyword_set(baseline) then begin
 			if keyword_set(global_noise) then begin
                 if not keyword_set(double_gauss) then begin
       			   ;al_legend, ['Data','Fit','Residual','Noise'],colors=[0,80,250,160], linestyle=[0,0,0,0], /bottom
-				    al_legend, ['Data','Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom
+				    al_legend, ['Data','Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom, /horizontal
                 endif else begin
-                    al_legend, ['Data','Comb. Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom
+                    al_legend, ['Data','Comb. Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /bottom, /horizontal
                 endelse
 			endif else begin
                 if not keyword_set(double_gauss) then begin
       			   ;al_legend, ['Data','Fit','Residual'],colors=[0,80,250], linestyle=[0,0,0], /bottom
-				    al_legend, ['Data','Fit'],colors=[0,80], linestyle=[0,0], /bottom
+				    al_legend, ['Data','Fit'],colors=[0,80], linestyle=[0,0], /bottom, /horizontal
                 endif else begin
-                    al_legend, ['Data','Comb. Fit'],colors=[0,80], linestyle=[0,0], /bottom
+                    al_legend, ['Data','Comb. Fit'],colors=[0,80], linestyle=[0,0], /bottom, /horizontal
                 endelse
 			endelse
             if not keyword_set(double_gauss) then al_legend, [title_name(linename)],textcolors=[0],/right
