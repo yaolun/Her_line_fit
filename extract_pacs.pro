@@ -327,12 +327,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
                 stdb = [std_basepool[left]]
                 base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
             endif
+            ; Select line+baseline
+            indl = where(wl gt base_range[0] and wl lt base_range[3])
+			if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
+			if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
+			wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
         endif
-        ; use the plot_base feature to plot the actual spectrum (with line) here
-		plot_base = [[wll],[fluxl]]
-        ; fit the baseline and return the baseline parameter in 'base_para'
-        fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
-        ;select the line+baseline
+        ; select the line+baseline
 		if not keyword_set(localbaseline) then begin
         	if i le 39 then begin
         	    indl = where(wl gt cont[0,i] and wl lt cont[3,i])
@@ -342,12 +343,11 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
         	    wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
         	endelse
 		endif
-		if keyword_set(localbaseline) then begin
-			indl = where(wl gt base_range[0] and wl lt base_range[3])
-			if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
-			if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
-			wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
-		endif
+        ; use the plot_base feature to plot the actual spectrum (with line) here
+		plot_base = [[wll],[fluxl]]
+        ; fit the baseline and return the baseline parameter in 'base_para'
+        fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
+
 		; extract the wave and flux for plottng that is for better visualization of the fitting results.
 		ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 		plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
@@ -866,11 +866,12 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
                 	stdb = [std_basepool[left]]
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
 				endif
+				; Select the line+baseline
+				indl = where(wl gt base_range[0] and wl lt base_range[3])
+				if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
+				if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
+				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 			endif
-			; use the plot_base feature to plot the actual spectrum (with line) here
-			plot_base = [[wll],[fluxl]]
-			; Fit the baseline and return the baseline parameter in 'base_para'
-			fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
 			; Select the line+baseline
 			if not keyword_set(localbaseline) then begin
         		if i le 39 then begin
@@ -881,13 +882,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 				endelse
 			endif
-			
-			if keyword_set(localbaseline) then begin
-				indl = where(wl gt base_range[0] and wl lt base_range[3])
-				if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
-				if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
-				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
-			endif
+			; use the plot_base feature to plot the actual spectrum (with line) here
+			plot_base = [[wll],[fluxl]]
+			; Fit the baseline and return the baseline parameter in 'base_para'
+			fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
 			; Extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot] & plot_std = std[ind_plot]
