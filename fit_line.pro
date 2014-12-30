@@ -83,16 +83,16 @@ if not keyword_set(baseline) then begin
     ; First, construct the structure of the constrain.  Here to constrain that the width of the Gaussian cannot larger than the range of the wavelength put into this program
     ; r = -700*(median(wl)-200)/470+1000
     ; dl = median(wl)/r  resolution element
-    if not keyword_set(fixed_width) then begin
-        if max(wl) gt 200 then begin
-            dl = 1.4*1e9*(line[0]*1e-4)^2/c*1e4/2.354
-        endif else if max(wl) gt 100 then begin
-            dl = 0.1/2.354
-        endif else begin
-            dl = 0.03/2.354
-        endelse
-	;Use the theoretical value of line width
-    endif else begin
+    ; if not keyword_set(fixed_width) then begin
+    if max(wl) gt 200 then begin
+        dl = 1.4*1e9*(line[0]*1e-4)^2/c*1e4/2.354
+    endif else if max(wl) gt 100 then begin
+        ;     dl = 0.1/2.354
+        ; endif else begin
+        ;     dl = 0.03/2.354
+        ; endelse
+    ;Use the theoretical value of line width
+    ; endif else begin
         readcol, '~/bhr71/data/spectralresolution_order1.txt', format='D,D', wl1, res1,/silent
         readcol, '~/bhr71/data/spectralresolution_order2.txt', format='D,D', wl2, res2,/silent
         readcol, '~/bhr71/data/spectralresolution_order3.txt', format='D,D', wl3, res3,/silent
@@ -111,6 +111,7 @@ if not keyword_set(baseline) then begin
         	endif
         endif
     endelse
+    ; endelse
 
     ;-------------------------------------------e
     ;For single Gaussian fit
@@ -281,7 +282,6 @@ if not keyword_set(baseline) then begin
                 sig_fwhm = reverse(sig_fwhm)
                 snr = reverse(snr)
             endif
-            stop
             ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
             ; 
             if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
