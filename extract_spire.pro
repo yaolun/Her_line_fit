@@ -84,7 +84,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	line_center = line_center[sort(line_center)]
 	; cont = cont[*,sort(line_center)]
 	for i = 0, n_elements(line_center)-1 do begin
-        dl = 1.5*1.207*(1.2*1e9*(line[0]*1e-4)^2/c*1e4)
+		; resolution intead of fwhm here
+		dl = 1.5*1.207*(1.2*1e9*(line_center[i]*1e-4)^2/2.998d10*1e4)/2.354
 
 		; range = [[range], [[line_center[i]-range_factor*dl, line_center[i]+(range_factor+2)*dl]]]
 		if i eq 0 then begin

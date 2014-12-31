@@ -87,7 +87,7 @@ if not keyword_set(baseline) then begin
     ; if not keyword_set(fixed_width) then begin
     if max(wl) gt 200 then begin
         ; instrument resolution 1.2 GHz and plus apodize 1.5 factor in the pipeline
-        dl = 1.5*1.207*(1.2*1e9*(line[0]*1e-4)^2/c*1e4)
+        dl = 1.5*1.207*(1.2*1e9*(line[0]*1e-4)^2/c*1e4)/2.354
     endif else begin
         ;     dl = 0.1/2.354
         ; endif else begin
