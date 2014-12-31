@@ -52,7 +52,7 @@ def her2pomac(obj, outdir, linelist):
 		pacscoord.write('%s \t' % line)
 		for foo in filename:
 			[data, header] = read_fitting(foo, 0)
-			inten_dum = data[data['Line'] == line]['Str(W/cm2)']
+			inten_dum = data[data['Line'] == line]['Str(W/cm2)'].data
 			error_dum = data[data['Line'] == line]['Sig_str(W/cm2)']
 			ra_dum = data[data['Line'] == line]['RA(deg)']
 			if data[data['Line'] == line]['Validity'] == 0:
