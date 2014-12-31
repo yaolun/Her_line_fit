@@ -339,7 +339,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				; Fitting part
 				; Different fitting keyword for fixed width and test arguement
 				fit_line,pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=abs(fluxx)*0.07,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
-					 noiselevel=3,base_range=base_range,plot_base=plot_base,/fix_dg,/spire,/fixed_width
+					 noiselevel=3,base_range=base_range,plot_base=plot_base,/fix_dg,/spire,/fixed_width,brightness=brightness
 				if status eq 0 then begin
 					printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
 				endif else begin
@@ -804,7 +804,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					; Fitting part
 					; Different fitting keyword for fixed width and test arguement
 					fit_line,pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=abs(fluxx)*0.07,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,/double_gauss,outdir=plotdir,$
-					 	noiselevel=3,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,/fix_dg,/spire,/fixed_width
+					 	noiselevel=3,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,/fix_dg,/spire,/fixed_width,brightness=brightness
 					if status eq 0 then begin
 						printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
 					endif else begin

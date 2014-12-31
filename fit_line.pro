@@ -86,7 +86,7 @@ if not keyword_set(baseline) then begin
     ; dl = median(wl)/r  resolution element
     ; if not keyword_set(fixed_width) then begin
     if max(wl) gt 200 then begin
-        dl = 1.4*1e9*(line[0]*1e-4)^2/c*1e4/2.354
+        dl = 1.2*1.5*1e9*(line[0]*1e-4)^2/c*1e4/2.354
     endif else begin
         ;     dl = 0.1/2.354
         ; endif else begin
@@ -423,7 +423,9 @@ if not keyword_set(baseline) then begin
 			if keyword_set(brightness) then ylabel = '!3Brightness (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
 			if not keyword_set(double_gauss) then plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],position=[0.15,0.1,0.95,0.95]        ;plot the baseline substracted spectrum
 			if keyword_set(double_gauss) then begin
-				plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],xrange=[base_range[1],base_range[2]],position=[0.15,0.1,0.95,0.95]
+				plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, $
+                    max([height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2)+base_gauss,height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)+base_gauss,flux+base])*1.1/1d-22],$
+                    xrange=[base_range[1],base_range[2]],position=[0.15,0.1,0.95,0.95]
 				oplot, fine_wl, (height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2)+base_gauss)/1d-22, color=30
 				oplot, fine_wl, (height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)+base_gauss)/1d-22, color=225
 			endif
