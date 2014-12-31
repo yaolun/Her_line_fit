@@ -122,7 +122,8 @@ if not keyword_set(baseline) then begin
         start[0] = interpol(nflux,nwl,line[0]-median(wl));max(nflux)
         start[1] = line[0] - median(wl);nwl[where(nflux eq max(nflux))]
         ind = where(nflux gt 0.5*(max(nflux) - min(nflux)) + min(nflux))
-        start[2] = dl;(max(nwl[ind]) - min(nwl[ind]))
+        ; start[2] = dl;(max(nwl[ind]) - min(nwl[ind]))
+        start[2] = dl/1.5;(max(nwl[ind]) - min(nwl[ind]))
     endif
     ;For double Gaussian fit
     if keyword_set(double_gauss) then begin
@@ -137,7 +138,8 @@ if not keyword_set(baseline) then begin
         if start[3] lt 0 then start[3] = 0
         ;start[1] = nwl[where(nflux eq nflux_sort[0])] & start[4] = nwl[where(nflux eq nflux_sort[1])]
         start[1] = line[0]-median(wl) & start[4] = line[3]-median(wl)
-        start[2] = dl & start[5] = dl
+        ; start[2] = dl & start[5] = dl
+        start[2] = dl/1.5 & start[5] = dl/1.5
     endif
   
     if keyword_set(single_gauss) then begin
@@ -153,7 +155,7 @@ if not keyword_set(baseline) then begin
         	parinfo[2].fixed = 1
         endif else begin
         	if dl eq 0 then stop
-        	parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
+        	parinfo[2].limited = [1,1] & parinfo[2].limits = [dl/1.5, dl];[dl,2*dl]
         endelse
     endif
 
