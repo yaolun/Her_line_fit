@@ -53,19 +53,19 @@ def her2pomac(obj, outdir, linelist):
 		for foo in filename:
 			[data, header] = read_fitting(foo, 0)
 			inten_dum = data[data['Line'] == line]['Str(W/cm2)'].data
-			error_dum = data[data['Line'] == line]['Sig_str(W/cm2)']
-			ra_dum = data[data['Line'] == line]['RA(deg)']
+			error_dum = data[data['Line'] == line]['Sig_str(W/cm2)'].data
+			ra_dum = data[data['Line'] == line]['RA(deg)'].data
 			if data[data['Line'] == line]['Validity'] == 0:
 				inten_dum = 0.0
 				error_dum = 0.0
-			inten.write('%16.10e \t' % inten_dum)
-			error.write('%16.10e \t' % error_dum)
-			pacscoord.write('%16.10f \t' % ra_dum)
+			inten.write('%16.10e \t' % float(inten_dum))
+			error.write('%16.10e \t' % float(error_dum))
+			pacscoord.write('%16.10f \t' % float(ra_dum))
 		# Print Dec
 		for foo in filename:
 			[data, header] = read_fitting(foo, 0)
-			dec_dum = data[data['Line'] == line]['Dec(deg)']
-			pacscoord.write('%16.10f \t' % dec_dum)
+			dec_dum = data[data['Line'] == line]['Dec(deg)'].data
+			pacscoord.write('%16.10f \t' % float(dec_dum))
 	inten.close()
 	error.close()
 	pacscoord.close()
