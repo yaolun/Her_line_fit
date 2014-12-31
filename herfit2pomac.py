@@ -51,6 +51,7 @@ def her2pomac(obj, outdir, linelist):
 		error.write('%s \t' % line)
 		pacscoord.write('%s \t' % line)
 		for foo in filename:
+			print foo
 			[data, header] = read_fitting(foo, 0)
 			inten_dum = data[data['Line'] == line]['Str(W/cm2)'].data
 			error_dum = data[data['Line'] == line]['Sig_str(W/cm2)'].data
@@ -74,6 +75,9 @@ def her2pomac(obj, outdir, linelist):
 			if len(dec_dum) == 0:
 				dec_dum = 0.0
 			pacscoord.write('%16.10f \t' % float(dec_dum))
+		inten.write('\n')
+		error.write('\n')
+		pacscoord.write('\n')
 	inten.close()
 	error.close()
 	pacscoord.close()
@@ -108,6 +112,7 @@ cdf = ['AS205','B1-a','B1-c','B335','BHR71','DGTau','Elias29','FUOri','GSS30-IRS
 outdir = '/FWD_archive/FWD_archive/'
 
 for obj in cdf:
+	print obj
 	her2pomac(obj, outdir, linelist)
 
 
