@@ -3,7 +3,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				   print_all=print_all,flat=flat,continuum_sub=continuum_sub,plot_subtraction=plot_subtraction,no_plot=no_plot,coordpix=coordpix,double_gauss=double_gauss
 	; Test if the target path is valid. If not, create them.
 	if file_test(outdir,/directory) eq 0 then file_mkdir, outdir
-	if not keyword_set(no_plot) then beginf
+	if not keyword_set(no_plot) then begin
 		if file_test(plotdir+'base',/directory) eq 0 then file_mkdir,plotdir+'base'
 	endif
 	if file_test(plotdir+'cannot_fit',/directory) eq 0 then file_mkdir,plotdir+'cannot_fit'
