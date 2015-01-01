@@ -557,7 +557,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		; Construct the smooth/featureless spectrum to calculate the noise properly
 		if keyword_set(global_noise) then begin
 			print, '---> Re-calculating the noise level...'
-			name = outdir+object+'_'+pixelname[j]+'_lines'
+			; name = outdir+object+'_'+pixelname[j]+'_lines'
 			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
 				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I',$
