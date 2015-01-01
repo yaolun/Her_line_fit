@@ -130,6 +130,7 @@ if not keyword_set(baseline) then begin
             start[2] = dl;(max(nwl[ind]) - min(nwl[ind]))
         endif else begin
             start[2] = dl/1.5
+        endelse
     endif
     ;For double Gaussian fit
     if keyword_set(double_gauss) then begin
