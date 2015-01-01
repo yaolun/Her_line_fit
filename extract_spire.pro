@@ -49,7 +49,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		pixelname = ['spire_corrected']
 	endelse
 	plot_pixelname = pixelname
-	pixelname = pixelname;+suffix
 	c = 2.998d8
     ; Information about the line that you want to fit including the range for baseline fitting.  SLW and SSW included
     line_name_oh2o = ['o-H2O5_23-5_14','o-H2O6_25-5_32','o-H2O8_45-9_18','o-H2O8_27-7_34','o-H2O7_43-6_52','o-H2O8_54-7_61','o-H2O3_21-3_12','o-H2O6_34-5_41','o-H2O3_12-2_21','o-H2O7_25-8_18',$
@@ -182,7 +181,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			wl_basepool = wl_basepool[where(wl_basepool ge 314.078 and wl_basepool le 670.708)]
 		endif
 		; The path to the output file for print out the fitting result.
-		name = outdir+object+'_'+pixelname[j]+'_lines'
+		if not keyword_set(filename) then name = outdir+object+'_'+pixelname[j]+'_lines'
+		if keyword_set(filename) then name = outdir + filename +'_lines'
 		; if keyword_set(linescan) then name = name+'_LS'
 		; if keyword_set(localbaseline) then name = name+''
 		; if keyword_set(fixed_width) then name = name+'_fixwidth'
@@ -382,7 +382,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		close, firstfit
 		; Blended lines labeling and pick out the most possible line
 		; print, '--> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
-		if not keyword_set(filename) then filename = object+'_'+pixelname[j]
+		; if not keyword_set(filename) then filename = object+'_'+pixelname[j]
 		; name = filename+'_lines'
 		; if keyword_set(linescan) then name = name+'_LS'
 		; if keyword_set(localbaseline) then name = name+''
@@ -494,7 +494,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		close, firstfit
 		; Plot the line subtracted spectrum
 		if not keyword_set(global_noise) then begin
-    		name = filename+'_lines'
+    		; name = filename+'_lines'
 			if keyword_set(linescan) then name = name+'_LS'
 			; if keyword_set(localbaseline) then name = name+''
 			; if keyword_set(fixed_width) then name = name+'_fixwidth'
@@ -634,10 +634,10 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			cleanplot,/silent
 			!p.multi = 0
 			; The path to the output file for print out the fitting result.
-			name = outdir+object+'_'+pixelname[j]+'_lines'
+			; name = outdir+object+'_'+pixelname[j]+'_lines'
 			; if keyword_set(linescan) then name = name+'_LS'
 			; if keyword_set(localbaseline) then name = name+''
-			if keyword_set(fixed_width) then name = name+'_fixwidth'
+			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			; openw, secondfit, name+'_global_noise.txt', /get_lun
 			openw, secondfit, name+'.txt', /get_lun
 			if not keyword_set(current_pix) then begin
@@ -848,8 +848,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			
 			; Identify the blended lines
 			; print, '----> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
-			name = filename+'_lines'
-			if keyword_set(linescan) then name = name+'_LS'
+			; name = filename+'_lines'
+			; if keyword_set(linescan) then name = name+'_LS'
 			; if keyword_set(localbaseline) then name = name+''
 			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
@@ -963,7 +963,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			free_lun, secondfit
 			close, secondfit
 			; Calculate the line subtracted spectrum again
-			name = outdir+object+'_'+pixelname[j]+'_lines'
+			; name = outdir+object+'_'+pixelname[j]+'_lines'
 			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
 				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I',$
