@@ -88,7 +88,7 @@ if not keyword_set(baseline) then begin
     if max(wl) gt 200 then begin
         ; instrument resolution 1.2 GHz and plus apodize 1.5 factor in the pipeline
         ; FWHM = 1.207*delta_sigma  (from silde: spire dp webinar by Nanyao Lu)
-        dl = 1.5*1.207*(1.2*1e9*(line[0]*1e-4)^2/c*1e4)/2.354
+        dl = 1.5*1.207*(1.2*1e9*(line[0]*1e-4)^2/c)/2.354 * 1e4
     endif else begin
         ;     dl = 0.1/2.354
         ; endif else begin
@@ -148,7 +148,7 @@ if not keyword_set(baseline) then begin
         if not keyword_set(spire) then begin
             start[2] = dl & start[5] = dl
         endif else begin
-            start[2] = dl/1.5 & start[5] = dl/1.5
+            start[2] = dl & start[5] = dl
         endelse
     endif
   
@@ -464,8 +464,8 @@ if not keyword_set(baseline) then begin
 			if keyword_set(global_noise) then oplot, global_noise[*,0], (global_noise[*,1]+interpol(base,wl, line[0]))/1e-22, psym=10, color=160
 			if keyword_set(double_gauss) then oplot, [line[3],line[3]], [-1000,1000]/1d-22, linestyle = 2
 			if keyword_set(single_gauss) then begin
-				xyouts, 0.7, 0.7, 'SNR ='+string(snr,format='(g6.3)'), /normal
-                xyouts, 0.7, 0.65, 'FWHM ='+string(fwhm,format='(g7.3)'), /normal
+				xyouts, 0.8, 0.7, 'SNR ='+string(snr,format='(g6.3)'), /normal
+                xyouts, 0.8, 0.65, 'FWHM ='+string(fwhm,format='(g7.3)'), /normal
 			endif
 			if keyword_set(double_gauss) then begin
         		xyouts, 0.55, 0.7, 'SNR ='+string(snr[0],format='(g6.3)')+', FWHM ='+string(fwhm[0],format='(g7.3)'), /normal, color=30
