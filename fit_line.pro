@@ -243,7 +243,7 @@ if not keyword_set(baseline) then begin
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
                 indl = where((wl ge line[1]) and (wl le line[2]))
-                indb = where((global_noise[*,0] lt line[1]) and (global_noise[*,0] gt line[2]))
+                indb = where((global_noise[*,0] lt line[1]) or (global_noise[*,0] gt line[2]))
                 comb_noise = [residual[indl], global_noise[indb,1]]
                 comb_noise_wl = [wl[indl], global_noise[indb,0]]
                 noise = stddev(comb_noise)
@@ -291,7 +291,7 @@ if not keyword_set(baseline) then begin
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
                 indl = where((wl ge line[1]) and (wl le line[5]))
-                indb = where((global_noise[*,0] lt line[1]) and (global_noise[*,0] gt line[5]))
+                indb = where((global_noise[*,0] lt line[1]) or (global_noise[*,0] gt line[5]))
                 comb_noise = [residual[indl], global_noise[indb,1]]
                 comb_noise_wl = [wl[indl], global_noise[indb,0]]
                 noise = stddev(comb_noise)
