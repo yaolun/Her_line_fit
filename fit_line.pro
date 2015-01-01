@@ -240,7 +240,13 @@ if not keyword_set(baseline) then begin
             residual = flux - gauss
             noise = stddev(residual)
             if keyword_set(global_noise) then begin
-            	noise = stddev(global_noise[*,1])
+                ; stich the residual and global_noise together
+                ; Take the residual under the line area and use the global_noise at other place
+                indl = where((wl ge line[1]) and (wl le line[2]))
+                indb = where((wl lt line[1]) and (wl gt line[2]))
+                comb_noise = [residual[indl], global_noise[indb,1]]
+                noise = stddev(comb_noise)
+            	; noise = stddev(global_noise[*,1])
                 ; Use Eq. 4.57 from Robinson's note
                 ; if n_elements(global_noise[0,*]) eq 3 then begin
                 ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
@@ -280,7 +286,13 @@ if not keyword_set(baseline) then begin
             residual = flux - gauss
             noise = stddev(residual)            ; if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
             if keyword_set(global_noise) then begin
-                noise = stddev(global_noise[*,1])
+                ; stich the residual and global_noise together
+                ; Take the residual under the line area and use the global_noise at other place
+                indl = where((wl ge line[1]) and (wl le line[5]))
+                indb = where((wl lt line[1]) and (wl gt line[5]))
+                comb_noise = [residual[indl], global_noise[indb,1]]
+                noise = stddev(comb_noise)
+                ; noise = stddev(global_noise[*,1])
                 ; Use Eq. 4.57 from Robinson's notec
                 ; if n_elements(global_noise[0,*]) eq 3 then begin
                 ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
@@ -460,7 +472,8 @@ if not keyword_set(baseline) then begin
 			oplot, [base_range[2],base_range[2]], [-1000,1000]/1d-22, linestyle = 1
 			oplot, [base_range[3],base_range[3]], [-1000,1000]/1d-22, linestyle = 1
 			; if keyword_set(plot_base) then oplot, plot_base[*,0],plot_base[*,1]/1d-22,psym=4,symsize=0.5
-			if keyword_set(global_noise) then oplot, global_noise[*,0], (global_noise[*,1]+interpol(base,wl, line[0]))/1e-22, psym=10, color=160
+			; if keyword_set(global_noise) then oplot, global_noise[*,0], (global_noise[*,1]+interpol(base,wl, line[0]))/1e-22, psym=10, color=160
+            if keyword_set(global_noise) then oplot, wl, (comb_noise+interpol(base,wl, line[0]))/1e-22, psym=10, color=160
 			if not keyword_set(global_noise) then oplot, wl, (residual+interpol(base,wl, line[0]))/1d-22, psym=10, color=160
             if keyword_set(double_gauss) then oplot, [line[3],line[3]], [-1000,1000]/1d-22, linestyle = 2
 			if keyword_set(single_gauss) then begin
