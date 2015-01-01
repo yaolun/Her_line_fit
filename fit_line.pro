@@ -324,8 +324,6 @@ if not keyword_set(baseline) then begin
                 if sig_str[k] eq 0 then sig_str[k] = -999 
             endfor
 		endif
-
-        if linename eq 'CO5-4' then stop
 ;		;----------------------------------------------------------------
 ;		if keyword_set(single_gauss) then begin
 ;			rms2 = total((gauss(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
