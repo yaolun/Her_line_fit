@@ -87,6 +87,7 @@ if not keyword_set(baseline) then begin
     ; if not keyword_set(fixed_width) then begin
     if max(wl) gt 200 then begin
         ; instrument resolution 1.2 GHz and plus apodize 1.5 factor in the pipeline
+        ; FWHM = 1.207*delta_sigma  (from silde: spire dp webinar by Nanyao Lu)
         dl = 1.5*1.207*(1.2*1e9*(line[0]*1e-4)^2/c*1e4)/2.354
     endif else begin
         ;     dl = 0.1/2.354
@@ -95,6 +96,7 @@ if not keyword_set(baseline) then begin
         ; endelse
     ;Use the theoretical value of line width
     ; endif else begin
+        ; the width in these files are the FWHM.
         readcol, '~/bhr71/data/spectralresolution_order1.txt', format='D,D', wl1, res1,/silent
         readcol, '~/bhr71/data/spectralresolution_order2.txt', format='D,D', wl2, res2,/silent
         readcol, '~/bhr71/data/spectralresolution_order3.txt', format='D,D', wl3, res3,/silent
@@ -109,7 +111,7 @@ if not keyword_set(baseline) then begin
         ; different band used in WISH
         if keyword_set(b3a) then begin
         	if line[0] lt 69.2 then begin
-        		dl = double(interpol(fwhm3,wl3,line[0]))
+        		dl = double(interpol(fwhm3/2.354,wl3,line[0]))
         	endif
         endif
     endelse
@@ -122,8 +124,12 @@ if not keyword_set(baseline) then begin
         start[0] = interpol(nflux,nwl,line[0]-median(wl));max(nflux)
         start[1] = line[0] - median(wl);nwl[where(nflux eq max(nflux))]
         ind = where(nflux gt 0.5*(max(nflux) - min(nflux)) + min(nflux))
-        ; start[2] = dl;(max(nwl[ind]) - min(nwl[ind]))
-        start[2] = dl/1.5;(max(nwl[ind]) - min(nwl[ind]))
+        ; For unapodized spectra, the width should be dl/1.5, dl for apodized spectra.
+        ; Here the width can vary from dl/1.5 to dl for better fitting results.
+        if not keyword_set(spire) then begin
+            start[2] = dl;(max(nwl[ind]) - min(nwl[ind]))
+        endif else begin
+            start[2] = dl/1.5
     endif
     ;For double Gaussian fit
     if keyword_set(double_gauss) then begin
@@ -138,8 +144,11 @@ if not keyword_set(baseline) then begin
         if start[3] lt 0 then start[3] = 0
         ;start[1] = nwl[where(nflux eq nflux_sort[0])] & start[4] = nwl[where(nflux eq nflux_sort[1])]
         start[1] = line[0]-median(wl) & start[4] = line[3]-median(wl)
-        ; start[2] = dl & start[5] = dl
-        start[2] = dl/1.5 & start[5] = dl/1.5
+        if not keyword_set(spire) then begin
+            start[2] = dl & start[5] = dl
+        endif else begin
+            start[2] = dl/1.5 & start[5] = dl/1.5
+        endelse
     endif
   
     if keyword_set(single_gauss) then begin
@@ -155,7 +164,11 @@ if not keyword_set(baseline) then begin
         	parinfo[2].fixed = 1
         endif else begin
         	if dl eq 0 then stop
-        	parinfo[2].limited = [1,1] & parinfo[2].limits = [dl/1.5, dl];[dl,2*dl]
+            if not keyword_set(spire) then begin
+        	   parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
+            endif else begin
+               parinfo[2].limited = [1,1] & parinfo[2].limits = [dl/1.5, dl];[dl,2*dl]
+            endelse
         endelse
     endif
 
@@ -186,8 +199,13 @@ if not keyword_set(baseline) then begin
 			parinfo[5].fixed = 1
         endif else begin
             ; let the line width varied flexible
-            parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
-            parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
+            if not keyword_set(spire) then begin
+                parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
+                parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
+            endif else begin
+                parinfo[2].limited = [1,1] & parinfo[2].limits = [dl/1.5, dl]
+                parinfo[5].limited = [1,1] & parinfo[5].limits = [dl/1.5, dl]
+            endelse
         endelse
 		if dl eq 0 then stop
     endif
@@ -443,11 +461,12 @@ if not keyword_set(baseline) then begin
 			if keyword_set(global_noise) then oplot, global_noise[*,0], (global_noise[*,1]+interpol(base,wl, line[0]))/1e-22, psym=10, color=160
 			if keyword_set(double_gauss) then oplot, [line[3],line[3]], [-1000,1000]/1d-22, linestyle = 2
 			if keyword_set(single_gauss) then begin
-				xyouts, 0.2, 0.7, 'SNR ='+string(snr,format='(g6.3)')+', FWHM ='+string(fwhm,format='(g7.3)'), /normal
+				xyouts, 0.7, 0.7, 'SNR ='+string(snr,format='(g6.3)'), /normal
+                xyouts, 0.7, 0.65, 'FWHM ='+string(fwhm,format='(g7.3)'), /normal
 			endif
 			if keyword_set(double_gauss) then begin
-        		xyouts, 0.2, 0.7, 'SNR ='+string(snr[0],format='(g6.3)')+', FWHM ='+string(fwhm[0],format='(g7.3)'), /normal, color=30
-				xyouts, 0.2, 0.65, 'SNR ='+string(snr[1],format='(g6.3)')+', FWHM ='+string(fwhm[1],format='(g7.3)'), /normal, color=225
+        		xyouts, 0.7, 0.7, 'SNR ='+string(snr[0],format='(g6.3)')+', FWHM ='+string(fwhm[0],format='(g7.3)'), /normal, color=30
+				xyouts, 0.7, 0.65, 'SNR ='+string(snr[1],format='(g6.3)')+', FWHM ='+string(fwhm[1],format='(g7.3)'), /normal, color=225
 ;				xyouts, 0.2, 0.75, 'FWHM='+strtrim(string(fwhm[0]),1), /normal
 ;        		xyouts, 0.2, 0.7, '     '+strtrim(string(fwhm[1]),1), /normal
 			endif

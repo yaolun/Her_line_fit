@@ -3,7 +3,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				   print_all=print_all,flat=flat,continuum_sub=continuum_sub,plot_subtraction=plot_subtraction,no_plot=no_plot,coordpix=coordpix,double_gauss=double_gauss
 	; Test if the target path is valid. If not, create them.
 	if file_test(outdir,/directory) eq 0 then file_mkdir, outdir
-	if not keyword_set(no_plot) then begin
+	if not keyword_set(no_plot) then beginf
 		if file_test(plotdir+'base',/directory) eq 0 then file_mkdir,plotdir+'base'
 	endif
 	if file_test(plotdir+'cannot_fit',/directory) eq 0 then file_mkdir,plotdir+'cannot_fit'
@@ -85,7 +85,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	; cont = cont[*,sort(line_center)]
 	for i = 0, n_elements(line_center)-1 do begin
 		; resolution intead of fwhm here
-		dl = 1.5*1.207*(1.2*1e9*(line_center[i]*1e-4)^2/2.998d10*1e4)/2.354
+		dl = 1.5*1.207*(1.2*1e9*(line_center[i]*1e-4)^2/2.998d10*1e4)/2.354d
 
 		; range = [[range], [[line_center[i]-range_factor*dl, line_center[i]+(range_factor+2)*dl]]]
 		if i eq 0 then begin
@@ -185,7 +185,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		name = outdir+object+'_'+pixelname[j]+'_lines'
 		; if keyword_set(linescan) then name = name+'_LS'
 		; if keyword_set(localbaseline) then name = name+''
-		if keyword_set(fixed_width) then name = name+'_fixwidth'
+		; if keyword_set(fixed_width) then name = name+'_fixwidth'
 		openw, firstfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
     		printf, firstfit, format='(16(a16,2x))',$
@@ -383,15 +383,15 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		; Blended lines labeling and pick out the most possible line
 		; print, '--> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
 		if not keyword_set(filename) then filename = object+'_'+pixelname[j]
-		name = filename+'_lines'
-		if keyword_set(linescan) then name = name+'_LS'
-		if keyword_set(localbaseline) then name = name+''
-		if keyword_set(fixed_width) then name = name+'_fixwidth'
+		; name = filename+'_lines'
+		; if keyword_set(linescan) then name = name+'_LS'
+		; if keyword_set(localbaseline) then name = name+''
+		; if keyword_set(fixed_width) then name = name+'_fixwidth'
 		if not keyword_set(current_pix) then begin
-    		readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
+    		readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, /silent, skipline=1
 		endif else begin
-    		readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
+    		readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, /silent, skipline=1
 		endelse
 		blend_group = []
@@ -451,7 +451,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		; if (where(possible_all eq 'CO7-6'))[0] eq -1 then possible_all = [possible_all,'CO7-6']
 		; if (where(possible_all eq 'CI3P2-3P1'))[0] ne -1 then possible_all = possible_all[where(possible_all ne 'CI3P2-3P1')]
 		; 
-		openw, firstfit, outdir+name+'.txt', /get_lun
+		openw, firstfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
 			printf, firstfit, format='(17(a16,2x))', $
     			'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2'+unit+')','Sig_str(W/cm2'+unit+')','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um'+unit+')','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
@@ -499,10 +499,10 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; if keyword_set(localbaseline) then name = name+''
 			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
-    			readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I', $
+    			readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I', $
     				line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
 			endif else begin
-    			readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I', $
+    			readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I', $
     				line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, lowest_E_n, /silent
 			endelse
 			flux_sub = flux
@@ -853,12 +853,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; if keyword_set(localbaseline) then name = name+''
 			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
-				; readcol, outdir+name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A', $
-				readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
+				; readcol, name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A', $
+				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, /silent, skipline=1
 			endif else begin
-				; readcol, outdir+name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A', $
-				readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
+				; readcol, name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A', $
+				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, /silent, skipline=1
 			endelse
 			
@@ -918,8 +918,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; if (where(possible_all eq 'CO7-6'))[0] eq -1 then possible_all = [possible_all,'CO7-6']
 			; if (where(possible_all eq 'CI3P2-3P1'))[0] ne -1 then possible_all = possible_all[where(possible_all ne 'CI3P2-3P1')]
 			; 
-			; openw, secondfit, outdir+name+'_global_noise.txt', /get_lun
-			openw, secondfit, outdir+name+'.txt', /get_lun
+			; openw, secondfit, name+'_global_noise.txt', /get_lun
+			openw, secondfit, name+'.txt', /get_lun
 			if not keyword_set(current_pix) then begin
 				printf, secondfit, format='(17(a16,2x))', $
     				'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2'+unit+')','Sig_str(W/cm2'+unit+')','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um'+unit+')','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
