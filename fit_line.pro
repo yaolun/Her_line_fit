@@ -11,19 +11,19 @@ c = 2.998d10
 ; make the unit consist with each other. Change F_nu (Jy) -> F_lambda (W cm-2 um-1)
 ; flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26
 
-; weight = 1+0*flux
-wl = double(wl)
-flux = double(flux)
-expo = round(alog10(abs(median(flux))))*(-1)+1
-factor = 10d^expo
-nwl = wl - median(wl)
-if keyword_set(std) then begin
-	weight = double(std)*factor
-endif else begin
-	weight = 1+0*flux
-endelse
-fluxx = flux*factor
-nflux = fluxx - median(fluxx)
+; ; weight = 1+0*flux
+; wl = double(wl)
+; flux = double(flux)
+; expo = round(alog10(abs(median(flux))))*(-1)+1
+; factor = 10d^expo
+; nwl = wl - median(wl)
+; if keyword_set(std) then begin
+; 	weight = double(std)*factor
+; endif else begin
+; 	weight = 1+0*flux
+; endelse
+; fluxx = flux*factor
+; nflux = fluxx - median(fluxx)
 
 ; baseline part
 ; 
@@ -37,6 +37,7 @@ if keyword_set(std) then begin
   	; Prevent the ncertainty has zero in the array
   	std[where(std eq 0)] = mean(std)
     weight = double(std)*factor
+    if keyword_set(spire) then weight = 1+0*flux
 endif else begin
     weight = 1+0*flux
 endelse
