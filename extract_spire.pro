@@ -1039,7 +1039,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endif
 			if trim2[0] ne -1 then begin
 				oplot, wl[trim2], flux[trim2]/1e-22
-				oplot, wl[trim2], continuum_sub[trim2]/1e-22, color=200
+				oplot, wl[trim2], continuum_sub[trim2]/1e-22, color=100
 				oplot, wl[trim2], flat_noise[trim2]/1e-22 + min(flux)/1e-22, color=10
 			endif
 			; al_legend,['Data','lines_subtracted','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,100,10],/right
