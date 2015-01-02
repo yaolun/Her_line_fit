@@ -177,7 +177,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	for i = 0, n_elements(line_center)-1 do begin
 		dl = interpol(dl_ins, wl_ins, line_center[i])
 		if line_name[i] eq 'OI3P1-3P2' then range_factor=3
-		if line_name[i] ne 'OI3P1-3P2' then range_factor=1.5
+		if line_name[i] ne 'OI3P1-3P2' then range_factor=1
 		if i eq 0 then begin
 			lower = line_center[i]-(range_factor)*dl
 			if (range_factor)*dl gt 0.5*(line_center[i+1]-line_center[i]) then begin
