@@ -249,6 +249,7 @@ if not keyword_set(baseline) then begin
                 comb_noise = comb_noise[sort(comb_noise_wl)]
                 comb_noise_wl = comb_noise_wl[sort(comb_noise_wl)]
                 noise = stddev(comb_noise)
+                if linename eq 'o-H2O6_52-6_43' then stop
             	; noise = stddev(global_noise[*,1])
                 ; Use Eq. 4.57 from Robinson's note
                 ; if n_elements(global_noise[0,*]) eq 3 then begin
