@@ -20,7 +20,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	endif
 	if keyword_set(fx) then begin
 		; suffix = '_f'
-		ylabel = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)'
+		ylabel = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)'
 		unit = ''
 		brightness=0
 	endif
@@ -537,18 +537,18 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			!p.thick=2 & !x.thick=3 & !y.thick=3
 			trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-			plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata,position=[0.15,0.1,0.95,0.95]
+			plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = ylabel,/nodata,position=[0.15,0.1,0.95,0.95]
 			if trim1[0] ne -1 then begin
 				oplot, wl[trim1], flux[trim1]/1e-22
-				oplot, wl[trim1], flux_sub[trim1]/1e-22, color=200
+				oplot, wl[trim1], flux_sub[trim1]/1e-22, color=100
 			endif
 			if trim2[0] ne -1 then begin
 				oplot, wl[trim2], flux[trim2]/1e-22
-				oplot, wl[trim2], flux_sub[trim2]/1e-22, color=200
+				oplot, wl[trim2], flux_sub[trim2]/1e-22, color=100
 			endif
 			; oplot, wl, continuum/1e-22, color=50
 			; al_legend,['Data','lines_subtracted','Data_smooth','(lines_subtracted)_smooth', 'flat/featureless'],textcolors=[0,200,50,100,10],/right
-			al_legend,['Data','lines_subtracted'],textcolors=[0,200],/right
+			al_legend,['Data','lines_subtracted'],textcolors=[0,100],/right
 			al_legend,[object],textcolors=[0],/left
 			device, /close_file, decomposed = 1
 			!p.multi = 0
