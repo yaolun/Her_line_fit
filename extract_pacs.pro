@@ -328,8 +328,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
                 base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
             endif
             ; Select line+baseline
-            ; indl = where(wl gt base_range[0] and wl lt base_range[3])
-            indl = where(wl gt base_range[1] and wl lt base_range[2])
+            indl = where(wl gt base_range[0] and wl lt base_range[3])
 			if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
 			if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
 			wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
@@ -868,8 +867,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
 				endif
 				; Select the line+baseline
-				; indl = where(wl gt base_range[0] and wl lt base_range[3])
-				indl = where(wl gt base_range[1] and wl lt base_range[2])
+				indl = where(wl gt base_range[0] and wl lt base_range[3])
 				if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
 				if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
 				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
