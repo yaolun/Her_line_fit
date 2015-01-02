@@ -494,9 +494,9 @@ if not keyword_set(baseline) then begin
 			if keyword_set(global_noise) then begin
                 if not keyword_set(double_gauss) then begin
       			   ;al_legend, ['Data','Fit','Residual','Noise'],colors=[0,80,250,160], linestyle=[0,0,0,0], /bottom
-				    al_legend, ['Data','Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /left
+				    al_legend, ['Data','Fit','Residual+Noise'],colors=[0,80,160], linestyle=[0,0,0], /left
                 endif else begin
-                    al_legend, ['Data','Comb. Fit','Residual'],colors=[0,80,160], linestyle=[0,0,0], /left
+                    al_legend, ['Data','Comb. Fit','Residual+Noise'],colors=[0,80,160], linestyle=[0,0,0], /left
                 endelse
 			endif else begin
                 if not keyword_set(double_gauss) then begin
