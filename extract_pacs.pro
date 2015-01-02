@@ -246,7 +246,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	; Modified the line list for double Gaussian fitting
 	line_name_dg = [['CO31-30','OH9-3'],['CO23-22','o-H2O4_14-3_03'],['p-H2O7_53-8_26','CO20-19'],['OH14-12','o-H2O5_14-5_05'],$
 					['p-H2O3_22-3_13','o-H2O5_23-4_32'],['p-H2O6_51-7_26','OH19-14'],['OH18-15','p-H2O7_71-7_62'],['p-H2O9_19-8_08','o-H2O9_09-8_18'],['OH13-9','o-H2O6_25-5_14'],$
-					['OH14-10','OH15-11'],['p-H2O9_37-8_44','CO22-21'],['o-H2O7_34-7_25','p-H2O6_24-6_15'],['p-H2O5_33-6_06','o-H2O3_03-2_12'],['CO16-15','OH7-5']]
+					['OH14-10','OH15-11'],['p-H2O9_37-8_44','CO22-21'],['o-H2O7_34-7_25','p-H2O6_24-6_15'],['p-H2O5_33-6_06','o-H2O3_03-2_12'],['CO16-15','OH7-5'],['p-H2O4_13-3_22','CO18-17']]
 					; lines are too close to get a well-constrained fit: ['CII2P3_2-2P1_2','OH18-17'],['p-H2O3_13-2_02','p-H2O8_44-7_53']
 	line_center_dg = []
 	range_dg = []
