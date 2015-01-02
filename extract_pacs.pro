@@ -667,7 +667,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	endelse
     	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
-    		if abs(snr_n[line]) ge noiselevel-1.5 then begin
+    		if abs(snr_n[line]) ge noiselevel-2.0 then begin
 				if (blend_flag_n[line] ne 'x') and (lowest_E_n[line] ne 1) then continue
     			ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
     			wl_n = wl[ind]
@@ -734,7 +734,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	; Line subtraction
     	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
-    		if abs(snr_n[line]) ge noiselevel-1.5 then begin
+    		if abs(snr_n[line]) ge noiselevel-2.0 then begin
 				if (blend_flag_n[line] ne 'x') and (lowest_E_n[line] ne 1) then continue
     			ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
     			wl_n = wl[ind]
