@@ -247,6 +247,7 @@ if not keyword_set(baseline) then begin
                 comb_noise = [residual[indl], global_noise[indb,1]]
                 comb_noise_wl = [wl[indl], global_noise[indb,0]]
                 noise = stddev(comb_noise)
+                stop
             	; noise = stddev(global_noise[*,1])
                 ; Use Eq. 4.57 from Robinson's note
                 ; if n_elements(global_noise[0,*]) eq 3 then begin
