@@ -545,15 +545,15 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     
     ; Blended lines labeling and pick out the most possible line
     ; print, '--> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
-    name = filename+'_lines'
-    if keyword_set(linescan) then name = name+'_LS'
+    ; name = filename+'_lines'
+    ; if keyword_set(linescan) then name = name+'_LS'
     ; if keyword_set(localbaseline) then name = name+'_localbaseline'
     ; if keyword_set(fixed_width) then name = name+'_fixwidth'
     if not keyword_set(current_pix) then begin
-    	readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
+    	readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
     		line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, /silent, skipline=1
     endif else begin
-    	readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
+    	readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
     		line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, /silent, skipline=1
     endelse
     		    	
@@ -610,7 +610,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			endif
 		endelse	
 	endfor
-    openw, firstfit, outdir+name+'.txt', /get_lun
+    openw, firstfit, name+'.txt', /get_lun
     if not keyword_set(current_pix) then begin
     	printf, firstfit, format='(17(a16,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
@@ -654,15 +654,15 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     close, firstfit
     ; Plot the line subtracted spectrum
     if not keyword_set(global_noise) then begin
-    	name = filename+'_lines'
-    	if keyword_set(linescan) then name = name+'_LS'
+    	; name = filename+'_lines'
+    	; if keyword_set(linescan) then name = name+'_LS'
     	;if keyword_set(localbaseline) then name = name+'_localbaseline'
     	;if keyword_set(fixed_width) then name = name+'_fixwidth'
     	if not keyword_set(current_pix) then begin
-    		readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I', $
+    		readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
     	endif else begin
-    		readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I', $
+    		readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, lowest_E_n, /silent
     	endelse
     	flux_sub = flux
@@ -717,17 +717,17 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     ; Second fitting to use the results of the previous one to better estimate the noise
     if keyword_set(global_noise) then begin
     	print, '---> Re-calculating the noise level...'
-    	name = filename+'_lines'
-    	if keyword_set(linescan) then name = name+'_LS'
+    	; name = filename+'_lines'
+    	; if keyword_set(linescan) then name = name+'_LS'
     	;if keyword_set(localbaseline) then name = name+'_localbaseline'
     	;if keyword_set(fixed_width) then name = name+'_fixwidth'
 
     	; Read in the results of first fitting
     	if not keyword_set(current_pix) then begin
-    		readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I', $
+    		readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
     	endif else begin
-    		readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I', $
+    		readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, lowest_E_n, /silent
     	endelse
 
@@ -763,7 +763,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	flat_noise = flux_sub - continuum_sub
     	; Do I want to output the unceratinty with the continuum and flat spectrum?
     	if keyword_set(continuum_sub) then begin
-    		openw, sed, outdir+filename+'_continuum.txt', /get_lun
+    		openw, sed, name+'_continuum.txt', /get_lun
     		printf, sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		print_continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
@@ -772,7 +772,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		close, sed
     	endif
     	if keyword_set(flat) then begin
-    		openw, flat_sed, outdir+filename+'_flat_spectrum.txt',/get_lun
+    		openw, flat_sed, name+'_flat_spectrum.txt',/get_lun
     		printf, flat_sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		flat = (flux-continuum_sub)*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
@@ -813,8 +813,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 
 		; Do the same fitting again but using the global noise value
 		; Define the name of the output data of fitting results
-		name = outdir+filename+'_lines'
-		if keyword_set(linescan) then name = name+'_LS'
+		; name = outdir+filename+'_lines'
+		; if keyword_set(linescan) then name = name+'_LS'
 		; if keyword_set(localbaseline) then name = name+'_localbaselin
 		; if keyword_set(fixed_width) then name = name+'_fixwidth'
 		; name = name+'_global_noise'
@@ -1095,17 +1095,17 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	close, secondfit
     	; Identify the blended lines
 		; print, '----> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
-		name = filename+'_lines'
-		if keyword_set(linescan) then name = name+'_LS'
+		; name = filename+'_lines'
+		; if keyword_set(linescan) then name = name+'_LS'
 		;if keyword_set(localbaseline) then name = name
 		;if keyword_set(fixed_width) then name = name+'_fixwidth'
 		if not keyword_set(current_pix) then begin
 			;readcol, outdir+name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A', $
-			readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
+			readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
 				line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, /silent, skipline=1
 		endif else begin
 			;readcol, outdir+name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A', $
-			readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
+			readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
 				line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, /silent, skipline=1
 		endelse
     		    	
@@ -1162,7 +1162,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			endelse	
 		endfor
 		; openw, secondfit, outdir+name+'_global_noise.txt', /get_lun
-		openw, secondfit, outdir+name+'.txt', /get_lun
+		openw, secondfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
 			printf, secondfit, format='(17(a16,2x))', $
     			'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
@@ -1208,13 +1208,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		close, secondfit
 		
 		; Calculate the line subtracted spectrum again
-		name = filename+'_lines'
+		; name = filename+'_lines'
 		; if keyword_set(fixed_width) then name = name+'_fixwidth'
 		if not keyword_set(current_pix) then begin
-			readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I',$
+			readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I',$
 				line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
 		endif else begin
-			readcol, outdir+name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I',$
+			readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I',$
 				line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, lowest_E_n, /silent
 		endelse
 		
@@ -1246,7 +1246,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		flat_noise = flux_sub - continuum_sub
 
 		if keyword_set(continuum_sub) then begin
-    		openw, sed, outdir+filename+'_continuum.txt', /get_lun
+    		openw, sed, name+'_continuum.txt', /get_lun
     		printf, sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		print_continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
@@ -1255,7 +1255,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		close, sed
     	endif
     	if keyword_set(flat) then begin
-    		openw, flat_sed, outdir+filename+'_flat_spectrum.txt',/get_lun
+    		openw, flat_sed, name+'_flat_spectrum.txt',/get_lun
     		printf, flat_sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		flat = (flux-continuum_sub) *1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
