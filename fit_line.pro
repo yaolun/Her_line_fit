@@ -484,8 +484,8 @@ if not keyword_set(baseline) then begin
 			if not keyword_set(global_noise) then oplot, wl, (residual+interpol(base,wl, line[0]))/1d-22, psym=10, color=160
             if keyword_set(double_gauss) then oplot, [line[3],line[3]], [-1000,1000]/1d-22, linestyle = 2
 			if keyword_set(single_gauss) then begin
-				xyouts, 0.75, 0.8, 'SNR ='+string(snr,format='(g6.3)'), /normal
-                xyouts, 0.75, 0.75, 'FWHM ='+string(fwhm,format='(g6.3)'), /normal
+				xyouts, 0.75, 0.75, 'SNR ='+string(snr,format='(g6.3)'), /normal
+                xyouts, 0.75, 0.7, 'FWHM ='+string(fwhm,format='(g6.3)'), /normal
 			endif
 			if keyword_set(double_gauss) then begin
         		xyouts, 0.6, 0.75, 'SNR ='+string(snr[0],format='(g6.3)')+', FWHM ='+string(fwhm[0],format='(g6.3)'), /normal, color=30
