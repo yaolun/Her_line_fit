@@ -258,7 +258,8 @@ if not keyword_set(baseline) then begin
                 ; endif
             endif
             snr = abs(str/noise/fwhm)
-            if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
+            ; The constraint on fwhm has already considered the boardening caused by the apodization. Therefore, there is no need to address the oversample
+            if keyword_set(spire) then snr = str/noise/fwhm;/sqrt(4.8312294)
             ; snr = height/noise
             ;
             ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
@@ -306,7 +307,7 @@ if not keyword_set(baseline) then begin
             endif
             snr = abs(str/noise/fwhm)
             ; Account for the oversample in spire band
-            if keyword_set(spire) then snr = str/noise/fwhm/sqrt(4.8312294)
+            if keyword_set(spire) then snr = str/noise/fwhm;/sqrt(4.8312294)
             ;snr = height/noise
             ; Making sure the line classification is correct
             if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
