@@ -4,11 +4,11 @@ if file_test(outdir) eq 0 then file_mkdir, outdir
 if keyword_set(pacs) then noiselevel=3
 if keyword_set(spire) then noiselevel=4
 if keyword_set(cube) then begin
-	readcol, indir+filename+'.txt',format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,I',$
-		line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_n, valid_n, /silent
+	readcol, indir+filename+'.txt',format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,I',$
+		line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_n, valid_n, /silent
 endif else begin
-	readcol, indir+filename+'.txt',format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,I',$
-		line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_n, valid_n, /silent
+	readcol, indir+filename+'.txt',format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,I',$
+		line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_n, valid_n, /silent
 endelse
 
 line_name_oh2o = ['o-H2O8_27-7_16','o-H2O10_29-10_110','o-H2O9_09-8_18','o-H2O7_52-8_27','o-H2O4_32-3_21','o-H2O5_41-6_16','o-H2O9_18-9_09','o-H2O8_18-7_07','o-H2O6_61-6_52','o-H2O7_61-7_52',$

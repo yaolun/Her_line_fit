@@ -61,27 +61,27 @@ if keyword_set(fixed_width) then global_outname = global_outname+'_fixwidth'
 if keyword_set(print_all) and not keyword_set(no_fit) and not keyword_set(FWD) then begin
 	if not keyword_set(cube) or (keyword_set(cube) and keyword_set(co_add)) then begin
     	openw, gff, outdir+print_all+global_outname+'.txt',/get_lun
-		printf, gff, format='(18(a18,2x))',$
-        	'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
+		printf, gff, format='(19(a18,2x))',$
+        	'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
 		free_lun, gff
 		close, gff
 		
 		openw, gff, outdir+print_all+global_outname+'_global_noise.txt',/get_lun
-		printf, gff, format='(18(a18,2x))',$
-			'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
+		printf, gff, format='(19(a18,2x))',$
+			'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
 		free_lun, gff
 		close, gff
 		
 	endif
 	if keyword_set(cube) and not keyword_set(coadd) then begin
 		openw, gff, outdir+print_all+global_outname+'.txt',/get_lun
-		printf, gff, format='(19(a18,2x))',$
-				'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
+		printf, gff, format='(20(a18,2x))',$
+				'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
 		free_lun, gff
 		close, gff
 		openw, gff, outdir+print_all+global_outname+'_global_noise.txt',/get_lun
-		printf, gff, format='(19(a18,2x))',$
-				'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
+		printf, gff, format='(20(a18,2x))',$
+				'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
 		free_lun, gff
 		close, gff
 	endif

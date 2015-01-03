@@ -7,12 +7,12 @@ if keyword_set(spire) then begin
 	pixelname = ['SLWA1','SLWA2','SLWA3','SLWB1','SLWB2','SLWB3','SLWB4','SLWC1','SLWC2','SLWC3','SLWC4','SLWC5','SLWD1','SLWD2','SLWD3','SLWD4','SLWE1','SLWE2','SLWE3']
 	suffix = '_lines.txt'
 	if file_test(indir+objname+'_SLWC3'+suffix) eq 0 then suffix = '_lines.txt'
-	readcol, indir+objname+'_SLWC3'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+	readcol, indir+objname+'_SLWC3'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 	ra_cen_slw = ra
 	dec_cen_slw = dec
 	data_slw = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)), fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str))},n_elements(pixelname))
 	for pix = 0, n_elements(pixelname)-1 do begin
-    	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str,snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+    	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 		data_slw[pix].line = name
 		data_slw[pix].lab_wl = lab_wl
 		data_slw[pix].wl = wl
@@ -27,12 +27,12 @@ if keyword_set(spire) then begin
 	endfor
 	;SSW
 	pixelname = ['SSWA1','SSWA2','SSWA3','SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3','SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
-	readcol, indir+objname+'_SSWD4'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+	readcol, indir+objname+'_SSWD4'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 	ra_cen_ssw = ra
 	dec_cen_ssw = dec
 	data_ssw = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)), fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str))}, n_elements(pixelname))
 	for pix = 0, n_elements(pixelname)-1 do begin
-    	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+    	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 		data_ssw[pix].line = name
 		data_ssw[pix].lab_wl = lab_wl
 		data_ssw[pix].wl = wl
@@ -51,7 +51,7 @@ if keyword_set(pacs) then begin
 	;readcol, '~/bhr71/data/pacs_coord.txt', format='D,D,D', pix_ind, ra, dec  ;read the coordinate
 	suffix = '_os8_sf7_lines.txt'
 	if file_test(indir+objname+'_pacs_pixel13'+suffix) eq 0 then suffix = '_os8_sf7_lines.txt'
-	readcol, indir+objname+'_pacs_pixel13'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+	readcol, indir+objname+'_pacs_pixel13'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 	ra_cen_pacs = ra
 	dec_cen_pacs = dec
 	;if objname eq 'HD245906' then stop
@@ -59,7 +59,7 @@ if keyword_set(pacs) then begin
 		fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str))}, 25)
 
 	for pix = 0, 24 do begin
-    	readcol, indir+objname+'_pacs_pixel'+strtrim(string(pix+1),1)+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str,snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+    	readcol, indir+objname+'_pacs_pixel'+strtrim(string(pix+1),1)+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 		data_pacs[pix].line = name
 		data_pacs[pix].lab_wl = lab_wl
 		data_pacs[pix].wl = wl
