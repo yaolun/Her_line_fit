@@ -1,4 +1,4 @@
-pro fit_line, pixelname, linename, wl, flux, std=std, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, plot_base=plot_base,$
+pro fit_line, pixelname, linename, wl, flux, std=std, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 baseline=baseline, test=test, single_gauss=single_gauss, double_gauss=double_gauss, outdir=outdir, noiselevel=noiselevel, fixed_width=fixed_width,global_noise=global_noise,base_range=base_range,brightness=brightness,$
 no_plot=no_plot,b3a=b3a,fix_dg=fix_dg,spire=spire
 
@@ -58,6 +58,7 @@ if keyword_set(baseline) then begin
     base_para = [p[0], p[1]-2*p[0]*median(wl), p[2]-p[1]*median(wl)+p[0]*median(wl)^2]
     mid_base = median(base)
     residual = flux-base
+    noise = stddev(residual)
     ;-------------------------------------------
     if not keyword_set(no_plot) then begin
     	set_plot, 'ps'
@@ -72,6 +73,7 @@ if keyword_set(baseline) then begin
 		oplot, wl, flux/1d-22, psym = 2
         oplot, wl, base/1d-22, color = 40                                                                           ;plot the fitted curve
 		oplot, wl, residual/1d-22, psym = 10, color = 250                                                           ;plot the reidual
+        al_legend, ['Data','Baseline']
         device, /close_file, decomposed = 1
     endif
 endif
@@ -130,7 +132,7 @@ if not keyword_set(baseline) then begin
         if not keyword_set(spire) then begin
             start[2] = dl;(max(nwl[ind]) - min(nwl[ind]))
         endif else begin
-            start[2] = dl/1.5
+            start[2] = dl
         endelse
     endif
     ;For double Gaussian fit
@@ -265,7 +267,11 @@ if not keyword_set(baseline) then begin
             ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
             if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
             if keyword_set(fixed_width) then sig_fwhm = -998
-            if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
+            if not keyword_set(spire) then begin
+                if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
+            endif else begin
+                if (fwhm eq dl/1.5*2.354 or fwhm eq dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
+            endelse
             ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
             if sig_str eq 0 then sig_str = -999
         endif

@@ -243,14 +243,14 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; Fitting part
 			; Different fitting keyword for fixed width and test arguement
 			if keyword_set(fixed_width) then begin
-				if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, noise, snr, line, noise, plot_base=plot_base,$
+				if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-				if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, noise, snr, line, noise, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 			endif else begin
-        		if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, noise, snr, line, noise, plot_base=plot_base,$
+        		if keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
         						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-				if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, noise, snr, line, noise, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, pixelname[j], line_name[i], wll, fluxx, std=abs(fluxx)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 			endelse
 			; Print the fittng result into text file
