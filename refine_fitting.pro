@@ -7,7 +7,7 @@ if keyword_set(cube) then begin
 	readcol, indir+filename+'.txt',format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,I',$
 		line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_n, valid_n, /silent
 endif else begin
-	readcol, indir+filename+'.txt',format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,I',$
+	readcol, indir+filename+'.txt',format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,I',$
 		line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_n, valid_n, /silent
 endelse
 
