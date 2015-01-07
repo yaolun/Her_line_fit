@@ -596,8 +596,10 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			spec_continuum_smooth,wl,flux_sub,continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
 			spec_continuum_smooth,wl,flux,continuum, continuum_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9, lower=0.9
 			flat_noise = flux_sub - continuum_sub
+			if not keyword_set(filename) then name_dum = outdir+object+'_'+pixelname[j]
+			if keyword_set(filename) then name_dum = outdir + filename
 			if keyword_set(continuum_sub) then begin
-    			openw, sed, name+'_continuum.txt', /get_lun
+    			openw, sed, name_dum+'_continuum.txt', /get_lun
     			if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
     			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 				print_continuum_sub = continuum_sub*1d26*1d6*(wl*1d-6)^2/c*1d4
@@ -606,7 +608,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				close, sed
 			endif
 			if keyword_set(flat) then begin
-    			openw, flat_sed, name+'_flat_spectrum.txt',/get_lun
+    			openw, flat_sed, name_dum+'_flat_spectrum.txt',/get_lun
 				if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
     			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 				flat = (flux - continuum_sub) *1d26*1d6*(wl*1d-6)^2/c*1d4
@@ -1001,9 +1003,10 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			sbin=20
 			spec_continuum_smooth,wl,flux_sub,continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
 			flat_noise = flux_sub - continuum_sub
-
+			if not keyword_set(filename) then name_dum = outdir+object+'_'+pixelname[j]
+			if keyword_set(filename) then name_dum = outdir + filename
 			if keyword_set(continuum_sub) then begin
-    			openw, sed, name+'_continuum.txt', /get_lun
+    			openw, sed, name_dum+'_continuum.txt', /get_lun
     			if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
     			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 				print_continuum_sub = continuum_sub*1d26*1d6*(wl*1d-6)^2/c*1d4
@@ -1012,7 +1015,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				close, sed
 			endif
 			if keyword_set(flat) then begin
-    			openw, flat_sed, name+'_flat_spectrum.txt',/get_lun
+    			openw, flat_sed, name_dum+'_flat_spectrum.txt',/get_lun
 				if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
     			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 				flat = (flux - continuum_sub) *1d26*1d6*(wl*1d-6)^2/c*1d4

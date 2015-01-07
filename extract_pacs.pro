@@ -763,7 +763,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	flat_noise = flux_sub - continuum_sub
     	; Do I want to output the unceratinty with the continuum and flat spectrum?
     	if keyword_set(continuum_sub) then begin
-    		openw, sed, name+'_continuum.txt', /get_lun
+    		openw, sed, outdir+filename+'_continuum.txt', /get_lun
     		printf, sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		print_continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
@@ -772,7 +772,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		close, sed
     	endif
     	if keyword_set(flat) then begin
-    		openw, flat_sed, name+'_flat_spectrum.txt',/get_lun
+    		openw, flat_sed, outdir+filename+'_flat_spectrum.txt',/get_lun
     		printf, flat_sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		flat = (flux-continuum_sub)*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
@@ -1246,7 +1246,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		flat_noise = flux_sub - continuum_sub
 
 		if keyword_set(continuum_sub) then begin
-    		openw, sed, name+'_continuum.txt', /get_lun
+    		openw, sed, outdir+filename+'_continuum.txt', /get_lun
     		printf, sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		print_continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
@@ -1255,7 +1255,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		close, sed
     	endif
     	if keyword_set(flat) then begin
-    		openw, flat_sed, name+'_flat_spectrum.txt',/get_lun
+    		openw, flat_sed, outdir+filename+'_flat_spectrum.txt',/get_lun
     		printf, flat_sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
     		flat = (flux-continuum_sub) *1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
