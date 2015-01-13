@@ -56,7 +56,7 @@ if keyword_set(baseline) then begin
     start[2] = nflux(0)
     ; result = mpfitfun('base2d', nwl, nflux, weight, start, /quiet, perror=sigma, status=status, errmsg=errmsg, /nan)
     ; Use an uniform weights for the baseline fitting
-    result = mpfitfun('base2d', nwl, nflux, start, weights=(1+0*flux), /quiet, perror=sigma, status=status, errmsg=errmsg, /nan)
+    result = mpfitfun('base2d', nwl, nflux, 0*flux, start, weights=(1+0*flux), /quiet, perror=sigma, status=status, errmsg=errmsg, /nan)
     p = result/factor & p_sig = sigma/factor
     p[2] = p[2] + median(flux)
     base = p[0]*(wl-median(wl))^2 + p[1]*(wl-median(wl)) + p[2]
