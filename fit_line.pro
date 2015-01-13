@@ -37,7 +37,7 @@ if keyword_set(std) then begin
   	; Prevent the ncertainty has zero in the array
   	std[where(std eq 0)] = mean(std)
     weight = double(std)*factor
-    if keyword_set(spire) then weight = 1+0*flux
+    ; if keyword_set(spire) then weight = 1+0*flux
 endif else begin
     weight = 1+0*flux
 endelse
@@ -56,6 +56,7 @@ if keyword_set(baseline) then begin
     start[2] = nflux(0)
     ; result = mpfitfun('base2d', nwl, nflux, weight, start, /quiet, perror=sigma, status=status, errmsg=errmsg, /nan)
     ; Use an uniform weights for the baseline fitting
+    ; Although putting zeros in err will result in the ignorance of the corresponding data points, specifying weights keyword ignores the err instead.
     result = mpfitfun('base2d', nwl, nflux, 0*flux, start, weights=(1+0*flux), /quiet, perror=sigma, status=status, errmsg=errmsg, /nan)
     p = result/factor & p_sig = sigma/factor
     p[2] = p[2] + median(flux)
@@ -78,7 +79,7 @@ if keyword_set(baseline) then begin
 		oplot, wl, flux/1d-22, psym = 2
         oplot, wl, base/1d-22, color = 40                                                                           ;plot the fitted curve
 		oplot, wl, residual/1d-22, psym = 10, color = 250                                                           ;plot the reidual
-        al_legend, ['Data','Baseline']
+        al_legend, ['Data','Baseline','Residual'], color=[0,40,250], linestyle=[1,1,1], /left, /bottom
         device, /close_file, decomposed = 1
     endif
 endif
