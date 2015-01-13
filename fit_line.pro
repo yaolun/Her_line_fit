@@ -270,6 +270,7 @@ if not keyword_set(baseline) then begin
                 ; endif
             endif
             snr = abs(str/(1.064*noise*fwhm))
+            if linename eq 'CO25-24' then stop
             ; The constraint on fwhm has already considered the boardening caused by the apodization. Therefore, there is no need to address the oversample
             ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
             ; snr = height/noise
