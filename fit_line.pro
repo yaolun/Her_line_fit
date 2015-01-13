@@ -223,10 +223,10 @@ if not keyword_set(baseline) then begin
     if keyword_set(single_gauss) then func = 'gauss'
     if keyword_set(double_gauss) then func = 'gauss_double'
     if not keyword_set(feedback) then begin
-        result = mpfitfun(func, nwl, nflux, start, /quiet, weights = 1/weight^2, perror=sigma, status = status, errmsg = errmsg, parinfo=parinfo, /nan)
+        result = mpfitfun(func, nwl, nflux, start, /quiet, weights = 1/weight^2, perror=sigma, status = status, errmsg = errmsg, parinfo=parinfo, /nan, bestnorm=bestnorm, dof=dof)
     endif else begin
         ; if feedback is provided, then the fitting routine has a precise measurement of the local error.
-        result = mpfitfun(func, nwl, nflux, weight, start, /quiet, perror=sigma, status = status, errmsg = errmsg, parinfo=parinfo, /nan)
+        result = mpfitfun(func, nwl, nflux, weight, start, /quiet, perror=sigma, status = status, errmsg = errmsg, parinfo=parinfo, /nan, bestnorm=bestnorm, dof=dof)
     endelse
     p = result
     if status gt 0 then begin
@@ -270,7 +270,7 @@ if not keyword_set(baseline) then begin
                 ; endif
             endif
             snr = abs(str/(1.064*noise*fwhm))
-            if linename eq 'CO25-24' then stop
+            if linename eq 'CO25-24' then stopp
             ; The constraint on fwhm has already considered the boardening caused by the apodization. Therefore, there is no need to address the oversample
             ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
             ; snr = height/noise
