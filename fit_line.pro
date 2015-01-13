@@ -239,9 +239,9 @@ if not keyword_set(baseline) then begin
             rms = sqrt(rms2)
             ; Additional procedure for using the actual uncertainty from the data
             ; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
-            if not keyword_set(std) then begin
-                sigma = sigma*rms
-            endif
+            ; if not keyword_set(std) then begin
+            ;     sigma = sigma*rms
+            ; endif
             if keyword_set(feedback) then sigma = sigma * sqrt(bestnorm/dof)
             cen_wl = p[1] + median(wl) & sig_cen_wl = sigma[1]
             height = p[0]/factor & sig_height = sigma[0]/factor
@@ -294,9 +294,9 @@ if not keyword_set(baseline) then begin
             rms = sqrt(rms2)
             ; Additional procedure for using the actual uncertainty from the data
             ; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
-            if not keyword_set(std) then begin
-                sigma = sigma*rms
-            endif
+            ; if not keyword_set(std) then begin
+            ;     sigma = sigma*rms
+            ; endif
             if keyword_set(feedback) then sigma = sigma * sqrt(bestnorm/dof)
             cen_wl = [p[1]+median(wl), p[4]+median(wl)] & sig_cen_wl = [sigma[1],sigma[4]]
             height = [p[0],p[3]]/factor & sig_height = [sigma[0],sigma[3]]/factor
