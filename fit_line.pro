@@ -241,6 +241,7 @@ if not keyword_set(baseline) then begin
             if not keyword_set(std) then begin
                 sigma = sigma*rms
             endif
+            if keyword_set(feedback) then sigma = sigma * sqrt(bestnorm/dof)
             cen_wl = p[1] + median(wl) & sig_cen_wl = sigma[1]
             height = p[0]/factor & sig_height = sigma[0]/factor
             fwhm = 2.354*abs(p[2]) & sig_fwhm = 2.354*abs(sigma[2])
@@ -295,6 +296,7 @@ if not keyword_set(baseline) then begin
             if not keyword_set(std) then begin
                 sigma = sigma*rms
             endif
+            if keyword_set(feedback) then sigma = sigma * sqrt(bestnorm/dof)
             cen_wl = [p[1]+median(wl), p[4]+median(wl)] & sig_cen_wl = [sigma[1],sigma[4]]
             height = [p[0],p[3]]/factor & sig_height = [sigma[0],sigma[3]]/factor
             fwhm = 2.354*[abs(p[2]), abs(p[5])] & sig_fwhm = 2.354*[abs(sigma[2]), abs(sigma[5])]
