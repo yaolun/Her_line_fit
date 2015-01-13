@@ -1,6 +1,6 @@
 pro fit_line, pixelname, linename, wl, flux, std=std, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 baseline=baseline, test=test, single_gauss=single_gauss, double_gauss=double_gauss, outdir=outdir, noiselevel=noiselevel, fixed_width=fixed_width,global_noise=global_noise,base_range=base_range,brightness=brightness,$
-no_plot=no_plot,b3a=b3a,fix_dg=fix_dg,spire=spire
+no_plot=no_plot,b3a=b3a,fix_dg=fix_dg,spire=spire,feedback=feedback
 
 ; The double gaussian function still in alpha test
 ; Create a separated directory for putting the double fitting plots
@@ -41,6 +41,9 @@ if keyword_set(std) then begin
 endif else begin
     weight = 1+0*flux
 endelse
+
+; Feedback option for the third fitting.  Take the well-estimated noise as the local error of the data.
+if keyword_set(feedback) then weight = feedback
 fluxx = flux*factor
 nflux = fluxx - median(fluxx)
   
@@ -51,7 +54,9 @@ if keyword_set(baseline) then begin
     start[0] = 0
     start[1] = (nflux[n_elements(nwl)-1] - nflux[0])/(nwl[n_elements(nwl)-1] - nwl[0])
     start[2] = nflux(0)
-    result = mpfitfun('base2d', nwl, nflux, weight, start, /quiet, perror=sigma, status=status, errmsg=errmsg, /nan)
+    ; result = mpfitfun('base2d', nwl, nflux, weight, start, /quiet, perror=sigma, status=status, errmsg=errmsg, /nan)
+    ; Use an uniform weights for the baseline fitting
+    result = mpfitfun('base2d', nwl, nflux, start, weights=(1+0*flux), /quiet, perror=sigma, status=status, errmsg=errmsg, /nan)
     p = result/factor & p_sig = sigma/factor
     p[2] = p[2] + median(flux)
     base = p[0]*(wl-median(wl))^2 + p[1]*(wl-median(wl)) + p[2]
@@ -217,7 +222,12 @@ if not keyword_set(baseline) then begin
     ;Fit it!
     if keyword_set(single_gauss) then func = 'gauss'
     if keyword_set(double_gauss) then func = 'gauss_double'
-    result = mpfitfun(func, nwl, nflux, weight, start, /quiet, perror=sigma, status = status, errmsg = errmsg, parinfo=parinfo, /nan)
+    if not keyword_set(feedback) then begin
+        result = mpfitfun(func, nwl, nflux, start, /quiet, weights = 1/weight^2, perror=sigma, status = status, errmsg = errmsg, parinfo=parinfo, /nan)
+    endif else begin
+        ; if feedback is provided, then the fitting routine has a precise measurement of the local error.
+        result = mpfitfun(func, nwl, nflux, weight, start, /quiet, perror=sigma, status = status, errmsg = errmsg, parinfo=parinfo, /nan)
+    endelse
     p = result
     if status gt 0 then begin
     ;This if statement is to make sure that the fitting routine actually gets the converged result.
@@ -259,9 +269,9 @@ if not keyword_set(baseline) then begin
                 ;   noise = std_noise
                 ; endif
             endif
-            snr = abs(str/noise/fwhm)
+            snr = abs(str/(1.064*noise*fwhm))
             ; The constraint on fwhm has already considered the boardening caused by the apodization. Therefore, there is no need to address the oversample
-            if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
+            ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
             ; snr = height/noise
             ;
             ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
@@ -313,9 +323,9 @@ if not keyword_set(baseline) then begin
                 ;   noise = std_noise
                 ; endif
             endif
-            snr = abs(str/noise/fwhm)
+            snr = abs(str/(1.064*noise*fwhm))
             ; Account for the oversample in spire band
-            if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
+            ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
             ;snr = height/noise
             ; Making sure the line classification is correct
             if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
