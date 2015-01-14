@@ -507,10 +507,10 @@ if not keyword_set(baseline) then begin
                 xyouts, 0.75, 0.7, 'FWHM ='+string(fwhm,format='(g7.4)'), /normal
 			endif
 			if keyword_set(double_gauss) then begin
-                ; xyouts, 0.6, 0.75, 'SNR ='+string(snr[0],format='(g6.4)')+', FWHM ='+string(fwhm[0],format='(g7.4)'), /normal, color=30
-				; xyouts, 0.6, 0.7, 'SNR ='+string(snr[1],format='(g6.4)')+', FWHM ='+string(fwhm[1],format='(g7.4)'), /normal, color=225
-                xyouts, 0.2, 0.75, 'SNR ='+string(snr[0],format='(g6.4)')+', FWHM ='+string(fwhm[0],format='(g7.4)'), /normal, color=30
-                xyouts, 0.2, 0.7, 'SNR ='+string(snr[1],format='(g6.4)')+', FWHM ='+string(fwhm[1],format='(g7.4)'), /normal, color=225
+                xyouts, 0.6, 0.75, 'SNR ='+string(snr[0],format='(g6.4)')+', FWHM ='+string(fwhm[0],format='(g7.4)'), /normal, color=30
+				xyouts, 0.6, 0.7, 'SNR ='+string(snr[1],format='(g6.4)')+', FWHM ='+string(fwhm[1],format='(g7.4)'), /normal, color=225
+                ; xyouts, 0.2, 0.75, 'SNR ='+string(snr[0],format='(g6.4)')+', FWHM ='+string(fwhm[0],format='(g7.4)'), /normal, color=30
+                ; xyouts, 0.2, 0.7, 'SNR ='+string(snr[1],format='(g6.4)')+', FWHM ='+string(fwhm[1],format='(g7.4)'), /normal, color=225
 ;				xyouts, 0.2, 0.75, 'FWHM='+strtrim(string(fwhm[0]),1), /normal
 ;        		xyouts, 0.2, 0.7, '     '+strtrim(string(fwhm[1]),1), /normal
 			endif
