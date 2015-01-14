@@ -79,7 +79,7 @@ if keyword_set(baseline) then begin
 		oplot, wl, flux/1d-22, psym = 2
         oplot, wl, base/1d-22, color = 40                                                                           ;plot the fitted curve
 		oplot, wl, residual/1d-22, psym = 10, color = 250                                                           ;plot the reidual
-        al_legend, ['Data','Baseline','Residual'], color=[0,40,250], linestyle=[1,1,1], /left, /bottom
+        al_legend, ['Data','Baseline','Residual'], color=[0,40,250], linestyle=[0,0,0], /left, /bottom
         device, /close_file, decomposed = 1
     endif
 endif
@@ -504,11 +504,11 @@ if not keyword_set(baseline) then begin
             if keyword_set(double_gauss) then oplot, [line[3],line[3]], [-1000,1000]/1d-22, linestyle = 2
 			if keyword_set(single_gauss) then begin
 				xyouts, 0.75, 0.75, 'SNR ='+string(snr,format='(g6.4)'), /normal
-                xyouts, 0.75, 0.7, 'FWHM ='+string(fwhm,format='(g6.4)'), /normal
+                xyouts, 0.75, 0.7, 'FWHM ='+string(fwhm,format='(g7.4)'), /normal
 			endif
 			if keyword_set(double_gauss) then begin
-        		xyouts, 0.6, 0.75, 'SNR ='+string(snr[0],format='(g6.4)')+', FWHM ='+string(fwhm[0],format='(g6.4)'), /normal, color=30
-				xyouts, 0.6, 0.7, 'SNR ='+string(snr[1],format='(g6.4)')+', FWHM ='+string(fwhm[1],format='(g6.4)'), /normal, color=225
+        		xyouts, 0.6, 0.75, 'SNR ='+string(snr[0],format='(g6.4)')+', FWHM ='+string(fwhm[0],format='(g7.4)'), /normal, color=30
+				xyouts, 0.6, 0.7, 'SNR ='+string(snr[1],format='(g6.4)')+', FWHM ='+string(fwhm[1],format='(g7.4)'), /normal, color=225
 ;				xyouts, 0.2, 0.75, 'FWHM='+strtrim(string(fwhm[0]),1), /normal
 ;        		xyouts, 0.2, 0.7, '     '+strtrim(string(fwhm[1]),1), /normal
 			endif
