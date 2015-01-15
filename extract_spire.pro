@@ -227,7 +227,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; 7 % of flux uncertainty in SPIRE spectrometer (Observer manual 5.3.6)
 			; use the plot_base feature to plot the actual spectrum (with line) here
 			plot_base = [[wll],[fluxl]]
-			fit_line, object+pixelname[j], line_name[i], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base,/spire
+			fit_line, object+'_'+pixelname[j], line_name[i], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base,/spire
 			
 			; extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
@@ -243,28 +243,28 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; Fitting part
 			; Different fitting keyword for fixed width and test arguement
 			if keyword_set(fixed_width) then begin
-				if keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+				if keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-				if not keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 			endif else begin
-        		if keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+        		if keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
         						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-				if not keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+				if not keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 			endelse
 			; if the global_noise keyword is not specified, then do the fitting again but take the evaluated noise as the error of the data
 			if not keyword_set(global_noise) then begin
 				feedback = noise + fluxx*0
 				if keyword_set(fixed_width) then begin
-					if keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+					if keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 	        										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire, feedback=feedback
-					if not keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+					if not keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 											       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire, feedback=feedback
 				endif else begin
-	        		if keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+	        		if keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 	        						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire, feedback=feedback
-					if not keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+					if not keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 											  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire, feedback=feedback
 				endelse
 			endif
@@ -339,7 +339,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				endif
 				; use the plot_base feature to plot the actual spectrum (with line) here
 				plot_base = [[wll],[fluxl]]
-				fit_line, object+pixelname[j], line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base,/spire
+				fit_line, object+'_'+pixelname[j], line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base,/spire
 				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
@@ -354,11 +354,11 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
 				; Fitting part
 				; Different fitting keyword for fixed width and test arguement
-				fit_line,object+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
+				fit_line,object+'_'+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
 					 noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,/fix_dg,/spire,/fixed_width,brightness=brightness
 				; if the global_noise keyword is not specified, then do the fitting again but take the evaluated noise as the error of the data
 				if not keyword_set(global_noise) then begin
-					fit_line,pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
+					fit_line,object+'_'+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
 						noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,/fix_dg,/spire,/fixed_width,brightness=brightness,feedback=feedback
 				endif
 				if status eq 0 then begin
@@ -703,7 +703,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				; use the plot_base feature to plot the actual spectrum (with line) here
 				plot_base = [[wll],[fluxl]]
 				; fit the baseline and return the baseline parameter in 'base_para'
-				fit_line, object+pixelname[j], line_name[i], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base,/spire
+				fit_line, object+'_'+pixelname[j], line_name[i], wlb, fluxb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base,/spire
 				; extract the wave and flux for plottng that is for better visualization of the fitting results.
 				ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 				plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
@@ -723,14 +723,14 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				; Fitting part
 				; Different fitting keyword for fixed width and test arguement
 				if keyword_set(fixed_width) then begin
-					if keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+					if keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-					if not keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+					if not keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 				endif else begin
-        			if keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+        			if keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
         						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
-					if not keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+					if not keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 				endelse
 				
@@ -739,14 +739,14 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				feedback = noise + fluxx*0
 
 				if keyword_set(fixed_width) then begin
-					if keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+					if keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
         										/single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire, feedback=feedback
-					if not keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+					if not keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire, feedback=feedback
 				endif else begin
-        			if keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+        			if keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
         						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire, feedback=feedback
-					if not keyword_set(test) then fit_line, object+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
+					if not keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire, feedback=feedback
 				endelse
 
@@ -824,7 +824,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					endif
 					; use the plot_base feature to plot the actual spectrum (with line) here
 					plot_base = [[wll],[fluxl]]
-					fit_line, object+pixelname[j], line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base,/spire
+					fit_line, object+'_'+pixelname[j], line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot,plot_base=plot_base,/spire
 					; extract the wave and flux for plottng that is for better visualization of the fitting results.
 					ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 					plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
@@ -845,12 +845,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
 					; Fitting part
 					; Different fitting keyword for fixed width and test arguement
-					fit_line,object+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
+					fit_line,object+'_'+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
 					 	noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,/fix_dg,/spire,/fixed_width,brightness=brightness
 		
 					; A third fitting to take the well-estimated noise as the error of the data into the fitting routine to get the best estimation of the unceratinty of the fitted parameters
 					feedback = noise + fluxx*0
-					fit_line,object+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
+					fit_line,object+'_'+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
 					 	noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,/fix_dg,/spire,/fixed_width,brightness=brightness,feedback=feedback
 					if status eq 0 then begin
 						printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
