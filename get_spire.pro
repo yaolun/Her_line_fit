@@ -104,9 +104,9 @@ pix_slw = !PI/4*50.5^2
 pix_ssw = !PI/4*32.5^2
 ; Read the object info from the header
 ;SLW
-!p.multi = [0,5,5]
-set_plot, 'ps'
-!p.font = 0
+; !p.multi = [0,5,5]
+; set_plot, 'ps'
+; !p.font = 0
 if keyword_set(brightness) then begin
 	plotname_slw = plotdir+object+'_brightness_slw.eps'
 	plotname_ssw = plotdir+object+'_brightness_ssw.eps'
@@ -119,9 +119,9 @@ if keyword_set(fx) then begin
 	ylabel = 'Flux (Jy)'
     brightness = 0
 endif
-device, filename = plotname_slw, /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
-loadct, 12,/silent
-!p.thick = 1; & !x.thick = 3 & !y.thick = 3
+; device, filename = plotname_slw, /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
+; loadct, 12,/silent
+; !p.thick = 1; & !x.thick = 3 & !y.thick = 3
 label = ['SLWA1','SLWA2','SLWA3','SLWB1','SLWB2','SLWB3','SLWB4','SLWC1','SLWC2','SLWC3','SLWC4','SLWC5','SLWD1','SLWD2','SLWD3','SLWD4','SLWE1','SLWE2','SLWE3','SSWA1','SSWA2','SSWA3',$
          'SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3',$
          'SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
@@ -138,7 +138,7 @@ for i = 2,4 do begin
     ; plot spaxel spectrum
     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
 
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
@@ -146,8 +146,8 @@ for i = 2,4 do begin
     free_lun, lun
     close, lun
 endfor
-plot, [0],[0], color = 255
-plot, [0],[0], color = 255
+; plot, [0],[0], color = 255
+; plot, [0],[0], color = 255
 for i = 5,8 do begin
     data = readfits(filename, hdr,exten=i,/silent)
     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
@@ -157,7 +157,7 @@ for i = 5,8 do begin
     wl = wl[where(wl gt 304)]
     flux = flux[sort(wl)]
     wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
@@ -165,7 +165,7 @@ for i = 5,8 do begin
     free_lun, lun
     close, lun
 endfor
-plot, [0],[0], color = 255
+; plot, [0],[0], color = 255
 for i = 9,13 do begin
     data = readfits(filename, hdr,exten=i,/silent)
     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
@@ -175,7 +175,7 @@ for i = 9,13 do begin
     wl = wl[where(wl gt 304)]
     flux = flux[sort(wl)]
     wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
@@ -183,7 +183,7 @@ for i = 9,13 do begin
     free_lun, lun
     close, lun
 endfor
-plot,[0],[0], color = 255
+; plot,[0],[0], color = 255
 for i = 14,17 do begin
     data = readfits(filename, hdr,exten=i,/silent)
     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
@@ -193,7 +193,7 @@ for i = 14,17 do begin
     wl = wl[where(wl gt 304)]
     flux = flux[sort(wl)]
     wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
@@ -201,8 +201,8 @@ for i = 14,17 do begin
     free_lun, lun
     close, lun
 endfor
-plot, [0],[0], color = 255
-plot, [0],[0], color = 255
+; plot, [0],[0], color = 255
+; plot, [0],[0], color = 255
 for i = 18,20 do begin
     data = readfits(filename, hdr,exten=i,/silent)
     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
@@ -212,7 +212,7 @@ for i = 18,20 do begin
     wl = wl[where(wl gt 304)]
     flux = flux[sort(wl)]
     wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
@@ -220,8 +220,8 @@ for i = 18,20 do begin
     free_lun, lun
     close, lun
 endfor
-device, /close_file, decomposed = 1
-!p.multi = 0
+; device, /close_file, decomposed = 1
+; !p.multi = 0
 
 ;SSW
 !p.multi = [0,7,7]
