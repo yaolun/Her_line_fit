@@ -74,6 +74,25 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
 	!p.multi = 0 
 end
 
+pro plot_spire_1d, wl, flux, object=object, pixname=pixname, outdir=outdir, fx=fx, brightness=brightness
+    ; This routine is designed for plotting the individual spaxel either from SSW or SLW.  Callable by get_spire
+    ; Sort the spectrum
+    flux = flux[sort(wl)]
+    wl = wl[sort(wl)]
+    if keyword_set(brightness) then ylabel = 'I!d!9n!n!3 (Jy/arcsec!u2!n)'
+    if keyword_set(fx) then ylabel = 'Flux (Jy)'
+    ; Plot the spectrum
+    set_plot, 'ps'
+    !p.font=0
+    loadct,13,/silent
+    !p.thick=3 & !x.thick=3 & !y.thick=3
+    device, filename = outdir+object+'_'+pixname+'.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
+    plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel
+    al_legend, [object+'-'+pixname],textcolors=[0],/right
+    device, /close_file,decomposed=1
+    !p.multi = 0 
+end
+
 pro get_spire, object=object,indir=indir, filename=filename, outdir=outdir, brightness=brightness,fx=fx
 
 if file_test(outdir) eq 0 then file_mkdir, outdir
@@ -90,13 +109,15 @@ set_plot, 'ps'
 !p.font = 0
 if keyword_set(brightness) then begin
 	plotname_slw = plotdir+object+'_brightness_slw.eps'
-	plotname_ssw = plotdir+object+'_brughtness_ssw.eps'
+	plotname_ssw = plotdir+object+'_brightness_ssw.eps'
 	ylabel = 'I!d!9n!n!3 (Jy/arcsec!u2!n)'
+    fx = 0
 endif
 if keyword_set(fx) then begin
 	plotname_slw = plotdir+object+'_flux_slw.eps'
 	plotname_ssw = plotdir+object+'_flux_ssw.eps'
 	ylabel = 'Flux (Jy)'
+    brightness = 0
 endif
 device, filename = plotname_slw, /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
 loadct, 12,/silent
@@ -114,6 +135,9 @@ for i = 2,4 do begin
     wl = wl[where(wl gt 304)]
     flux = flux[sort(wl)]
     wl = wl[sort(wl)]
+    ; plot spaxel spectrum
+    plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+
     plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
