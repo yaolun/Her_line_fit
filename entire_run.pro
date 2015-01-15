@@ -55,11 +55,13 @@ if keyword_set(pacs_test) then begin
 	proj = 'digit'
 	run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
 	run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+	goto, bottom
 endif
 if keyword_set(spire_test) then begin
 	; run COPS 1-D + cube
 	run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/corrected,/cops,no_plot=no_plot,print_all=outname+'_spire_1d',/double_gauss,/FWD,obj_flag=obj_flag
 	run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/cube,/cops,no_plot=no_plot,print_all=outname+'_spire_cube',/double_gauss,/contour,/FWD,obj_flag=obj_flag
+	goto, bottom
 endif
 
 if keyword_set(clean) then begin
