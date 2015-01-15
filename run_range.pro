@@ -197,8 +197,8 @@ while i eq 1 do begin
 		; 					  central9Spaxels_PointSourceCorrected_slice
 		if not keyword_set(cube) then begin
 			for ifoo = 0, n_elements(filename)-1 do begin
-				foo_front = (strsplit(filename[ifoo], 'centralSpaxel_PointSourceCorrected_Corrected3x3YES', /extract))[0]
-				foo_back = (strsplit(filename[ifoo], 'centralSpaxel_PointSourceCorrected_Corrected3x3YES', /extract))[1]
+				foo_front = (strsplit(filename[ifoo], 'centralSpaxel_PointSourceCorrected_Corrected3x3YES', /extract, /regex))[0]
+				foo_back = (strsplit(filename[ifoo], 'centralSpaxel_PointSourceCorrected_Corrected3x3YES', /extract, /regex))[1]
 				; Copy 3x3NO
 				file_copy, foo_front + 'centralSpaxel_PointSourceCorrected_Corrected3x3NO' + foo_back, outdir+current_obj+'/pacs/data/fits/',/overwrite
 				; Copy central9Spaxels
@@ -208,8 +208,8 @@ while i eq 1 do begin
 		; If cube, looking for rebinnedcubenoda and rebinnedcubenodb
 		if keyword_set(cube) then begin
 			for ifoo = 0, n_elements(filename)-1 do begin
-				foo_front = (strsplit(filename[ifoo], 'finalcubes', /extract))[0]
-				foo_back = (strsplit(filename[ifoo], 'finalcubes', /extract))[1]
+				foo_front = (strsplit(filename[ifoo], 'finalcubes', /extract, /regex))[0]
+				foo_back = (strsplit(filename[ifoo], 'finalcubes', /extract, /regex))[1]
 				; Copy rebinnedcubenoda
 				file_copy, foo_front + 'rebinnedcubesnoda' + foo_back, outdir+current_obj+'/pacs/data/fits/',/overwrite
 				; Copy rebinnedcubenodb
