@@ -187,6 +187,36 @@ while i eq 1 do begin
 			if (where(cdf eq current_obj))[0] eq -1 then continue
 		endif
 		if keyword_set(jitter) and (where(exclude_jitter eq current_obj))[0] ne -1 then continue
+
+		; Even if the source is not what we want to process, we still copy the FITS files over.  Such as 3x3NO, nojitter
+		; Copy the fits files into the archive directory
+		if file_test(outdir+current_obj+'/pacs/data/fits/') eq 0 then file_mkdir, outdir+current_obj+'/pacs/data/fits'
+		; Copy either 1-D Corrected3x3YES or finalcubes FITS file.
+		file_copy, filename, outdir+current_obj+'/pacs/data/fits/',/overwrite
+		; If 1-D, looking for centralSpaxel_PointSourceCorrected_Corrected3x3NO_slice... and 
+		; 					  central9Spaxels_PointSourceCorrected_slice
+		if not keyword_set(cube) then begin
+			for ifoo = 0, n_elements(filename)-1 do begin
+				foo_front = (strsplit(filename[ifoo], 'centralSpaxel_PointSourceCorrected_Corrected3x3YES', /extract))[0]
+				foo_back = (strsplit(filename[ifoo], 'centralSpaxel_PointSourceCorrected_Corrected3x3YES', /extract))[1]
+				; Copy 3x3NO
+				file_copy, foo_front + 'centralSpaxel_PointSourceCorrected_Corrected3x3NO' + foo_back, outdir+current_obj+'/pacs/data/fits/',/overwrite
+				; Copy central9Spaxels
+				file_copy, foo_front + 'central9Spaxels_PointSourceCorrected' + foo_back, outdir+current_obj+'/pacs/data/fits/',/overwrite
+			endfor
+		endif
+		; If cube, looking for rebinnedcubenoda and rebinnedcubenodb
+		if keyword_set(cube) then begin
+			for ifoo = 0, n_elements(filename)-1 do begin
+				foo_front = (strsplit(filename[ifoo], 'finalcubes', /extract))[0]
+				foo_back = (strsplit(filename[ifoo], 'finalcubes', /extract))[1]
+				; Copy rebinnedcubenoda
+				file_copy, foo_front + 'rebinnedcubesnoda' + foo_back, outdir+current_obj+'/pacs/data/fits/',/overwrite
+				; Copy rebinnedcubenodb
+				file_copy, foo_front + 'rebinnedcubesnodb' + foo_back, outdir+current_obj+'/pacs/data/fits/',/overwrite
+			endfor
+		endif
+		; Skip the nojitter run if the jitter reduction are found
 		if (file_test(outdir+current_obj+'/pacs/data/'+current_obj+'_centralSpaxel_PointSourceCorrected_CorrectedYES_trim.txt') ne 0) and keyword_set(nojitter) then continue
 		
 		openw, tot_list, outdir+'full_source_list.txt',/get_lun, /append
@@ -195,9 +225,6 @@ while i eq 1 do begin
 		if keyword_set(cube) and keyword_set(jitter) then reduction='cube-jitter'
 		if keyword_set(cube) and keyword_set(nojitter) then reduction='cube-nojitter'
 
-		; Copy the fits files into the archive directory
-		if file_test(outdir+current_obj+'/pacs/data/fits/') eq 0 then file_mkdir, outdir+current_obj+'/pacs/data/fits'
-		file_copy, filename, outdir+current_obj+'/pacs/data/fits/',/overwrite
 	endif
 	;if current_obj ne 'HBC722_379' and current_obj ne 'HBC722_173' then continue
 	if keyword_set(single) then if current_obj ne single then continue ; Uncomment this line for all objects fitting
