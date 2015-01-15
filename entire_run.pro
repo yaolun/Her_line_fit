@@ -1,4 +1,5 @@
-pro entire_run, indir=indir,outdir=outdir,outname=outname,slim=slim,clean=clean,contour_only=contour_only,obj_flag=obj_flag
+pro entire_run, indir=indir,outdir=outdir,outname=outname,slim=slim,clean=clean,contour_only=contour_only,obj_flag=obj_flag, $
+				spire_test=spire_test, pacs_test=pacs_test
 ;entire_run,/contour_only,outdir='~/data/FWD_bettyjo/FWD_archive'
 tic
 ; Keyword and directory setting
@@ -47,6 +48,20 @@ if keyword_set(contour_only) then begin
 	run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/cube,/cops,no_plot=no_plot,print_all=outname+'_spire_cube',/double_gauss,/contour,/no_fit,/FWD,obj_flag=obj_flag
 	goto, bottom
 endif
+
+; Option for dedugging and testing the pacs or spire individually
+if keyword_set(pacs_test) then begin
+	; run DIGIT 1-D + cube jittered
+	proj = 'digit'
+	run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
+	run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+endif
+if keyword_set(spire_test) then begin
+	; run COPS 1-D + cube
+	run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/corrected,/cops,no_plot=no_plot,print_all=outname+'_spire_1d',/double_gauss,/FWD,obj_flag=obj_flag
+	run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/cube,/cops,no_plot=no_plot,print_all=outname+'_spire_cube',/double_gauss,/contour,/FWD,obj_flag=obj_flag
+endif
+
 if keyword_set(clean) then begin
 	list = file_search(outdir, '*')
 	if (n_elements(list) gt 0) and strlen(list[0]) gt 0 then file_delete,list,/allow_nonexistent,/recursive
