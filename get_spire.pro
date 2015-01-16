@@ -88,7 +88,7 @@ pro plot_spire_1d, wl, flux, object=object, pixname=pixname, outdir=outdir, fx=f
     !p.thick=3 & !x.thick=3 & !y.thick=3
     device, filename = outdir+object+'_'+pixname+'.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
     plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, thick = 2
-    al_legend, [object+'-'+pixname],textcolors=[0],/right
+    al_legend, [object+' '+pixname],textcolors=[0],/right
     device, /close_file,decomposed=1
     !p.multi = 0 
 end
