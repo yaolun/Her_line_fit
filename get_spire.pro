@@ -126,7 +126,8 @@ label = ['SLWA1','SLWA2','SLWA3','SLWB1','SLWB2','SLWB3','SLWB4','SLWC1','SLWC2'
          'SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3',$
          'SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
 
-for i = 2,4 do begin
+; SLW
+for i =2, 20 bo begin
     data = readfits(filename, hdr,exten=i,/silent)
     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
@@ -137,27 +138,26 @@ for i = 2,4 do begin
     wl = wl[sort(wl)]
     ; plot spaxel spectrum
     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+    free_lun, lun
+    close, lun
+endfor
 
-    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-; plot, [0],[0], color = 255
-; plot, [0],[0], color = 255
-for i = 5,8 do begin
+; SSW
+for i = 21, 55 do begin
     data = readfits(filename, hdr,exten=i,/silent)
     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
+    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 304)]
-    wl = wl[where(wl gt 304)]
+    flux = flux[where(wl gt 195 and wl le 304)]
+    wl = wl[where(wl gt 195 and wl le 304)]
     flux = flux[sort(wl)]
     wl = wl[sort(wl)]
-    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+    ; plot spaxel spectrum
+    plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
@@ -165,239 +165,301 @@ for i = 5,8 do begin
     free_lun, lun
     close, lun
 endfor
-; plot, [0],[0], color = 255
-for i = 9,13 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 304)]
-    wl = wl[where(wl gt 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-; plot,[0],[0], color = 255
-for i = 14,17 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 304)]
-    wl = wl[where(wl gt 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-; plot, [0],[0], color = 255
-; plot, [0],[0], color = 255
-for i = 18,20 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 304)]
-    wl = wl[where(wl gt 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-; device, /close_file, decomposed = 1
-; !p.multi = 0
 
-;SSW
-!p.multi = [0,7,7]
-set_plot, 'ps'
-!p.font = 0
 
-device, filename = plotname_ssw, /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 8, decomposed = 0, /color
-loadct, 12,/silent
-!p.thick = 1 & !x.thick = 3 & !y.thick = 3
-for i = 21,24 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-plot, [0],[0], color = 255
-plot, [0],[0], color = 255
-plot, [0],[0], color = 255
-for i = 25,29 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-plot, [0],[0], color = 255
-plot, [0],[0], color = 255
-for i = 30,35 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-plot, [0],[0], color = 255
-for i = 36,39 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-plot, [0],[0], color = 255
-for i = 40,41 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-plot, [0],[0], color = 255
-for i = 42,47 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-plot, [0],[0], color = 255
-plot, [0],[0], color = 255
-for i = 48,50 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
-plot, [0],[0], color = 255
-i = 51
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
+; for i = 2,4 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 304)]
+;     wl = wl[where(wl gt 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot, [0],[0], color = 255
+; ; plot, [0],[0], color = 255
+; for i = 5,8 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 304)]
+;     wl = wl[where(wl gt 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot, [0],[0], color = 255
+; for i = 9,13 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 304)]
+;     wl = wl[where(wl gt 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot,[0],[0], color = 255
+; for i = 14,17 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 304)]
+;     wl = wl[where(wl gt 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot, [0],[0], color = 255
+; ; plot, [0],[0], color = 255
+; for i = 18,20 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 304)]
+;     wl = wl[where(wl gt 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; device, /close_file, decomposed = 1
+; ; !p.multi = 0
 
-plot, [0],[0], color = 255
-plot, [0],[0], color = 255
-plot, [0],[0], color = 255
-for i = 51,55 do begin
-    data = readfits(filename, hdr,exten=i,/silent)
-    wl = 2.998e10/tbget(hdr, data, 1)*1e-5
-    if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
-    if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
-    flux = flux[sort(wl)]
-    wl = wl[sort(wl)]
-    plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
-    openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
-    free_lun, lun
-    close, lun
-endfor
+; ;SSW
+; ; !p.multi = [0,7,7]
+; ; set_plot, 'ps'
+; ; !p.font = 0
+
+; ; device, filename = plotname_ssw, /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 8, decomposed = 0, /color
+; ; loadct, 12,/silent
+; ; !p.thick = 1 & !x.thick = 3 & !y.thick = 3
+; for i = 21,24 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 195 and wl le 304)]
+;     wl = wl[where(wl gt 195 and wl le 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot, [0],[0], color = 255
+; ; plot, [0],[0], color = 255
+; ; plot, [0],[0], color = 255
+; for i = 25,29 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 195 and wl le 304)]
+;     wl = wl[where(wl gt 195 and wl le 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot, [0],[0], color = 255
+; ; plot, [0],[0], color = 255
+; for i = 30,35 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 195 and wl le 304)]
+;     wl = wl[where(wl gt 195 and wl le 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot, [0],[0], color = 255
+; for i = 36,39 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 195 and wl le 304)]
+;     wl = wl[where(wl gt 195 and wl le 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot, [0],[0], color = 255
+; for i = 40,41 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 195 and wl le 304)]
+;     wl = wl[where(wl gt 195 and wl le 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot, [0],[0], color = 255
+; for i = 42,47 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 195 and wl le 304)]
+;     wl = wl[where(wl gt 195 and wl le 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; ; plot, [0],[0], color = 255
+; ; plot, [0],[0], color = 255
+; for i = 48,50 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 195 and wl le 304)]
+;     wl = wl[where(wl gt 195 and wl le 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     ; plot spaxel spectrum
+;     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
+;     ; plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
+; plot, [0],[0], color = 255
+; i = 51
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 195 and wl le 304)]
+;     wl = wl[where(wl gt 195 and wl le 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+
+; plot, [0],[0], color = 255
+; plot, [0],[0], color = 255
+; plot, [0],[0], color = 255
+; for i = 51,55 do begin
+;     data = readfits(filename, hdr,exten=i,/silent)
+;     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
+;     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
+;     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
+;     flux = flux[where(wl gt 195 and wl le 304)]
+;     wl = wl[where(wl gt 195 and wl le 304)]
+;     flux = flux[sort(wl)]
+;     wl = wl[sort(wl)]
+;     plot, wl, flux, xtitle = '!9m!3m', ytitle = ylabel
+;     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
+;     if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+;     if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+;     for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+;     free_lun, lun
+;     close, lun
+; endfor
 end
 
 pro get_all,name=name, indir=indir, outdir=outdir, plotdir=plotdir
