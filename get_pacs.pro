@@ -116,7 +116,7 @@ if keyword_set(general) then begin
 			loadct,13,/silent
 			!p.thick=3 & !x.thick=3 & !y.thick=3
 			device, filename = plotdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
-			plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)';,/nodata
+			plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)', thick=2;,/nodata
 			al_legend, [objname], textcolors=[0], /left
 			device, /close_file,decomposed=1
 			!p.multi = 0
@@ -294,10 +294,10 @@ endif else begin
 			!p.thick=3 & !x.thick=3 & !y.thick=3
 			device, filename = plotdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
 			plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)',/nodata
-			if n_elements(wl_b2a) ne 0 then oplot, reform(wl_b2a[x,y,*]), reform(flux_b2a[x,y,*]), color=60    ;blue
-			if n_elements(wl_b2b) ne 0 then oplot, reform(wl_b2b[x,y,*]), reform(flux_b2b[x,y,*]), color=160   ;green
-			if n_elements(wl_r1s) ne 0 then oplot, reform(wl_r1s[x,y,*]), reform(flux_r1s[x,y,*]), color=237   ;orange
-			if n_elements(wl_r1l) ne 0 then oplot, reform(wl_r1l[x,y,*]), reform(flux_r1l[x,y,*]), color=250   ;red
+			if n_elements(wl_b2a) ne 0 then oplot, reform(wl_b2a[x,y,*]), reform(flux_b2a[x,y,*]), color=60    , thick=2  ;blue
+			if n_elements(wl_b2b) ne 0 then oplot, reform(wl_b2b[x,y,*]), reform(flux_b2b[x,y,*]), color=160   , thick=2  ;green
+			if n_elements(wl_r1s) ne 0 then oplot, reform(wl_r1s[x,y,*]), reform(flux_r1s[x,y,*]), color=237   , thick=2  ;orange
+			if n_elements(wl_r1l) ne 0 then oplot, reform(wl_r1l[x,y,*]), reform(flux_r1l[x,y,*]), color=250   , thick=2  ;red
 			al_legend, ['B2A','B2B','R1A','R1B'],textcolors = [60, 160, 237, 250],/right
 			al_legend, [objname], textcolors=[0], /left
 			device, /close_file,decomposed=1
@@ -398,7 +398,7 @@ if keyword_set(general) then begin
 	loadct,13,/silent
 	!p.thick=3 & !x.thick=3 & !y.thick=3
 	device, filename = outdir+objname+name+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
-	plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)';,/nodata
+	plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)', thick=2;,/nodata
 	device, /close_file,decomposed=1
 	!p.multi = 0
 	openw, lun, outdir+objname+name+'_trim.txt',/get_lun
@@ -467,10 +467,10 @@ endif else begin
 		device, filename = outdir+objname+name+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
 		plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = '!3Flux (Jy)!3',/nodata
 		;if objname eq 'EC82' then stop
-		if n_elements(wl_b2a) gt 1 then oplot, wl_b2a, flux_b2a, color=60    ;blue
-		if n_elements(wl_b2b) gt 1 then oplot, wl_b2b, flux_b2b, color=160   ;green
-		if n_elements(wl_r1s) gt 1 then oplot, wl_r1s, flux_r1s, color=237   ;orange
-		if n_elements(wl_r1l) gt 1 then oplot, wl_r1l, flux_r1l, color=250   ;red
+		if n_elements(wl_b2a) gt 1 then oplot, wl_b2a, flux_b2a, color=60 , thick=2   ;blue
+		if n_elements(wl_b2b) gt 1 then oplot, wl_b2b, flux_b2b, color=160, thick=2   ;green
+		if n_elements(wl_r1s) gt 1 then oplot, wl_r1s, flux_r1s, color=237, thick=2   ;orange
+		if n_elements(wl_r1l) gt 1 then oplot, wl_r1l, flux_r1l, color=250, thick=2   ;red
 		al_legend, ['B2A','B2B','R1A','R1B'],textcolors = [60, 160, 237, 250],/right
 		device, /close_file,decomposed=1
 		!p.multi = 0
@@ -583,7 +583,7 @@ if (where(special_list eq objname))[0] ne -1 then begin
 		loadct,13,/silent
 		!p.thick=3 & !x.thick=3 & !y.thick=3
 		device, filename = outdir+objname+name+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
-		plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)';,/nodata
+		plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)', thick=2;,/nodata
 		device, /close_file,decomposed=1
 		!p.multi = 0
 		

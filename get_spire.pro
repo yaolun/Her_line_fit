@@ -66,8 +66,8 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
 	!p.thick=3 & !x.thick=3 & !y.thick=3
     device, filename = outdir+object+'_spire_corrected.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
     plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)',/nodata
-	oplot, wl_slw, flux_slw, color=250
-	oplot, wl_ssw, flux_ssw, color=60
+	oplot, wl_slw, flux_slw, color=250, thick=2
+	oplot, wl_ssw, flux_ssw, color=60, thick=2
 	al_legend, ['SPIRE-SSW','SPIRE-SLW'],textcolors=[60,250],/right
 	al_legend, [object],textcolor=[0],/left
 	device, /close_file,decomposed=1
@@ -87,7 +87,7 @@ pro plot_spire_1d, wl, flux, object=object, pixname=pixname, outdir=outdir, fx=f
     loadct,13,/silent
     !p.thick=3 & !x.thick=3 & !y.thick=3
     device, filename = outdir+object+'_'+pixname+'.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
-    plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel
+    plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, thick = 2
     al_legend, [object+'-'+pixname],textcolors=[0],/right
     device, /close_file,decomposed=1
     !p.multi = 0 

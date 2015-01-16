@@ -20,7 +20,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	endif
 	if keyword_set(fx) then begin
 		; suffix = '_f'
-		ylabel = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)'
+		ylabel = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)'
 		unit = ''
 		brightness=0
 	endif
