@@ -127,7 +127,7 @@ label = ['SLWA1','SLWA2','SLWA3','SLWB1','SLWB2','SLWB3','SLWB4','SLWC1','SLWC2'
          'SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
 
 ; SLW
-for i =2, 20 bo begin
+for i =2, 20 do begin
     data = readfits(filename, hdr,exten=i,/silent)
     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
