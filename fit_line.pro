@@ -286,6 +286,7 @@ if not keyword_set(baseline) then begin
             endelse
             ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
             if sig_str eq 0 then sig_str = -999
+            if linename eq '13CO11-10' then stop
         endif
         if keyword_set(double_gauss) then begin
             ; print, 'Finishing double Gaussian fit for '+linename
