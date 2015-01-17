@@ -45,7 +45,7 @@ PRO spec_continuum_smooth, wave, flux, continuum, continuum_error, continuum_err
      iiter  = iiter + 1
   endwhile
   continuum 	= interpol(ymodel, xdata, wave)
-  continuum	= smooth(continuum, 12)
+  continuum	= smooth(continuum, 12)   ; Thinking about changing this later
   ind 		= where(outmask eq 0)
   ind2 		= where(outmask eq 1)
   ;mom		= moment(ymodel(ind2)/ydata(ind2))

@@ -29,7 +29,7 @@ endelse
 
 if file_test(outdir) eq 0 then file_mkdir, outdir
 
-if not keyword_set(outname) then outname = 'FWD_archive'
+if not keyword_set(outname) then outname = 'CDF_archive'
 
 if not keyword_set(obj_flag) then obj_flag = 0
 
