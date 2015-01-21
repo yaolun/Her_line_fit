@@ -10,7 +10,8 @@ if keyword_set(spire) then begin
 	readcol, indir+objname+'_SLWC3'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 	ra_cen_slw = ra
 	dec_cen_slw = dec
-	data_slw = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)), fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str))},n_elements(pixelname))
+	data_slw = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)),$
+		fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str)), validity: dblarr(n_elements(validity))},n_elements(pixelname))
 	for pix = 0, n_elements(pixelname)-1 do begin
     	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D, D,D,D,D,D, D,D,D,D,D, D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 		data_slw[pix].line = name
@@ -22,6 +23,7 @@ if keyword_set(spire) then begin
 		data_slw[pix].ra = ra
 		data_slw[pix].dec = dec
 		data_slw[pix].snr = snr
+		data_slw[pix].validity = validity
 		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
 		data_slw[pix].base_str = base_str*fwhm;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
 	endfor
@@ -30,7 +32,8 @@ if keyword_set(spire) then begin
 	readcol, indir+objname+'_SSWD4'+suffix, format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 	ra_cen_ssw = ra
 	dec_cen_ssw = dec
-	data_ssw = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)), fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str))}, n_elements(pixelname))
+	data_ssw = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)),$
+		fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str)), validity: dblarr(n_elements(validity))}, n_elements(pixelname))
 	for pix = 0, n_elements(pixelname)-1 do begin
     	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D, D,D,D,D,D, D,D,D,D,D, D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
 		data_ssw[pix].line = name
@@ -42,6 +45,7 @@ if keyword_set(spire) then begin
 		data_ssw[pix].ra = ra
 		data_ssw[pix].dec = dec
 		data_ssw[pix].snr = snr
+		data_ssw[pix].validity = validity
 		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
 		data_ssw[pix].base_str = base_str*fwhm;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
 	endfor
@@ -56,7 +60,7 @@ if keyword_set(pacs) then begin
 	dec_cen_pacs = dec
 	;if objname eq 'HD245906' then stop
 	data_pacs = replicate({line:strarr(n_elements(name)), ra: dblarr(n_elements(ra)), dec: dblarr(n_elements(dec)), lab_wl:dblarr(n_elements(lab_wl)), wl:dblarr(n_elements(wl)), flux: dblarr(n_elements(str)), flux_sig: dblarr(n_elements(sig_str)),$
-		fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str))}, 25)
+		fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str)), validity: dblarr(n_elements(validity))}, 25)
 
 	for pix = 0, 24 do begin
     	readcol, indir+objname+'_pacs_pixel'+strtrim(string(pix+1),1)+suffix, format='A,D,D,D,D, D,D,D,D,D, D,D,D,D,D, D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
@@ -69,6 +73,7 @@ if keyword_set(pacs) then begin
 		data_pacs[pix].ra = ra
 		data_pacs[pix].dec = dec
 		data_pacs[pix].snr = snr
+		data_pacs[pix].validity = validity
 		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
 		data_pacs[pix].base_str = base_str*fwhm;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
 	endfor
@@ -131,7 +136,8 @@ if not keyword_set(no_plot) then begin
 				base_str = [base_str, data_slw[pix].base_str[data_ind]]
 				; exclude absorption lines
 				; set every absorption line to zero
-				if (data_slw[pix].flux[data_ind] lt 0) or (data_slw[pix].snr[data_ind] lt 3d0) or (data_ind eq -1) then begin
+				if (data_slw[pix].flux[data_ind] lt 0) or (data_slw[pix].snr[data_ind] lt 3d0) or$
+				   (data_ind eq -1) or (data_slw[pix].validity[data_ind] eq 0) then begin
 					wl = [wl, data_slw[pix].wl[data_ind]]
 					flux = [flux, 0]
 					flux_sig = [flux_sig, 0]
@@ -312,7 +318,8 @@ if not keyword_set(no_plot) then begin
 				base_str = [base_str, data_ssw[pix].base_str[data_ind]]
 				; exclude absorption lines
 				; set every absorption line to zero
-				if (data_ssw[pix].flux[data_ind] lt 0) or (data_ssw[pix].snr[data_ind] lt 3) or (data_ind eq -1) then begin
+				if (data_ssw[pix].flux[data_ind] lt 0) or (data_ssw[pix].snr[data_ind] lt 3) or$
+				   (data_ind eq -1) or (data_ssw[pix].validity[data_ind] eq 0) then begin
 					wl = [wl, data_ssw[pix].wl[data_ind]]
 					flux = [flux, 0]
 					flux_sig = [flux_sig, 0]
@@ -461,7 +468,8 @@ if not keyword_set(no_plot) then begin
 				base_str = [base_str, data_pacs[pix].base_str[data_ind]]
 				; exclude absorption lines
 				; set every absorption line to zero
-		        if (data_pacs[pix].flux[data_ind] lt 0) or (data_pacs[pix].snr[data_ind] lt 3d0) or (data_ind eq -1) then begin
+		        if (data_pacs[pix].flux[data_ind] lt 0) or (data_pacs[pix].snr[data_ind] lt 3d0) or$
+		           (data_ind eq -1) or (data_pacs[pix].validity[data_ind] eq 0) then begin
 		        	wl = [wl, data_pacs[pix].wl[data_ind]]
 			        flux = [flux, 0]
 			        flux_sig = [flux_sig, 0]
