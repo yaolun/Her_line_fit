@@ -136,8 +136,7 @@ if not keyword_set(no_plot) then begin
 				base_str = [base_str, data_slw[pix].base_str[data_ind]]
 				; exclude absorption lines
 				; set every absorption line to zero
-				if (data_slw[pix].flux[data_ind] lt 0) or (data_slw[pix].snr[data_ind] lt 3d0) or$
-				   (data_ind eq -1) or (data_slw[pix].validity[data_ind] eq 0) then begin
+				if (data_slw[pix].flux[data_ind] lt 0) or (data_slw[pix].snr[data_ind] lt 3d0) or (data_ind eq -1) or (data_slw[pix].validity[data_ind] eq 0) then begin
 					wl = [wl, data_slw[pix].wl[data_ind]]
 					flux = [flux, 0]
 					flux_sig = [flux_sig, 0]
@@ -318,8 +317,7 @@ if not keyword_set(no_plot) then begin
 				base_str = [base_str, data_ssw[pix].base_str[data_ind]]
 				; exclude absorption lines
 				; set every absorption line to zero
-				if (data_ssw[pix].flux[data_ind] lt 0) or (data_ssw[pix].snr[data_ind] lt 3) or$
-				   (data_ind eq -1) or (data_ssw[pix].validity[data_ind] eq 0) then begin
+				if (data_ssw[pix].flux[data_ind] lt 0) or (data_ssw[pix].snr[data_ind] lt 3) or (data_ind eq -1) or (data_ssw[pix].validity[data_ind] eq 0) then begin
 					wl = [wl, data_ssw[pix].wl[data_ind]]
 					flux = [flux, 0]
 					flux_sig = [flux_sig, 0]
@@ -468,8 +466,7 @@ if not keyword_set(no_plot) then begin
 				base_str = [base_str, data_pacs[pix].base_str[data_ind]]
 				; exclude absorption lines
 				; set every absorption line to zero
-		        if (data_pacs[pix].flux[data_ind] lt 0) or (data_pacs[pix].snr[data_ind] lt 3d0) or$
-		           (data_ind eq -1) or (data_pacs[pix].validity[data_ind] eq 0) then begin
+		        if (data_pacs[pix].flux[data_ind] lt 0) or (data_pacs[pix].snr[data_ind] lt 3d0) or (data_ind eq -1) or (data_pacs[pix].validity[data_ind] eq 0) then begin
 		        	wl = [wl, data_pacs[pix].wl[data_ind]]
 			        flux = [flux, 0]
 			        flux_sig = [flux_sig, 0]
