@@ -283,7 +283,7 @@ if not keyword_set(baseline) then begin
             if not keyword_set(spire) then begin
                 if (fwhm eq dl*2.354 or fwhm eq 2*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
             endif else begin
-                if (fwhm eq dl/1.5*2.354 or fwhm eq 1.5*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
+                if (fwhm eq 0.7*dl*2.354 or fwhm eq 1.3*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
             endelse
             ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
             if sig_str eq 0 then sig_str = -999
