@@ -171,14 +171,14 @@ while i eq 1 do begin
 							   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
 				msg = ''
 				if keyword_set(fixed_width) then msg = '_fixwidth'
-				outname = '_lines'+msg+'_global_noise'
+				outname = '_lines';+msg+'_global_noise'
 			endif else begin
 				noisetype='Local'
 				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire_corrected',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
 							   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
 				msg = ''
 				if keyword_set(fixed_width) then msg = '_fixwidth'
-				outname = '_lines'+msg
+				outname = '_lines';+msg
 			endelse
 		endif else begin
 			if (where(exception_obj eq current_obj))[0] eq -1 then begin
@@ -187,14 +187,14 @@ while i eq 1 do begin
 							   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
 				msg = ''
 				if keyword_set(fixed_width) then msg = '_fixwidth'
-				outname = '_lines'+msg+'_global_noise'
+				outname = '_lines';+msg+'_global_noise'
 			endif else begin
 				noisetype='Local'
 				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
 							   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
 				msg = ''
 				if keyword_set(fixed_width) then msg = '_fixwidth'
-				outname = '_lines'+msg
+				outname = '_lines';+msg
 			endelse
 		endelse
 	endif
