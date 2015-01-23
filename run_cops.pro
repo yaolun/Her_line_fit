@@ -279,7 +279,7 @@ while i eq 1 do begin
 ;			if strlen(refine_list) gt 0 then file_delete,refine_list,/allow_nonexistent,/recursive
 ;		endif
 		;print,'-----> Clean up (species_separated) folder for updating the results.'
-		refine_fitting, indir=outdir+current_obj+'/spire/advanced_products/cube/',filename=current_obj+'_summed_'+outname,outdir=outdir+current_obj+'/spire/advanced_products/cube/species_separated/',/all,/spire
+		refine_fitting, indir=outdir+current_obj+'/spire/advanced_products/cube/',filename=current_obj+'_summed_'+outname,outdir=outdir+current_obj+'/spire/advanced_products/cube/species_separated/',/all,/spire,/cube
 	endif
 	
 	if keyword_set(refine) and keyword_set(cube) and not keyword_set(co_add) then begin
@@ -292,7 +292,7 @@ while i eq 1 do begin
 ;				if strlen(refine_list) gt 0 then file_delete,refine_list,/allow_nonexistent,/recursive
 ;			endif
 			;print,'----> Clean up (species_separated) folder for updating the results.'
-			refine_fitting, indir=outdir+current_obj+'/spire/advanced_products/cube/',filename=current_obj+'_'+pix_name[pix]+outname,outdir=outdir+current_obj+'/spire/advanced_products/cube/species_separated/',/all,/spire
+			refine_fitting, indir=outdir+current_obj+'/spire/advanced_products/cube/',filename=current_obj+'_'+pix_name[pix]+outname,outdir=outdir+current_obj+'/spire/advanced_products/cube/species_separated/',/all,/spire,/cube
 		endfor
 	endif
 	
