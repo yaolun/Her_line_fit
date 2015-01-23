@@ -205,7 +205,7 @@ while i eq 1 do begin
 			noisetype='Global'
 			msg = ''
 			if keyword_set(fixed_width) then msg = '_fixwidth'
-			outname = '_lines'+msg+'_global_noise'
+			outname = '_lines'
 			if not keyword_set(no_fit) then begin
 				; Print the fitting results of 25 spaxels into a single text file for each object
 				if file_test(outdir+current_obj+'/spire/data/cube/') eq 0 then file_mkdir, outdir+current_obj+'/spire/data/cube/'
@@ -223,7 +223,7 @@ while i eq 1 do begin
 			noisetype='Local'
 			msg = ''
 			if keyword_set(fixed_width) then msg = '_fixwidth'
-			outname = '_lines'+msg
+			outname = '_lines'
 			if not keyword_set(no_fit) then begin
 				; Print the fitting results of 25 spaxels into a single text file for each object
 				if file_test(outdir+current_obj+'/spire/data/cube/') eq 0 then file_mkdir, outdir+current_obj+'/spire/data/cube/'
@@ -251,7 +251,7 @@ while i eq 1 do begin
 						   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
 			msg = ''
 			if keyword_set(fixed_width) then msg = '_fixwidth'
-			outname = '_lines'+msg+'_global_noise'
+			outname = '_lines'
 		endif else begin
 			noisetype='Local'
 			extract_spire, indir=outdir+current_obj+'/spire/data/cube/',filename=current_obj+'_spire_cube_coadd',outdir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+current_obj+'/spire/advanced_products/cube/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
@@ -270,7 +270,7 @@ while i eq 1 do begin
 ;			if strlen(refine_list) gt 0 then file_delete,refine_list,/allow_nonexistent,/recursive
 ;		endif
 		;print,'-----> Clean up (species_separated) folder for updating the results.'
-		refine_fitting, indir=outdir+current_obj+'/spire/advanced_products/',filename=current_obj+'_spire_corrected_'+outname,outdir=outdir+current_obj+'/spire/advanced_products/species_separated/',/all,/spire
+		refine_fitting, indir=outdir+current_obj+'/spire/advanced_products/',filename=current_obj+'_spire_corrected'+outname,outdir=outdir+current_obj+'/spire/advanced_products/species_separated/',/all,/spire
 	endif
 	
 	if keyword_set(refine) and keyword_set(cube) and keyword_set(co_add) then begin
