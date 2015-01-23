@@ -175,7 +175,7 @@ if not keyword_set(baseline) then begin
         endif else begin
         	if dl eq 0 then stop
             if not keyword_set(spire) then begin
-        	   parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
+        	   parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl,1.3*dl]
             endif else begin
                parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.3*dl];[dl/1.5, 1.5*dl];[dl,2*dl]
             endelse
@@ -210,8 +210,8 @@ if not keyword_set(baseline) then begin
         endif else begin
             ; let the line width varied flexible
             if not keyword_set(spire) then begin
-                parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,2*dl]
-                parinfo[5].limited = [1,1] & parinfo[5].limits = [dl,2*dl]
+                parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl,1.3*dl]
+                parinfo[5].limited = [1,1] & parinfo[5].limits = [0.7*dl,1.3*dl]
             endif else begin
                 parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.3*dl];[dl/1.5, dl]
                 parinfo[5].limited = [1,1] & parinfo[5].limits = [0.7*dl, 1.3*dl];[dl/1.5, dl]
