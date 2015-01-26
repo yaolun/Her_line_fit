@@ -217,8 +217,11 @@ while i eq 1 do begin
 			endfor
 		endif
 		; Skip the nojitter run if the jitter reduction are found
-		if (file_test(outdir+current_obj+'/pacs/data/'+current_obj+'_centralSpaxel_PointSourceCorrected_CorrectedYES_trim.txt') ne 0) and keyword_set(nojitter) then continue
-		
+		if not keyword_set(cube) then begin
+			if (file_test(outdir+current_obj+'/pacs/data/'+current_obj+'_centralSpaxel_PointSourceCorrected_CorrectedYES_trim.txt') ne 0) and keyword_set(nojitter) then continue
+		endif else begin
+			if (file_test(outdir+current_obj+'/pacs/data/cube/'+current_obj+'_pacs_pixel1_os8sf7.txt') ne 0) and keyword_set(nojitter) then continue
+		endelse
 		openw, tot_list, outdir+'full_source_list.txt',/get_lun, /append
 		if keyword_set(jitter) then reduction='jitter'
 		if keyword_set(nojitter) then reduction='nojitter'
