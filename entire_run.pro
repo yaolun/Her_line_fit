@@ -1,5 +1,5 @@
 pro entire_run, indir=indir,outdir=outdir,outname=outname,slim=slim,clean=clean,contour_only=contour_only,obj_flag=obj_flag, $
-				spire_test=spire_test, pacs_test=pacs_test
+				spire_test=spire_test, pacs_test=pacs_test, test=test
 ;entire_run,/contour_only,outdir='~/data/FWD_bettyjo/FWD_archive'
 tic
 ; Keyword and directory setting
@@ -18,6 +18,8 @@ endif else begin
 endelse
 
 if not keyword_set(outdir) then outdir = '~/data/FWD_archive'
+
+if keyword_set(test) then outdir = outdir+'_test'
 
 if keyword_set(slim) then begin
 	no_plot = 1

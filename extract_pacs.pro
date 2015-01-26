@@ -284,6 +284,12 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	printf, firstfit, format='(19(a16,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend'
     endelse
+
+	; Using band 3 resolution for some of the WISH sources
+	b3a = 0
+	special_list = ['NGC1333-IRAS2A','Serpens-SMM1','G327-06','DR21(OH)','NGC7538-IRS1','NGC6334-I','G34.3+0.1','HOPS108']
+	if (where(special_list eq object))[0] ne -1 then b3a = 1
+
     ; Do the fitting for every line in the list
     ; Single Gaussian fitting
     for i = 0, n_elements(line_name)-1 do begin
@@ -363,11 +369,6 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
         ; Fitting part
         ; Different fitting keyword for fixed width and test arguement
 
-		; Using band 3 resolution for some of the WISH sources
-		
-		b3a = 0
-		special_list = ['HGC1333-IRAS2A','Serpens-SMM1','G327-06','DR21(OH)','NGC7538-IRS1','NGC6334-I','G34.3+0.1','HOPS108']
-		if (where(special_list eq object))[0] eq -1 then b3a = 1
         if keyword_set(fixed_width) and keyword_set(opt_width) then begin
         	if line_name[i] eq 'OI3P1-3P2' then begin
         		if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
@@ -522,8 +523,6 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			; Different fitting keyword for fixed width and test arguement
 
 			; Using band 3 resolution for some of WISH sources
-			b3a = 0
-			if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
 			fit_line,filename,line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
 				noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,b3a=b3a,/fix_dg,/fixed_width
 			
@@ -945,10 +944,6 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			;global_noise = stddev(flat_noise_smooth)
 			;
 			; Fitting part
-			;if object eq 'Serpens-SMM3' and line_name[i] eq 'p-H2O10_19-10_010' then stop
-			; Using the band 3 resolution for some of the WISH sources
-			b3a = 0
-			if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
 			if keyword_set(fixed_width) and keyword_set(opt_width) then begin
         		if line_name[i] eq 'OI3P1-3P2'then begin
         			if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
@@ -1110,9 +1105,6 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				line = [line_dg[*,2*i],line_dg[*,2*i+1]]
 				; Fitting part
 				; Different fitting keyword for fixed width and test arguement
-				; Using band 3 resolution for some of the WISH sources
-        		b3a = 0
-		        if (object eq 'NGC1333-IRAS2A') or (object eq 'Serpens-SMM1') or (object eq 'G327-06') then b3a = 1
 				fit_line,filename,line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
 					 noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,b3a=b3a,/fix_dg,/fixed_width
 				
