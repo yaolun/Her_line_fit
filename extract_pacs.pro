@@ -387,9 +387,9 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 										       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a
         endif else begin
         	if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
-        						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot
+        						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot, b3a=b3a
 			if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
-										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot
+										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot, b3a=b3a
         endelse
         ; if the global_noise keyword is not specified, then do the fitting again but take the evaluated noise as the error of the data
         if not keyword_set(global_noise) then begin
@@ -413,9 +413,9 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 											       /single_gauss,outdir=plotdir, noiselevel=noiselevel, /fixed_width, base_range=base_range, no_plot=no_plot,b3a=b3a, feedback=feedback
 	        endif else begin
 	        	if keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
-	        						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot, feedback=feedback
+	        						      /single_gauss, /test, outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot, b3a=b3a feedback=feedback
 				if not keyword_set(test) then fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
-											  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot, feedback=feedback
+											  /single_gauss,outdir=plotdir, noiselevel=noiselevel, base_range=base_range, no_plot=no_plot, b3a=b3a feedback=feedback
 	        endelse
        	endif
 
