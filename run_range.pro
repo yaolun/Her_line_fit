@@ -216,17 +216,28 @@ while i eq 1 do begin
 				file_copy, foo_front + 'rebinnedcubesnodb' + foo_back, outdir+current_obj+'/pacs/data/fits/',/overwrite
 			endfor
 		endif
+		; print the source info
+		openw, tot_list, outdir+'full_source_list.txt',/get_lun, /append
+		if keyword_set(jitter) then reduction='jitter'
+		if keyword_set(nojitter) then reduction='nojitter'
+		if keyword_set(cube) and keyword_set(jitter) then reduction='cube-jitter'
+		if keyword_set(cube) and keyword_set(nojitter) then reduction='cube-nojitter'
+		
+		if not keyword_set(no_fit) then begin
+			printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype	
+			free_lun, tot_list
+			close, tot_list
+		endif else begin
+			free_lun, tot_list
+			close, tot_list
+		endelse
+
 		; Skip the nojitter run if the jitter reduction are found
 		if not keyword_set(cube) then begin
 			if (file_test(outdir+current_obj+'/pacs/data/'+current_obj+'_centralSpaxel_PointSourceCorrected_CorrectedYES_trim.txt') ne 0) and keyword_set(nojitter) then continue
 		endif else begin
 			if (file_test(outdir+current_obj+'/pacs/data/cube/'+current_obj+'_pacs_pixel1_os8_sf7.txt') ne 0) and keyword_set(nojitter) then continue
 		endelse
-		openw, tot_list, outdir+'full_source_list.txt',/get_lun, /append
-		if keyword_set(jitter) then reduction='jitter'
-		if keyword_set(nojitter) then reduction='nojitter'
-		if keyword_set(cube) and keyword_set(jitter) then reduction='cube-jitter'
-		if keyword_set(cube) and keyword_set(nojitter) then reduction='cube-nojitter'
 
 	endif
 	;if current_obj ne 'HBC722_379' and current_obj ne 'HBC722_173' then continue
@@ -378,14 +389,6 @@ while i eq 1 do begin
 		if keyword_set(jitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs;outdir+current_obj+'/cube/plots/contour/'
 		if keyword_set(nojitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs
 	endif
-	if keyword_set(FWD) and (not keyword_set(no_fit)) then begin
-		printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype	
-		free_lun, tot_list
-		close, tot_list
-	endif else begin
-		free_lun, tot_list
-		close, tot_list
-	endelse
 	num_obj = num_obj+1
 endwhile
 print, 'Finish fitting', strtrim(string(num_obj),1),'objects (PACS)',format='(a14,x,a3,x,a7)'
