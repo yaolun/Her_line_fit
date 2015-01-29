@@ -175,7 +175,7 @@ if not keyword_set(baseline) then begin
         endif else begin
         	if dl eq 0 then stop
             if not keyword_set(spire) then begin
-        	   parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.3*dl]
+        	   parinfo[2].limited = [1,1] & parinfo[2].limits = [0.8*dl, 1.2*dl]
             endif else begin
                parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.3*dl];[dl/1.5, 1.5*dl];[dl,2*dl]
             endelse
@@ -210,8 +210,8 @@ if not keyword_set(baseline) then begin
         endif else begin
             ; let the line width varied flexible
             if not keyword_set(spire) then begin
-                parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl,1.3*dl]
-                parinfo[5].limited = [1,1] & parinfo[5].limits = [0.7*dl,1.3*dl]
+                parinfo[2].limited = [1,1] & parinfo[2].limits = [0.8*dl,1.2*dl]
+                parinfo[5].limited = [1,1] & parinfo[5].limits = [0.8*dl,1.2*dl]
             endif else begin
                 parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.3*dl];[dl/1.5, dl]
                 parinfo[5].limited = [1,1] & parinfo[5].limits = [0.7*dl, 1.3*dl];[dl/1.5, dl]
@@ -280,7 +280,7 @@ if not keyword_set(baseline) then begin
             if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
             if keyword_set(fixed_width) then sig_fwhm = -998
             if not keyword_set(spire) then begin
-                if (fwhm eq 0.7*dl*2.354 or fwhm eq 1.3*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
+                if (fwhm eq 0.8*dl*2.354 or fwhm eq 1.2*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
             endif else begin
                 if (fwhm eq 0.7*dl*2.354 or fwhm eq 1.3*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
             endelse

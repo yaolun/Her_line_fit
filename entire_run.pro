@@ -111,11 +111,17 @@ proj = 'digit'
 ; run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
 ; run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
 
-run_digit,indir=digit_dir,outdir=outdir+'_fixedwidth',/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-run_digit,indir=digit_dir_nojitter,outdir=outdir+'_fixedwidth',/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir,outdir=outdir+'fixedwidth/',/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir_nojitter,outdir=outdir+'fixedwidth/',/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
 
-run_digit,indir=digit_dir,outdir=outdir+'_flexwidth',/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-run_digit,indir=digit_dir_nojitter,outdir=outdir+'_flexwidth',/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir,outdir=outdir+'flexwidth/',/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir_nojitter,outdir=outdir+'flexwidth/',/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
+
+run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+
+run_digit,indir=digit_dir,outdir=outdir,/cube,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
 
 ; proj = 'digit'
 
