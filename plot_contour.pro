@@ -561,8 +561,7 @@ if not keyword_set(no_plot) then begin
 		        	oplot, ra_tot, dec_tot, psym=1,color=0
 		        	oplot, [0], [0], psym=1, color=250
 		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160
-		        	if line_name[i] eq 'CO25-24' then stop
-		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[40,-40],yrange=[-40,40],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, position=plotposition, color=0,xrange=[40,-40],yrange=[-40,40],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
 		        endelse
 		        loadct, 0, /silent
 		        ;xyouts, 0, 30, title_name(line_name[i]),color=255
