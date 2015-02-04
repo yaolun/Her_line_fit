@@ -489,7 +489,7 @@ if not keyword_set(no_plot) then begin
 		    endfor
 		    if (n_elements(flux[where(flux ne 0)]) ge 1) and ((where(flux ne 0))[0] ne -1) then begin
 				if keyword_set(verbose) then print, 'Plotting ',objname,'-',line_name[i]
-		    	;if line_name[i] eq 'o-H2O9_09-8_18' then stop
+		    	if line_name[i] eq 'CO25-24' then stop
 		        set_plot, 'ps'
 		        !p.font = 0
 		        device, filename = plotdir+objname+'_'+line_name[i]+'_contour.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
