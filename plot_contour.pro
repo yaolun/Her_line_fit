@@ -1,4 +1,4 @@
-pro plot_contour, noise=noise, no_plot=no_plot,indir=indir,plotdir=plotdir,objname=objname,spire=spire,pacs=pacs
+pro plot_contour, noise=noise, no_plot=no_plot,indir=indir,plotdir=plotdir,objname=objname,spire=spire,pacs=pacs,verbose=verbose
 if file_test(plotdir,/directory) eq 0 then file_mkdir,plotdir
 ;Construct the data structure in each band
 if keyword_set(spire) then begin
@@ -113,6 +113,7 @@ if not keyword_set(no_plot) then begin
 		;SLW
 		;line_name = ['p-H2O2_02-1_11','CO8-7','13CO8-7','CO7-6','CI370','13CO7-6','p-H2O2_11-2_02','CO6-5','13CO6-5','HCO+P7-6','CO5-4','o-H2O1_10-1_01','13CO5-4','CI610','CO4-3']
 		line_name = line_name_slw
+		if keyword_set(verbose) then print, 'contour plots for SPIRE-SLW'
 		for i = 0, n_elements(line_name)-1 do begin
 			wl = []
 			flux = []
@@ -154,6 +155,7 @@ if not keyword_set(no_plot) then begin
 			endfor
 
 			if (n_elements(flux[where(flux ne 0)]) ge 1) and ((where(flux ne 0))[0] ne -1) then begin
+				if keyword_set(verbose) then print, 'Plotting ',objname,'-',line_name[i]
 ;				set_plot, 'ps'
 ;				!p.font = 0
 ;				device, filename = plotdir+objname+'_'+line_name[i]+'_contour.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
@@ -293,6 +295,7 @@ if not keyword_set(no_plot) then begin
 		endfor
 		;SSW
 		;line_name = ['CO13-12','NII205','CO12-11','CO11-10','13CO11-10','o-H2O3_21-3_12','CO10-9','p-H2O1_11-0_00','13CO10-9','CO9-8']
+		if keyword_set(verbose) then print, 'contour plots for SPIRE-SSW'
 		line_name = line_name_ssw
 		for i = 0, n_elements(line_name)-1 do begin
 			wl = []
@@ -338,6 +341,7 @@ if not keyword_set(no_plot) then begin
 ;				if (line_name[i] eq 'p-H2O5_24-4_31') or (line_name[i] eq 'p-H2O2_02-1_11') or (line_name[i] eq 'p-H2O9_46-10_1_9') then stop
 ;			endif
 			if (n_elements(flux[where(flux ne 0)]) ge 1) and ((where(flux ne 0))[0] ne -1) then begin
+				if keyword_set(verbose) then print, 'Plotting ',objname,'-',line_name[i]
 				set_plot, 'ps'
 				!p.font = 0
 				device, filename = plotdir+objname+'_'+line_name[i]+'_contour.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
@@ -442,6 +446,7 @@ if not keyword_set(no_plot) then begin
 	    line_name_pacs = [line_name_oh2o, line_name_ph2o, line_name_co, line_name_oh, line_name_other]
 		
 		line_name = line_name_pacs
+		if keyword_set(verbose) then print, 'contour plots for PACS'
 		for i = 0, n_elements(line_name)-1 do begin
 		    wl = []
 		    flux = []
@@ -483,6 +488,7 @@ if not keyword_set(no_plot) then begin
 		        endelse
 		    endfor
 		    if (n_elements(flux[where(flux ne 0)]) ge 1) and ((where(flux ne 0))[0] ne -1) then begin
+				if keyword_set(verbose) then print, 'Plotting ',objname,'-',line_name[i]
 		    	;if line_name[i] eq 'o-H2O9_09-8_18' then stop
 		        set_plot, 'ps'
 		        !p.font = 0
