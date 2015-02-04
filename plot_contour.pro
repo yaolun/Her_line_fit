@@ -469,7 +469,7 @@ if not keyword_set(no_plot) then begin
 		        ra_tot = [ra_tot, data_pacs[pix].ra[data_ind]]
 				dec_tot = [dec_tot, data_pacs[pix].dec[data_ind]]
 				base_str = [base_str, data_pacs[pix].base_str[data_ind]]
-				stop
+				if line_name[i] eq 'CO25-24' then stop
 				; exclude absorption lines
 				; set every absorption line to zero
 		        if (data_pacs[pix].flux[data_ind] lt 0) or (data_pacs[pix].snr[data_ind] lt 3d0) or (data_ind eq -1) or (data_pacs[pix].validity[data_ind] eq 0) then begin
