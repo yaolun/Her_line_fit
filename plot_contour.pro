@@ -282,7 +282,7 @@ if not keyword_set(no_plot) then begin
 		        	oplot, ra_tot, dec_tot, psym=1,color=0
 		        	oplot, [0], [0], psym=1, color=250
 		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160
-		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, position=plotposition, color=0,xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
 		        endelse
 				;xyouts, -20, 125, title_name(line_name[i]),color=255
 				al_legend,[title_name(line_name[i])],textcolors=[0],/right,box=0
@@ -407,7 +407,7 @@ if not keyword_set(no_plot) then begin
 		        	oplot, ra_tot, dec_tot, psym=1,color=0
 		        	oplot, [0], [0], psym=1, color=250
 		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160
-		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color=0,xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
+		        	contour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, position=plotposition, color=0,xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
 		        endelse
 				;xyouts, -20, 125, title_name(line_name[i]),color=255
 				al_legend,[title_name(line_name[i])],textcolors=[0],/right,box=0
