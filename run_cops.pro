@@ -126,19 +126,19 @@ while i eq 1 do begin
 		reduction = 'Standard'
 		if keyword_set(cube) then reduction = 'spirecube'
 
-		; Print source info
-		if not keyword_set(no_fit) then begin
-			printf, tot_list, format='(4(a16,2x))',current_obj, 'SPIRE', reduction, noisetype
-			free_lun, tot_list
-			close, tot_list
-		endif else begin
-			free_lun, tot_list
-			close, tot_list
-		endelse
-
 		; Copy the fits files into the archive directory
 		if file_test(outdir+current_obj+'/spire/data/fits/') eq 0 then file_mkdir, outdir+current_obj+'/spire/data/fits'
 		file_copy, filename, outdir+current_obj+'/spire/data/fits/',/overwrite
+
+		noisetype = 'None'
+		; Print source info
+		if keyword_set(no_fit) then begin
+			printf, tot_list, format='(4(a16,2x))',current_obj, 'SPIRE', reduction, noisetype
+			free_lun, tot_list
+			close, tot_list
+			continue
+		endif
+
 	endif
 	
 	if keyword_set(single) then if current_obj ne single then continue  
@@ -316,6 +316,13 @@ while i eq 1 do begin
 		print, 'Plotting the contour plots...'
 		plot_contour, noise=3, indir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/spire;outdir+current_obj+'/cube/plots/contour/'
 	endif
+
+	if not keyword_set(no_fit) then begin
+		printf, tot_list, format='(4(a16,2x))',current_obj, 'SPIRE', reduction, noisetype
+		free_lun, tot_list
+		close, tot_list
+	endif
+
 	num_obj = num_obj+1
 endwhile
 print, 'Finish fitting', strtrim(string(num_obj),1),'objects (SPIRE)',format='(a14,x,a3,x,a7)'
