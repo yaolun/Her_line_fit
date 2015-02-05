@@ -91,10 +91,10 @@ if not keyword_set(cube) then begin
 ;	digit_file = digit_file[where(strmatch(digit_file, '*os8sf7*',/fold_case) eq 1)]
 	; Other temperary exclusion
 	;
-	objname = objname[where(strmatch(digit_file, '*HD203024*',/fold_case) ne 1)]
-	digit_file = digit_file[where(strmatch(digit_file, '*HD203024*',/fold_case) ne 1)]
-	objname = objname[where(strmatch(digit_file, '*HD245906*',/fold_case) ne 1)]
-	digit_file = digit_file[where(strmatch(digit_file, '*HD245906*',/fold_case) ne 1)]
+	; objname = objname[where(strmatch(digit_file, '*HD203024*',/fold_case) ne 1)]
+	; digit_file = digit_file[where(strmatch(digit_file, '*HD203024*',/fold_case) ne 1)]
+	; objname = objname[where(strmatch(digit_file, '*HD245906*',/fold_case) ne 1)]
+	; digit_file = digit_file[where(strmatch(digit_file, '*HD245906*',/fold_case) ne 1)]
 	;
 	; WISH range scan object: Serpens-SMM1, NGC1333 IRAS2A, NGC1333 IRAS4A, and NGC1333 IRAS4B
 	;if proj eq 'wish' then begin
