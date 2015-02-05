@@ -660,7 +660,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
      	if (where(possible_all eq line_name_n[line]))[0] ne -1 then lowest = '1'
      	if (blend_msg_all[line] eq 'x') or (blend_msg_all[line] eq 'DoubleGaussian') then lowest = '1'
      	if finite(snr_n[line],/nan) eq 1 then lowest = '0'
-     	if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) then lowest = '0'
+     	; Reason for sig_str is that some sources have very poor spectra like EC82.  It will fit on the edge
+     	if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) or (sig_str_n[line] eq -999)then lowest = '0'
      	if not keyword_set(current_pix) then begin
      		printf, firstfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
             	line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
@@ -1242,7 +1243,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			if (where(possible_all eq line_name_n[line]))[0] ne -1 then lowest = '1'
 			if (blend_msg_all[line] eq 'x') or (blend_msg_all[line] eq 'DoubleGaussian') then lowest = '1'
 			if finite(snr_n[line],/nan) eq 1 then lowest = '0'
-			if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) then lowest = '0'
+			; Reason for sig_str is that some sources have very poor spectra like EC82.  It will fit on the edge
+			if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) or (sig_str_n[line] eq -999)then lowest = '0'
 			if not keyword_set(current_pix) then begin
 				printf, secondfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
             		line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$

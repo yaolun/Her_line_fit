@@ -250,8 +250,14 @@ while i eq 1 do begin
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
 	
 	; design for copying the FITS 
-	if keyword_set(no_fit) then continue
-
+	if keyword_set(no_fit) then begin
+		if keyword_set(jitter) then begin
+			printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype	
+			free_lun, tot_list
+			close, tot_list
+		endif
+		continue
+	endif
 	; "filename" contains the all of the filepath of the object in each iteration
 	; Extract the fits files of each object now.  Output a two-column spectrum in ascii file and a whole spectrum plot.
 	;
