@@ -160,7 +160,7 @@ if keyword_set(FWD) then begin
 	; Set the source list that we want to report to the archive
 	cdf = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD100546','HD104237','HD135344B','HD139614',$
 		   'HD141569','HD142527','HD142666','HD144432','HD144668','HD150193','HD163296','HD169142','HD179218','HD203024','HD245906','HD35187','HD36112','HD38120','HD50138',$
-		   'HD97048','HD98922','HH46','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
+		   'HD97048','HD98922','HH46','HH100','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
 		   'L1489','L1527','L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
 		   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
 	; Debugging purpose
@@ -243,18 +243,15 @@ while i eq 1 do begin
 		endelse
 
 	endif
-	;if current_obj ne 'HBC722_379' and current_obj ne 'HBC722_173' then continue
+
 	if keyword_set(single) then if current_obj ne single then continue ; Uncomment this line for all objects fitting
-	;if current_obj ne 'TMC1A' then continue
-;	if current_obj ne 'BHR71' then begin
-;		free_lun, tot_list
-;		close, tot_list 
-;		continue
-;	endif
 
 	if file_test(outdir+current_obj+'/pacs/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/pacs/data'
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
 	
+	; design for copying the FITS 
+	if keyword_set(no_fit) then continue
+
 	; "filename" contains the all of the filepath of the object in each iteration
 	; Extract the fits files of each object now.  Output a two-column spectrum in ascii file and a whole spectrum plot.
 	;
