@@ -149,7 +149,7 @@ run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiseleve
 ;stop
 ;SPIRE for only text file format
 ; B335, RcrA-IRS7B, BHR71, HD142527, HD97048
-obj = ['B335','RCrA-IRS7B','BHR71','HD142527','HD97048']
+obj = ['B335','RCrA-IRS7B','BHR71']; ,'HD142527','HD97048']
 ra = [294.2700500,285.4640808,180.40109,-65.147993,239.1745453,67.89822744]
 dec = [7.548758507,-36.93764496,-65.147993,-42.32313156,-77.6548556,18.12826098]
 for i = 0, n_elements(obj)-1 do begin
