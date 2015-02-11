@@ -182,7 +182,9 @@ while i eq 1 do begin
 			close, tot_list
 		endif
 
-		exclude_jitter = ['IRAM04191','IRS46','L1014','L1455-IRS3','RCrA-IRS5A','RCrA-IRS7C','Serpens-SMM4','HBC722_May2011','HBC722_Dec2010','EC82','HD98922','HD245906','HD203024','HTLup','HD142666']
+		exclude_jitter = ['IRAM04191','IRS46','L1014','L1455-IRS3','RCrA-IRS5A',$
+						  'RCrA-IRS7C','Serpens-SMM4','HBC722_May2011','HBC722_Dec2010','EC82',$
+						  'HD98922','HD245906','HD203024','HTLup','HD142666','HD35187']
 		if keyword_set(obj_flag) then begin
 			if (where(cdf eq current_obj))[0] eq -1 then continue
 		endif
