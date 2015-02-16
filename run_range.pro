@@ -15,7 +15,7 @@ end
 
 
 pro run_digit, indir=indir,outdir=outdir,fixed_width=fixed_width,localbaseline=localbaseline,global_noise=global_noise,noiselevel=noiselevel,test=test,central9=central9,centralyes=centralyes,centralno=centralno,cube=cube,$
-	jitter=jitter,nojitter=nojitter,refine=refine,no_fit=no_fit,print_all=print_all,co_add=co_add,no_plot=no_plot,proj=proj,double_gauss=double_gauss,contour=contour,FWD=FWD,single=single,obj_flag=obj_flag,local=local
+	jitter=jitter,nojitter=nojitter,refine=refine,no_fit=no_fit,print_all=print_all,co_add=co_add,no_plot=no_plot,proj=proj,double_gauss=double_gauss,contour=contour,FWD=FWD,single=single,obj_flag=obj_flag,localnoise=localnoise
 ; don’t use the jitter-corrected version for L1455-IRS3, L1014, Serpens-SMM4, RCrA-IRS5A, RCrA-IRS7C, or IRAM 04191.
 if not keyword_set(FWD) then tic
 if not keyword_set(outdir) then outdir = indir
@@ -282,7 +282,7 @@ while i eq 1 do begin
 	if keyword_set(jitter) then exception_obj = ['HD50138','IRAM04191','IRS46','L1014','L1455-IRS3','RCrA-IRS5A','RCrA-IRS7C','Serpens-SMM4'] 
 	if keyword_set(nojitter) then exception_obj = ['HD203024','RCrA-IRS5A','RCrA-IRS5A','RCrA-IRS7C','Serpens-SMM4']
 	; force to use Local noise for all sources
-	if keyword_set(local) then 	exception_obj = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD100546','HD104237','HD135344B','HD139614',$
+	if keyword_set(localnoise) then 	exception_obj = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD100546','HD104237','HD135344B','HD139614',$
 		   'HD141569','HD142527','HD142666','HD144432','HD144668','HD150193','HD163296','HD169142','HD179218','HD203024','HD245906','HD35187','HD36112','HD38120','HD50138',$
 		   'HD97048','HD98922','HH46','HH100','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
 		   'L1489','L1527','L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
