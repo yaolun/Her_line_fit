@@ -358,6 +358,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					 noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,/fix_dg,/spire,/fixed_width,brightness=brightness
 				; if the global_noise keyword is not specified, then do the fitting again but take the evaluated noise as the error of the data
 				if not keyword_set(global_noise) then begin
+					feedback = noise + 0*fluxx
 					fit_line,object+'_'+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
 						noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,/fix_dg,/spire,/fixed_width,brightness=brightness,feedback=feedback
 				endif
