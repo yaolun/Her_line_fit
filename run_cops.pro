@@ -1,5 +1,5 @@
 pro run_cops, indir=indir,outdir=outdir,fixed_width=fixed_width,localbaseline=localbaseline,global_noise=global_noise,noiselevel=noiselevel,test=test,corrected=corrected,cube=cube,$
-	refine=refine,no_fit=no_fit,print_all=print_all,co_add=co_add,no_plot=no_plot,cops=cops,double_gauss=double_gauss,contour=contour,FWD=FWD,single=single,obj_flag=obj_flag
+	refine=refine,no_fit=no_fit,print_all=print_all,co_add=co_add,no_plot=no_plot,cops=cops,double_gauss=double_gauss,contour=contour,FWD=FWD,single=single,obj_flag=obj_flag,local=local
 
 if not keyword_set(FWD) then tic
 if not keyword_set(outdir) then outdir = indir
@@ -146,6 +146,13 @@ while i eq 1 do begin
 	if file_test(outdir+current_obj+'/spire/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/spire/data'
 	ignore_obj = ['B335','RCrA-IRS7B','BHR71','HD142527','HD97048']
 	exception_obj = []
+	; Force to use Local noise for all sources
+	if keyword_set(local) then 	exception_obj = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD104237','HD135344B','HD139614',$
+		   'HD141569','HD142527','HD142666','HD144432','HD144668','HD150193','HD163296','HD169142','HD179218','HD203024','HD245906','HD35187','HD36112','HD38120','HD50138',$
+		   'HD98922','HH46','HH100','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
+		   'L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
+		   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
+
 	if (where(ignore_obj eq current_obj))[0] ne -1 and not keyword_set(cube) then continue
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
 	

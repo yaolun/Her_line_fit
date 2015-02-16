@@ -1,5 +1,5 @@
 pro entire_run, indir=indir,outdir=outdir,outname=outname,slim=slim,clean=clean,contour_only=contour_only,obj_flag=obj_flag, $
-				spire_test=spire_test, pacs_test=pacs_test, test=test
+				spire_test=spire_test, pacs_test=pacs_test, test=test, local=local
 ;entire_run,/contour_only,outdir='~/data/FWD_bettyjo/FWD_archive'
 tic
 ; Keyword and directory setting
@@ -34,6 +34,8 @@ if file_test(outdir) eq 0 then file_mkdir, outdir
 if not keyword_set(outname) then outname = 'CDF_archive'
 
 if not keyword_set(obj_flag) then obj_flag = 0
+
+if not keyword_set(local) then local = 0
 
 ; Option for updating the contours plot only
 if keyword_set(contour_only) then begin
@@ -105,47 +107,33 @@ close, gff
 ;
 proj = 'digit'
 
-run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,local=local
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,local=local
 
-run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
-run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
-
-; run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-; run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-
-; run_digit,indir=digit_dir,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-; run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-
-; proj = 'digit'
-
-; run_digit,indir=digit_dir,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-; run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-
-; run_digit,indir=digit_dir,outdir=outdir,/cube,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
-; run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,local=local
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,local=local
 
 
 ;FOOSH
 proj = 'foosh'	
-run_digit,indir=foosh_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-run_digit,indir=foosh_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
+run_digit,indir=foosh_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,local=local
+run_digit,indir=foosh_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,local=local
 
-run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
-run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,local=local
+run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,local=local
 
 
 ;WISH
 proj='wish'
-run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,local=local
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,local=local
 
-run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
-run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,local=local
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,local=local
 
 ;COPS
-run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/corrected,/cops,no_plot=no_plot,print_all=outname+'_spire_1d',/refine,/double_gauss,/FWD,obj_flag=obj_flag
-run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/cube,/cops,no_plot=no_plot,print_all=outname+'_spire_cube',/refine,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/corrected,/cops,no_plot=no_plot,print_all=outname+'_spire_1d',/refine,/double_gauss,/FWD,obj_flag=obj_flag,local=local
+run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/cube,/cops,no_plot=no_plot,print_all=outname+'_spire_cube',/refine,/double_gauss,/contour,/FWD,obj_flag=obj_flag,local=local
 ;stop
 ;SPIRE for only text file format
 ; B335, RcrA-IRS7B, BHR71, HD142527, HD97048
@@ -179,9 +167,13 @@ for i = 0, n_elements(obj)-1 do begin
 	al_legend, [obj[i]],textcolor=[0],/left
 	device, /close_file,decomposed=1
 	!p.multi = 0 
-	
-	extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,global_noise=20,$
-	ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
+	if not keyword_set(local) then begin
+		extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,global_noise=20,$
+		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
+	endif else begin
+		extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,$
+		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
+	endelse
 endfor
 
 ; Refine the source list
