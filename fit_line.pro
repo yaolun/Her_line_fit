@@ -461,7 +461,7 @@ if not keyword_set(baseline) then begin
             if total(line_str)/noise gt 2 then msg = 'over_2sigma' else msg = ''
     		print, 'Double Gaussian fitting fail'
     		print, errmsg
-    		;stop
+    		stop
     		pause
             ;msg = ''
         endif
