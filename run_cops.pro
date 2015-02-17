@@ -249,10 +249,10 @@ while i eq 1 do begin
 				;openw, gff, outdir+current_obj+'/cube/data/'+current_obj+outname+'.txt',/get_lun
 				; SLW
 				extract_spire, indir=outdir+current_obj+'/spire/data/cube/',outdir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+current_obj+'/spire/advanced_products/cube/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   ra=ra,dec=dec,coordpix=pix_slw,/slw,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,/current_pix,double_gauss=double_gauss,no_plot=no_plot
+						   ra=ra_slw,dec=dec_slw,coordpix=pix_slw,/slw,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,/current_pix,double_gauss=double_gauss,no_plot=no_plot
 				; SSW
 				extract_spire, indir=outdir+current_obj+'/spire/data/cube/',outdir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+current_obj+'/spire/advanced_products/cube/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   ra=ra,dec=dec,coordpix=pix_ssw,/ssw,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,/current_pix,double_gauss=double_gauss,no_plot=no_plot
+						   ra=ra_ssw,dec=dec_ssw,coordpix=pix_ssw,/ssw,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,/current_pix,double_gauss=double_gauss,no_plot=no_plot
 			endif
 		endelse
 	endif
