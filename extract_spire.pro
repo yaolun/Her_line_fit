@@ -555,7 +555,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; if keyword_set(fixed_width) then msg = '_fixed_width'
 			; if not keyword_set(fixed_width) then msg =''
 			msg = ''
-			device, filename = plotdir+object+'_spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
+			device, filename = plotdir+object+'_spectrum_line_subtracted_'+pixelname[j]+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			!p.thick=2 & !x.thick=3 & !y.thick=3
 			trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
 			plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = ylabel,/nodata,position=[0.15,0.1,0.95,0.95]
