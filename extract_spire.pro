@@ -70,8 +70,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	line_name_hco = ['HCO+16-15','HCO+15-14','HCO+14-13','HCO+13-12','HCO+12-11','HCO+11-10','HCO+10-9','HCO+9-8','HCO+8-7','HCO+7-6','HCO+6-5']
 	line_center_hco = [210.28816791,224.28135601,240.27541266,258.73206751,280.26711943,305.71952487,336.26530802,373.60195435,420.27521465,480.28810368,560.30913387]
 	
-	line_name_other = ['NII_205','CI3P2-3P0','CI3P2-3P1','CI3P1-3P0'];,'Unknown_221.3','Unknown_225.2']
-	line_center_other = [205.178,230.349132,370.424383,609.150689];,221.3,225.2]
+	line_name_other = ['NII_205','CI3P2-3P0','CI3P2-3P1','CI3P1-3P0','CH+1-0'];,'Unknown_221.3','Unknown_225.2']
+	line_center_other = [205.178,230.349132,370.424383,609.150689,358.99894016];,221.3,225.2]
 	
 	line_name = [line_name_oh2o, line_name_ph2o, line_name_co, line_name_13co, line_name_hco, line_name_other]
 	line_center = [line_center_oh2o, line_center_ph2o, line_center_co, line_center_13co, line_center_hco, line_center_other]

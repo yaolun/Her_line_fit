@@ -115,15 +115,20 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	cont_oh = [[55.85,60,60,70],[55.85,60,60,70],[55.85,60,60,70],[55.85,60,60,70],[65,75,75,80],[65,75,75,80],[65,75,75,80],[65,75,75,80],[80,84.35,84.7,87],[84.45,84.57,84.7,87],$
 			   [115,115.15,115.38,119],[115,115.15,115.38,119],[118.9,119.1,119.6,121],[118.9,119.1,119.6,121],[134,150,150,165],[134,150,150,165],[134,150,150,165],[134,150,150,165],[134,150,150,165]];,[134,150,150,165]
 	
+	line_name_ch = ['CH+2-1','CH+3-2','CH+4-3','CH+5-4','CH+6-5']
+	line_center_ch = [179.60534781,119.85466040,90.01483417,72.13950405,60.24658501]
+	range_ch = [[179,180],[119,120.3],[89,90.5],[71,5,73],[59.5,60.7]]
+	cont_ch = [[175,179,180,185],[115,119,120.3,125],[85,89,90.5,95],[65,71.5,73,77],[55,59.5,60.7,65]]
+
 	line_name_other = ['OI3P1-3P2','NII_122','OI3P0-3P1','CII2P3_2-2P1_2']
 	line_center_other = [63.1836709,121.9,145.48055764,157.69228158]
 	range_other = [[62.73,63.73],[121.5,122.5],[145.13,146.13],[157.35,158.35]]
 	cont_other = [[62.9,63.1,63.3,63.6],[119,121.8,122.2,123],[144.95,145.45,145.65,152],[155,157.5,158.0,162]]
 	
-	line_name = [line_name_oh2o, line_name_ph2o, line_name_co, line_name_oh, line_name_other]
-	line_center = [line_center_oh2o, line_center_ph2o, line_center_co, line_center_oh, line_center_other]
-	range = [[range_oh2o], [range_ph2o], [range_co], [range_oh], [range_other]]
-	cont = [[cont_oh2o], [cont_ph2o], [cont_co], [cont_oh], [cont_other]]
+	line_name = [line_name_oh2o, line_name_ph2o, line_name_co, line_name_oh, line_name_ch, line_name_other]
+	line_center = [line_center_oh2o, line_center_ph2o, line_center_co, line_center_oh, line_center_ch, line_center_other]
+	range = [[range_oh2o], [range_ph2o], [range_co], [range_oh], [range_ch], [range_other]]
+	cont = [[cont_oh2o], [cont_ph2o], [cont_co], [cont_oh], [cont_ch], [cont_other]]
 	; Old plotting code for visualizing the line list
 	;	set_plot, 'ps'
 	;	!p.font = 0
