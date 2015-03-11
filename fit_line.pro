@@ -257,7 +257,6 @@ if not keyword_set(baseline) then begin
             residual = flux - gauss
             noise = stddev(residual[where(wl gt line[1] and wl lt line[2])])
             if keyword_set(global_noise) then begin
-                if linename eq 'p-H2O6_15-6_06' then stop
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
                 ; 1/e^2 full width = 1.699 * fwhm

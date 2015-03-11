@@ -850,6 +850,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	spec_continuum_smooth,wl,flux_sub,continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
     	spec_continuum_smooth,wl,flux,continuum, continuum_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9, lower=0.9
     	flat_noise = flux_sub - continuum_sub
+
+    	; Deal with the edge effect that can sabotage the SNR later
+    	edge_low = where(flat_noise lt 100 and flat_noise gt max(flat_noise lt 100)-0.5)
+    	edge_hi = where(flat_noise gt 100 and flat_noise lt min(flat_noise gt 100)+0.5)
+    	flat_noise[edge_low] = flat_noise[edge_low-n_elements(edge_low)]
+    	flat_noise[edge_hi] = flat_noise[edge_hi+n_elements(edge_hi)]
+
     	; Do I want to output the unceratinty with the continuum and flat spectrum?
     	if keyword_set(continuum_sub) then begin
     		openw, sed, outdir+filename+'_continuum.txt', /get_lun
@@ -1388,6 +1395,12 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		sbin=10
 		spec_continuum_smooth,wl, flux_sub, continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
 		flat_noise = flux_sub - continuum_sub
+
+    	; Deal with the edge effect that can sabotage the SNR later
+    	edge_low = where(flat_noise lt 100 and flat_noise gt max(flat_noise lt 100)-0.5)
+    	edge_hi = where(flat_noise gt 100 and flat_noise lt min(flat_noise gt 100)+0.5)
+    	flat_noise[edge_low] = flat_noise[edge_low-n_elements(edge_low)]
+    	flat_noise[edge_hi] = flat_noise[edge_hi+n_elements(edge_hi)]
 
 		if keyword_set(continuum_sub) then begin
     		openw, sed, outdir+filename+'_continuum.txt', /get_lun
