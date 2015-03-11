@@ -30,28 +30,28 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     ; Information about the line that you want to fit including the range for baseline fitting.
     ; every level is equal to LAMDA level-1
     ; In the later version, the 10 times of resolutions is used for determining the baseline. Thus the baseline number here is less important
-    line_name_oh2o = ['o-H2O8_27-7_16','o-H2O10_29-10_110','o-H2O9_09-8_18','o-H2O7_52-8_27','o-H2O4_32-3_21','o-H2O5_41-6_16','o-H2O9_18-9_09','o-H2O8_18-7_07','o-H2O6_61-6_52','o-H2O7_61-7_52',$
+    line_name_oh2o = ['o-H2O8_27-7_16','o-H2O9_09-8_18','o-H2O7_52-8_27','o-H2O4_32-3_21','o-H2O5_41-6_16','o-H2O9_18-9_09','o-H2O8_18-7_07','o-H2O6_61-6_52','o-H2O7_61-7_52',$ ;'o-H2O10_29-10_110',
     	              'o-H2O6_25-5_14','o-H2O7_16-6_25','o-H2O3_30-2_21','o-H2O3_30-3_03','o-H2O8_27-8_18','o-H2O7_07-6_16','o-H2O7_25-6_34','o-H2O3_21-2_12','o-H2O8_54-8_45','o-H2O6_52-6_43',$
     	              'o-H2O5_50-5_41','o-H2O7_52-7_43','o-H2O4_23-3_12','o-H2O9_27-9_18','o-H2O6_16-5_05','o-H2O8_36-8_27','o-H2O7_16-7_07','o-H2O8_45-8_36','o-H2O6_43-6_34','o-H2O6_25-6_16',$
     	              'o-H2O4_41-4_32','o-H2O6_34-6_25','o-H2O2_21-1_10','o-H2O7_43-7_34','o-H2O4_41-5_14','o-H2O4_14-3_03','o-H2O9_27-10_110','o-H2O8_36-9_09','o-H2O7_34-6_43','o-H2O4_32-4_23',$
     	              'o-H2O9_36-9_27','o-H2O7_25-7_16','o-H2O9_45-9_36','o-H2O4_23-4_14','o-H2O8_36-7_43','o-H2O5_14-5_05','o-H2O3_30-3_21','o-H2O5_23-4_32','o-H2O8_45-7_52','o-H2O6_34-7_07',$
     	              'o-H2O5_32-5_23','o-H2O7_34-7_25','o-H2O3_03-2_12','o-H2O4_32-5_05','o-H2O2_12-1_01','o-H2O2_21-2_12','o-H2O8_54-9_27']
     	              ;'o-H2O5_41-5_32','o-H2O5_05-4_14','o-H2O5_14-4_23'
-    line_center_oh2o = [55.13237858,55.84107632,56.81776703,57.39510658,58.70051448,61.31781921,62.92978624,63.32514386,63.91602319,63.95696098,$
+    line_center_oh2o = [55.13237858,56.81776703,57.39510658,58.70051448,61.31781921,62.92978624,63.32514386,63.91602319,63.95696098,$ ;55.84107632,
     	                65.16779477,66.09434431,66.43936941,67.27066614,70.70435046,71.94880555,74.94690356,75.38256949,75.49739784,75.83187829,$
     	                75.91180234,77.76344508,78.74431117,81.40747341,82.03351147,82.97879320,84.76907298,85.77088313,92.81311776,94.64642892,$
 						94.70758174,104.0962925,108.0758815,112.5134151,112.8057590,113.5402058,114.4565616,116.3528767,116.7819562,121.7247732,$
 						123.4635170,127.8873463,129.3421955,132.4117288,133.5524240,134.9386313,136.4994335,156.2690816,159.0545289,159.4042699,$
 						160.5140957,166.8188522,174.6302863,174.9244086,179.5311752,180.4928070,187.8148753]
 						;98.49638273,99.49555191,100.9155494,
-	range_oh2o = [[55,55.4],[55.34,56.34],[56.31,57.31],[56.89,57.89],[58.2,59.2],[60.81,61.81],[62.42,63.3],[62.82,63.85],[63.4,63.95],[63.92,64.45],$
+	range_oh2o = [[55,55.4],[56.31,57.31],[56.89,57.89],[58.2,59.2],[60.81,61.81],[62.42,63.3],[62.82,63.85],[63.4,63.95],[63.92,64.45],$ ;[55.34,56.34],
 		  		  [64.67,65.67],[65.7,66.59],[65.9,66.9],[66.57,67.57],[70.2,70.8],[71.44,72.44],[74.89,75.37],[74.95,75.45],[75.39,75.8],[75.5,75.9],$
 		  		  [75.84,76.41],[77.26,78.26],[78.24,79.24],[80.9,81.7],[81.5,82.5],[82.4,83.4],[84.6,85.26],[85.27,86.27],[92.3,93.3],[94.14,94.7],$
 		  		  [94.65,95.15],[103.5,104.4],[107.5,108.5],[112,112.75],[112.55,113.5],[112.9,114],[114,115],[115.86,116.7],[116.4,117.28],[121.22,122.22],$
 		  		  [122.96,123.96],[127.38,128.38],[128.84,129.84],[131.91,132.91],[133.05,134.05],[134.43,135.43],[135.96,136.96],[155.76,156.76],[158.55,159.35],[159.1,159.9],$
 		  		  [160,161],[166.3,167.3],[174.25,175.25],[174.77,175.4],[179,180],[180.31,180.71],[187.3,188.3]]
 		  		  ;,[97.99,98.99],[98.99,99.99],[100.4,101.4];[50.8,51.4],[51.1,51.6],[51.45,52.18],[52.36,53.36],[52.95,53.95],[54,55],
-	cont_oh2o = [[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],$
+	cont_oh2o = [[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],$ ;[50.76,70,70,90],
 				 [50.76,70,70,90],[50.76,70,70,90],[55,63,66.6,69],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],$
 				 [50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[50.76,70,70,90],[90,94,94,95.15],[90,94,94,95.15],$
 				 [90,94,94,95.15],[103.5,110,110,139],[103.5,110,110,139],[103.5,110,110,139],[103.5,110,110,139],[103.5,110,110,139],[103.5,110,110,139],[103.5,110,110,139],[103.5,110,110,139],[103.5,110,110,139],$
@@ -285,10 +285,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	; if keyword_set(fixed_width) then name = name+'_fixwidth'
     openw, firstfit, name+'.txt', /get_lun
     if not keyword_set(current_pix) then begin
-		printf, firstfit, format='(18(a16,2x))', $
+		printf, firstfit, format='((a18,2x),17(a16,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend'
     endif else begin
-    	printf, firstfit, format='(19(a16,2x))', $
+    	printf, firstfit, format='((a18,2x),18(a16,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend'
     endelse
 
@@ -430,7 +430,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
         ; Print the fittng result into text file
 
         if status le 0 then begin
-            printf, firstfit, format = '((a16,2X),(a50))', line_name[i], errmsg
+            printf, firstfit, format = '((a18,2X),(a50))', line_name[i], errmsg
         endif else begin
             ; The read_line_ref procedure read the g, A, E_u from another file
             read_line_ref, line_name[i], E_u, A, g
@@ -470,10 +470,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             ; blend flag = 0: no blend; blend_flag = 1: Red blend; blend_flag = 2: Red/Blue blend; blend_flag = 3: Blue blend.
             ;
             if not keyword_set(current_pix) then begin
-            	printf, firstfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+            	printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
             		line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, blend_msg
             endif else begin
-            	printf, firstfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+            	printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
             		line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, current_pix, blend_msg
             endelse
         endelse 
@@ -541,7 +541,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			endif
 
 			if status eq 0 then begin
-				printf, firstfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
+				printf, firstfit, format = '((a18,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
 			endif else begin
 				; Making sure the line classification is correct
 				i1 = where(line_name eq line_name_dg[2*i])
@@ -569,14 +569,14 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				blend_msg = 'x'
 				if (finite(snr,/nan))[0] eq 1 then continue
 				if not keyword_set(current_pix) then begin
-					printf, firstfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+					printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
 						line_name_dg[2*i], line[0], cen_wl[0], sig_cen_wl[0], str[0], sig_str[0], fwhm[0], sig_fwhm[0], base_str[0], noise, snr[0], E_u[0], A[0], g[0], ra, dec, blend_msg
-					printf, firstfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+					printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
 						line_name_dg[2*i+1], line[3], cen_wl[1], sig_cen_wl[1], str[1], sig_str[1], fwhm[1], sig_fwhm[1], base_str[1], noise, snr[1], E_u[1], A[1], g[1], ra, dec, blend_msg
 				endif else begin
-					printf, firstfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+					printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
 						line_name_dg[2*i], line[0], cen_wl[0], sig_cen_wl[0], str[0], sig_str[0], fwhm[0], sig_fwhm[0], base_str[0], noise, snr[0], E_u[0], A[0], g[0], ra, dec, current_pix, blend_msg
-					printf, firstfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+					printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
 						line_name_dg[2*i+1], line[3], cen_wl[1], sig_cen_wl[1], str[1], sig_str[1], fwhm[1], sig_fwhm[1], base_str[1], noise, snr[1], E_u[1], A[1], g[1], ra, dec, current_pix, blend_msg
 				endelse
 			endelse
@@ -654,10 +654,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	endfor
     openw, firstfit, name+'.txt', /get_lun
     if not keyword_set(current_pix) then begin
-    	printf, firstfit, format='(18(a16,2x))', $
+    	printf, firstfit, format='((a18,2x),17(a16,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
     endif else begin
-    	printf, firstfit, format='(19(a16,2x))', $
+    	printf, firstfit, format='((a18,2x),18(a16,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
     endelse
     for line = 0, n_elements(line_name_n)-1 do begin
@@ -668,24 +668,24 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
      	; Reason for sig_str is that some sources have very poor spectra like EC82.  It will fit on the edge
      	if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) or (sig_str_n[line] eq -999)then lowest = '0'
      	if not keyword_set(current_pix) then begin
-     		printf, firstfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+     		printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
             	line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
             	E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 			if keyword_set(print_all) and not keyword_set(global_noise) then begin
             	openw, gff, print_all+'.txt',/append,/get_lun
-				printf, gff, format = '(2(a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+				printf, gff, format = '((a16,2X),(a18,2x),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
             		object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 				free_lun, gff
 				close, gff
 			endif
      	endif else begin
-     		printf, firstfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
+     		printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
             	line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
             	E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 			if keyword_set(print_all) and not keyword_set(global_noise) then begin
             	openw, gff, print_all+'.txt',/append,/get_lun
-				printf, gff, format = '(2(a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
+				printf, gff, format = '((a16,2X),(a18,2x),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
             		object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 				free_lun, gff
@@ -710,8 +710,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	endelse
     	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
-    		if abs(snr_n[line]) ge noiselevel-2.0 then begin
-				if (blend_flag_n[line] ne 'x') and (lowest_E_n[line] ne 1) then continue
+    		if abs(snr_n[line]) ge noiselevel-1.0 then begin
+				if (lowest_E_n[line] ne 1) then continue
     			ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
     			wl_n = wl[ind]
     			line_profile = gauss(wl_n, [2.354*str_n[line]/fwhm_n[line]/(2*!PI)^0.5, cen_wl_n[line], fwhm_n[line]/2.354]);+base_str[line]
@@ -723,9 +723,11 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					device, filename=plotdir+'line_subtracted_'+line_name[line]+'.eps',/helvetica,/portrait,/encapsulated,isolatin=1,font_size=12,decomposed=0,/color
 					!p.thick=3 & !x.thick=3 & !y.thick=3
 
-    				plot, wl_n, flux[ind], xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)'
-					oplot, wl_n, line_profile+base_str_n[line], color=120 ;purple
-					oplot, wl_n, flux_sub[ind], color=200 ;red
+    				plot, wl_n, flux[ind], psym=10, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)', position=[0.15,0.1,0.95,0.95], $
+    					yrange=[0.9*min([flux[ind],line_profile+base_str_n[line],flux_sub[line]]),1.1*max([flux[ind],line_profile+base_str_n[line],flux_sub[line]])]
+					oplot, wl_n, line_profile+base_str_n[line], color=120, psym=10 ;purple
+					oplot, wl_n, flux_sub[ind], color=200, psym=10 ;red
+					al_legend, ['Data','Line+Baseline Fit','Subtraction'], textcolors=[0,120,200], /right
 					device, /close_file, decomposed=1
 					!p.multi=0
 				endif
@@ -740,7 +742,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		device, filename = plotdir+'spectrum_line_subtracted_'+filename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
 		!p.thick=2 & !x.thick=3 & !y.thick=3
 		trim1 = where(wl lt 100) & trim2 = where(wl ge 100)
-		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata,position=[0.15,0.1,0.95,0.95]
+		plot, wl, flux/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)',/nodata, position=[0.15,0.1,0.95,0.95]
 		if trim1[0] ne -1 then begin
 			oplot, wl[trim1], flux[trim1]/1e-22
 			oplot, wl[trim1], flux_sub[trim1]/1e-22, color=200
@@ -777,8 +779,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	; Line subtraction
     	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
-    		if abs(snr_n[line]) ge noiselevel-2.0 then begin
-				if (blend_flag_n[line] ne 'x') and (lowest_E_n[line] ne 1) then continue
+    		if abs(snr_n[line]) ge noiselevel-1.0 then begin
+				if (lowest_E_n[line] ne 1) then continue
     			ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
     			wl_n = wl[ind]
     			line_profile = gauss(wl_n, [2.354*str_n[line]/fwhm_n[line]/(2*!PI)^0.5, cen_wl_n[line], fwhm_n[line]/2.354]);+base_str[line]
@@ -787,12 +789,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     				set_plot,'ps'
 					!p.font=0
 					loadct,12,/silent
-					device, filename=plotdir+'line_subtracted_'+line_name[line]+'.eps',/helvetica,/portrait,/encapsulated,isolatin=1,font_size=12,decomposed=0,/color
+					device, filename=plotdir+'line_subtracted_'+line_name_n[line]+'.eps',/helvetica,/portrait,/encapsulated,isolatin=1,font_size=12,decomposed=0,/color
 					!p.thick=3 & !x.thick=3 & !y.thick=3
-
-    				plot, wl_n, flux[ind], xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)'
-					oplot, wl_n, line_profile+base_str_n[line], color=120 ;purple
-					oplot, wl_n, flux_sub[ind], color=200 ;red
+    				plot, wl_n, flux[ind], psym=10, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)', position=[0.15,0.1,0.95,0.95], $
+    					yrange=[0.9*min([flux[ind],line_profile+base_str_n[line],flux_sub[line]]),1.1*max([flux[ind],line_profile+base_str_n[line],flux_sub[line]])]
+					oplot, wl_n, line_profile+base_str_n[line], color=120, psym=10 ;purple
+					oplot, wl_n, flux_sub[ind], color=200, psym=10 ;red
+					al_legend, ['Data','Line+Baseline Fit','Subtraction'], textcolors=[0,120,200], /right
 					device, /close_file, decomposed=1
 					!p.multi=0
 				endif
@@ -823,7 +826,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		free_lun, flat_sed
     		close,flat_sed
     	endif
-    	
+		
     	set_plot, 'ps'
 		!p.font = 0
 		loadct,12,/silent
@@ -863,10 +866,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		; name = name+'_global_noise'
 		openw, secondfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
-			printf, secondfit, format='(17(a16,2x))',$
+			printf, secondfit, format='((a18,2x),16(a16,2x))',$
 				'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend'
 		endif else begin
-			printf, secondfit, format='(18(a16,2x))',$
+			printf, secondfit, format='((a18,2x),17(a16,2x))',$
 				'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend'
 		endelse
     
@@ -1004,12 +1007,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 													/single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot, feedback=feedback
 			endelse
 
-
-
 			; Print the fittng result into text file
 
         	if status le 0 then begin
-				printf, secondfit, format = '((a16,2X),(a50))', line_name[i], errmsg
+				printf, secondfit, format = '((a18,2X),(a50))', line_name[i], errmsg
 			endif else begin
             	; The read_line_ref procedure read the g, A, E_u from another file
             	read_line_ref, line_name[i], E_u, A, g
@@ -1048,10 +1049,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				; Throw away the bogus results due to the missing segment in the spectrum
 				if finite(snr,/nan) eq 1 then continue
 				if not keyword_set(current_pix) then begin
-					printf, secondfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+					printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
             			line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, blend_msg
 				endif else begin
-					printf, secondfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+					printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
             			line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, current_pix, blend_msg
 				endelse
 			endelse 
@@ -1122,7 +1123,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					 noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,b3a=b3a,/fix_dg,/fixed_width,feedback=feedback
 				
 				if status eq 0 then begin
-					printf, secondfit, format = '((a16,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
+					printf, secondfit, format = '((a18,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
 				endif else begin
 					; Making sure the line classification is correct
 					i1 = where(line_name eq line_name_dg[2*i])
@@ -1151,14 +1152,14 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					; Throw away the bogus results due to the missing segment in the spectrum
 					if (finite(snr,/nan))[0] eq 1 then continue
 					if not keyword_set(current_pix) then begin
-						printf, secondfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+						printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
 							line_name_dg[2*i], line[0], cen_wl[0], sig_cen_wl[0], str[0], sig_str[0], fwhm[0], sig_fwhm[0], base_str[0],noise,snr[0], E_u[0], A[0], g[0], ra, dec, blend_msg
-						printf, secondfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+						printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
 							line_name_dg[2*i+1], line[3], cen_wl[1], sig_cen_wl[1], str[1], sig_str[1], fwhm[1], sig_fwhm[1], base_str[1],noise,snr[1], E_u[1], A[1], g[1], ra, dec, blend_msg
 					endif else begin
-						printf, secondfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+						printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
 							line_name_dg[2*i], line[0], cen_wl[0], sig_cen_wl[0], str[0], sig_str[0], fwhm[0], sig_fwhm[0], base_str[0],noise,snr[0], E_u[0], A[0], g[0], ra, dec, current_pix, blend_msg
-						printf, secondfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+						printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
 							line_name_dg[2*i+1], line[3], cen_wl[1], sig_cen_wl[1], str[1], sig_str[1], fwhm[1], sig_fwhm[1], base_str[1],noise,snr[1], E_u[1], A[1], g[1], ra, dec, current_pix, blend_msg
 					endelse
 				endelse
@@ -1237,10 +1238,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		; openw, secondfit, outdir+name+'_global_noise.txt', /get_lun
 		openw, secondfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
-			printf, secondfit, format='(18(a16,2x))', $
+			printf, secondfit, format='((a18,2x),17(a16,2x))', $
     			'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
 		endif else begin
-			printf, secondfit, format='(19(a16,2x))', $
+			printf, secondfit, format='((a18,2x),18(a16,2x))', $
     			'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
 		endelse
 		for line = 0, n_elements(line_name_n)-1 do begin
@@ -1251,26 +1252,26 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			; Reason for sig_str is that some sources have very poor spectra like EC82.  It will fit on the edge
 			if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) or (sig_str_n[line] eq -999)then lowest = '0'
 			if not keyword_set(current_pix) then begin
-				printf, secondfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+				printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
             		line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 				if keyword_set(print_all) then begin
             		;openw, gff, print_all+'_global_noise.txt',/append,/get_lun
             		openw, gff, print_all+'.txt',/append,/get_lun
-					printf, gff, format = '(2(a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+					printf, gff, format = '((a16,2X),(a18,2x),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
             			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 					free_lun, gff
 					close, gff
 				endif
 			endif else begin
-				printf, secondfit, format = '((a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
+				printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
             		line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 				if keyword_set(print_all) then begin
             		;openw, gff, print_all+'_global_noise.txt',/append,/get_lun
             		openw, gff, print_all+'.txt',/append,/get_lun
-					printf, gff, format = '(2(a16,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
+					printf, gff, format = '((a16,2X),(a18,2x),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
             			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 					free_lun, gff
@@ -1295,7 +1296,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		flux_sub = flux
 		for line = 0, n_elements(line_name_n)-1 do begin
 			if snr_n[line] ge noiselevel then begin
-				if blend_flag_n[line] ne 'x' and lowest_E_n[line] ne 1 then continue
+				if lowest_E_n[line] ne 1 then continue
 				ind = where((wl gt cen_wl_n[line]-5*fwhm_n[line]) and (wl lt cen_wl_n[line]+5*fwhm_n[line]))
 				wl_n = wl[ind]
 				line_profile = gauss(wl_n, [2.354*str_n[line]/fwhm_n[line]/(2*!PI)^0.5, cen_wl_n[line], fwhm_n[line]/2.354]);+base_str[line]
@@ -1304,11 +1305,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					set_plot,'ps'
 					!p.font=0
 					loadct,12,/silent
-					device, filename=plotdir+'line_subtracted_'+filename+'_'+line_name[line]+'.eps',/helvetica,/portrait,/encapsulated,isolatin=1,font_size=12,decomposed=0,/color
+					device, filename=plotdir+'line_subtracted_'+filename+'_'+line_name_n[line]+'.eps',/helvetica,/portrait,/encapsulated,isolatin=1,font_size=12,decomposed=0,/color
 					!p.thick=3 & !x.thick=3 & !y.thick=3
-					plot, wl_n, flux[ind]/1e-22, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)'
-					oplot, wl_n, (line_profile+base_str_n[line])/1e-22, color=120 ;purple
-					oplot, wl_n, flux_sub[ind]/1e-22, color=200 ;red
+    				plot, wl_n, flux[ind], psym=10, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)', position=[0.15,0.1,0.95,0.95], $
+    					yrange=[0.9*min([flux[ind],line_profile+base_str_n[line],flux_sub[line]]),1.1*max([flux[ind],line_profile+base_str_n[line],flux_sub[line]])]
+					oplot, wl_n, (line_profile+base_str_n[line])/1e-22, color=120, psym=10 ;purple
+					oplot, wl_n, flux_sub[ind]/1e-22, color=200, psym=10 ;red
+					al_legend, ['Data','Line+Baseline Fit','Subtraction'], textcolors=[0,120,200], /right
 					device, /close_file, decomposed=1
 					!p.multi=0
 				endif
