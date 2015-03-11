@@ -600,6 +600,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					wl_n = wl[ind]
 					line_profile = gauss(wl_n, [2.354*str_n[line]/fwhm_n[line]/(2*!PI)^0.5, cen_wl_n[line], fwhm_n[line]/2.354]);+base_str[line]
 					flux_sub[ind] = flux_sub[ind] - line_profile
+					if pixelname[j] eq 'SLWC3' and line_name_n[line] eq 'CO7-6' then stop
 					if keyword_set(plot_subtraction) then begin
 						set_plot,'ps'
 						!p.font=0
