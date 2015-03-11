@@ -785,6 +785,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     			wl_n = wl[ind]
     			line_profile = gauss(wl_n, [2.354*str_n[line]/fwhm_n[line]/(2*!PI)^0.5, cen_wl_n[line], fwhm_n[line]/2.354]);+base_str[line]
     			flux_sub[ind] = flux_sub[ind] - line_profile
+    			if line_name_n[line] eq 'o-H2O3_30-3_21' then stop
     			if keyword_set(plot_subtraction) then begin
     				set_plot,'ps'
 					!p.font=0
