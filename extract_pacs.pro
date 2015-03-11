@@ -343,13 +343,33 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             ; Select line+baseline
             case 1 of
             	i eq 0: begin
-            		indl = where((wl gt base_range[0]) and (wl lt min([base_range[3],range[0,i+1]])))
+            		if base_range[3] gt range[0,i+1] then begin
+            			max_wl = 0.5*(base_range[3]+range[0,i+1])
+            			indl = where((wl gt base_range[0]) and (wl lt max_wl))
+            		endif else begin
+            			indl = where((wl gt base_range[0]) and (wl lt base_range[3]))
+            		endelse
             	end
             	i eq n_elements(line_name)-1: begin
-            		indl = where((wl gt max([base_range[0],range[1,i-1]])) and (wl lt base_range[3]))
+            		if base_range[3] gt range[0,i+1] then begin
+            			max_wl = 0.5*(base_range[3]+range[0,i+1])
+            		endif else begin
+            			max_wl = base_range[3]
+            		endelse
+            		if base_range[0] lt range[1,i-1] then begin
+            			min_wl = 0.5*(base_range[0]+range[1,i-1])
+            		endif else begin
+            			min_wl = base_range[0]
+            		endelse
+            		indl = where(wl gt min_wl and wl lt max_wl)
             	end
             	(i ne 0) and (i ne n_elements(line_name)-1): begin
-            		indl = where((wl gt max([base_range[0],range[1,i-1]])) and (wl lt min([base_range[3],range[0,i+1]])))
+            		if base_range[0] lt range[1,i-1] then begin
+            			min_wl = 0.5*(base_range[0]+range[1,i-1])
+            			indl = where((wl gt min_wl) and (wl lt base_range[3]))
+            		endif else begin
+            			indl = where((wl gt base_range[0]) and (wl lt base_range[3]))
+            		endelse
             	end
             endcase
             if line_name[i] eq 'OH_hf_163.12' then stop
