@@ -577,8 +577,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			!p.multi = 0
 		endif
 		
-		if pixelname[j] eq 'SLWC3' then stop
-		
 		; Construct the smooth/featureless spectrum to calculate the noise properly
 		if keyword_set(global_noise) then begin
 			print, '---> Re-calculating the noise level...'
@@ -600,14 +598,13 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					wl_n = wl[ind]
 					line_profile = gauss(wl_n, [2.354*str_n[line]/fwhm_n[line]/(2*!PI)^0.5, cen_wl_n[line], fwhm_n[line]/2.354]);+base_str[line]
 					flux_sub[ind] = flux_sub[ind] - line_profile
-					if pixelname[j] eq 'SLWC3' and line_name_n[line] eq 'CO7-6' then stop
 					if keyword_set(plot_subtraction) then begin
 						set_plot,'ps'
 						!p.font=0
 						loadct,12,/silent
 						device, filename=plotdir+object+'_line_subtracted_'+pixelname[j]+'_'+line_name_n[line]+'.eps',/helvetica,/portrait,/encapsulated,isolatin=1,font_size=12,decomposed=0,/color
 						!p.thick=3 & !x.thick=3 & !y.thick=3
-						plot, wl_n, flux[ind], psym=10, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)', position=[0.15,0.1,0.95,0.95], $
+						plot, wl_n, flux[ind]/1e-22, psym=10, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)', position=[0.15,0.1,0.95,0.95], $
     						yrange=[0.9*min([flux[ind],line_profile+base_str_n[line],flux_sub[line]]),1.1*max([flux[ind],line_profile+base_str_n[line],flux_sub[line]])]
 						oplot, wl_n, (line_profile+base_str_n[line])/1e-22, color=120, psym=10 ;purple
 						oplot, wl_n, flux_sub[ind]/1e-22, color=200, psym=10 ;red
@@ -623,6 +620,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			spec_continuum_smooth,wl,flux_sub,continuum_sub, continuum_sub_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9,lower=0.9
 			spec_continuum_smooth,wl,flux,continuum, continuum_error,w1 = min(wl), w2 = max(wl), sbin=sbin,upper=0.9, lower=0.9
 			flat_noise = flux_sub - continuum_sub
+
 			if not keyword_set(filename) then name_dum = outdir+object+'_'+pixelname[j]
 			if keyword_set(filename) then name_dum = outdir + filename
 			if keyword_set(continuum_sub) then begin
@@ -727,6 +725,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				ind_n = where(wl gt limit_low and wl lt limit_hi)
 				wl_n = wl[ind_n] & flux_n = flat_noise[ind_n]
 				flat_noise_smooth = [[wl_n],[flux_n]]
+
 				; Fitting part
 				; Different fitting keyword for fixed width and test arguement
 				if keyword_set(fixed_width) then begin

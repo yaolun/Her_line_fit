@@ -844,6 +844,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				endif
     		endif
     	endfor
+    
     	; Smooth the line subtracted spectrum
     	sbin=10
     	if keyword_set(linescan) then sbin=10

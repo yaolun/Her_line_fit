@@ -101,7 +101,7 @@ if keyword_set(FWD) then begin
 		   'L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
 		   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
 	; Debug option
-	cdf = ['BHR71']
+	; cdf = ['BHR71']
 endif
 
 while i eq 1 do begin

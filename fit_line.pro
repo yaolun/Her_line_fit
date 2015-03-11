@@ -260,8 +260,13 @@ if not keyword_set(baseline) then begin
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
                 ; 1/e^2 full width = 1.699 * fwhm
-                indl = where((wl ge cen_wl-1.699/2*fwhm) and (wl le cen_wl+1.699/2*fwhm))
-                indb = where((global_noise[*,0] lt cen_wl-1.699/2*fwhm) or (global_noise[*,0] gt cen_wl+1.699/2*fwhm))
+                if not keyword_set(spire) then begin
+	                indl = where((wl ge cen_wl-1.699/2*fwhm) and (wl le cen_wl+1.699/2*fwhm))
+	                indb = where((global_noise[*,0] lt cen_wl-1.699/2*fwhm) or (global_noise[*,0] gt cen_wl+1.699/2*fwhm))
+	            endif else begin
+	                indl = where((wl ge cen_wl-1/2*fwhm) and (wl le cen_wl+1/2*fwhm))
+	                indb = where((global_noise[*,0] lt cen_wl-1/2*fwhm) or (global_noise[*,0] gt cen_wl+1/2*fwhm))
+	            endelse
                 comb_noise = [residual[indl], global_noise[indb,1]]
                 comb_noise_wl = [wl[indl], global_noise[indb,0]]
                 comb_noise = comb_noise[sort(comb_noise_wl)]
