@@ -343,20 +343,19 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             ; Select line+baseline
             case 1 of
             	i eq 0: begin
-            		indl = where((wl gt base_range[0]) and (wl lt min([base_range[3],range[1,i+1]])))
+            		indl = where((wl gt base_range[0]) and (wl lt min([base_range[3],range[0,i+1]])))
             	end
             	i eq n_elements(line_name)-1: begin
-            		indl = where((wl gt max([base_range[0],range[0,i-1]])) and (wl lt base_range[3]))
+            		indl = where((wl gt max([base_range[0],range[1,i-1]])) and (wl lt base_range[3]))
             	end
             	(i ne 0) and (i ne n_elements(line_name)-1): begin
-            		indl = where((wl gt max([base_range[0],range[0,i-1]])) and (wl lt min([base_range[3],range[1,i+1]])))
+            		indl = where((wl gt max([base_range[0],range[1,i-1]])) and (wl lt min([base_range[3],range[0,i+1]])))
             	end
             endcase
 
 			if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
 			if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
 			wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
-			if line_name[i] eq 'o-H2O3_30-3_21' then stop
         endif
         ; select the line+baseline
 		if not keyword_set(localbaseline) then begin
@@ -940,13 +939,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				; Select the line+baseline
 	            case 1 of
 	            	i eq 0: begin
-	            		indl = where((wl gt base_range[0]) and (wl lt min([base_range[3],range[1,i+1]])))
+	            		indl = where((wl gt base_range[0]) and (wl lt min([base_range[3],range[0,i+1]])))
 	            	end
 	            	i eq n_elements(line_name)-1: begin
-	            		indl = where((wl gt max([base_range[0],range[0,i-1]])) and (wl lt base_range[3]))
+	            		indl = where((wl gt max([base_range[0],range[1,i-1]])) and (wl lt base_range[3]))
 	            	end
 	            	(i ne 0) and (i ne n_elements(line_name)-1): begin
-	            		indl = where((wl gt max([base_range[0],range[0,i-1]])) and (wl lt min([base_range[3],range[1,i+1]])))
+	            		indl = where((wl gt max([base_range[0],range[1,i-1]])) and (wl lt min([base_range[3],range[0,i+1]])))
 	            	end
 	            endcase
 
