@@ -542,16 +542,16 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 			endif
 
-			if (where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[0] ne -1 then begin
-				wll = wll[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
-				fluxl = fluxl[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
-				stdl = stdl[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
-			endif 
-			if (where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[0] ne -1 then begin
-				wll = wll[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
-				fluxl = fluxl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
-				stdl = stdl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
-			endif 
+			; if (where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[0] ne -1 then begin
+			; 	wll = wll[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
+			; 	fluxl = fluxl[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
+			; 	stdl = stdl[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
+			; endif 
+			; if (where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[0] ne -1 then begin
+			; 	wll = wll[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
+			; 	fluxl = fluxl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
+			; 	stdl = stdl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
+			; endif 
 
 			; use the plot_base feature to plot the actual spectrum (with line) here
 			plot_base = [[wll],[fluxl]]
@@ -754,7 +754,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	endelse
     	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
-    		if abs(snr_n[line]) ge noiselevel-2.0 then begin
+    		if abs(snr_n[line]) ge noiselevel then begin
 				if (lowest_E_n[line] ne 1) then continue
     			ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
     			wl_n = wl[ind]
@@ -802,8 +802,6 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		device, /close_file, decomposed = 1
 		!p.multi = 0
     endif
-    
-    stop
 
     ; Second fitting to use the results of the previous one to better estimate the noise
     if keyword_set(global_noise) then begin
@@ -824,7 +822,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	; Line subtraction
     	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
-    		if abs(snr_n[line]) ge noiselevel-2.0 then begin
+    		if abs(snr_n[line]) ge noiselevel then begin
 				if (lowest_E_n[line] ne 1) then continue
     			ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
     			wl_n = wl[ind]
