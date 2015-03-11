@@ -162,11 +162,11 @@ while i eq 1 do begin
 	; Extract the fits files of each object now.  Output a two-column spectrum in ascii file and a whole spectrum plot.
 	;
 	if keyword_set(corrected) then begin
-		get_spire_1d, outdir=outdir+current_obj+'/spire/data/',object=current_obj,filename=filename,/fx
+		get_spire_1d, outdir=outdir+current_obj+'/spire/data/',object=current_obj,filename=filename,/brightness;/fx
 		get_radec_spire, filename=filename, pix, ra, dec, /central
 	endif
 	if keyword_set(cube) then begin
-		get_spire, outdir=outdir+current_obj+'/spire/data/cube/',object=current_obj,filename=filename,/fx
+		get_spire, outdir=outdir+current_obj+'/spire/data/cube/',object=current_obj,filename=filename,/brightness;/fx
 		get_radec_spire, filename=filename, pix_slw, ra_slw, dec_slw, /slw
 		get_radec_spire, filename=filename, pix_ssw, ra_ssw, dec_ssw, /ssw
 	endif
