@@ -352,7 +352,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             		indl = where((wl gt max([base_range[0],range[1,i-1]])) and (wl lt min([base_range[3],range[0,i+1]])))
             	end
             endcase
-            if line_name[i] eq 'OH_hf_163' then stop
+            if line_name[i] eq 'OH_hf_163.12' then stop
 			if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
 			if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
 			wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
