@@ -529,7 +529,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endelse
 			flux_sub = flux
 			for line = 0, n_elements(line_name_n)-1 do begin
-    			if abs(snr_n[line]) ge noiselevel-1.0 then begin
+    			if abs(snr_n[line]) ge noiselevel-2.0 then begin
 					if (lowest_E_n[line] ne 1) then continue
 					ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
 					wl_n = wl[ind]
@@ -593,7 +593,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 
 			flux_sub = flux
 			for line = 0, n_elements(line_name_n)-1 do begin
-    			if snr_n[line] ge noiselevel-1.0 then begin
+    			if snr_n[line] ge noiselevel-2.0 then begin
     				if lowest_E_n[line] ne 1 then continue
     				ind = where((wl gt cen_wl_n[line]-5*fwhm_n[line]) and (wl lt cen_wl_n[line]+5*fwhm_n[line]))
 					wl_n = wl[ind]
