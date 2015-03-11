@@ -15,7 +15,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	; The indir should include every letter except for the pixel name.
 	if keyword_set(brightness) then begin
 		; suffix = '_b'
-		ylabel = '!3Brightness (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
+		ylabel = '!3Intensity (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
 		unit = '/as2'
 	endif
 	if keyword_set(fx) then begin

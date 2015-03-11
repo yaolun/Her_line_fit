@@ -401,7 +401,7 @@ if not keyword_set(baseline) then begin
 			minn = min([0,min(flux)])
 			;plot, plot_wl, plot_flux/1d-22, psym = 10, xtitle = '!9m!3m', ytitle = '10!u-22!n W/cm!u2!n/!9m!3m', yrange = [min(plot_flux)/1d-22, max(plot_flux)*1.1/1d-22]
 			ylabel = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)'
-			if keyword_set(brightness) then ylabel = '!3Brightness (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
+			if keyword_set(brightness) then ylabel = '!3Intensity (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
 			if not keyword_set(double_gauss) then plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, max(flux+base)*1.1/1d-22],position=[0.15,0.1,0.95,0.95]        ;plot the baseline substracted spectrum
 			if keyword_set(double_gauss) then begin
 				plot, wl, (flux+base)/1d-22, psym = 10, xtitle = 'Wavelength (!9m!3m)', ytitle = ylabel, yrange = [min(flux+base)/1d-22, $
