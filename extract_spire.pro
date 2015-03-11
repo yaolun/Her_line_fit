@@ -16,7 +16,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	if keyword_set(brightness) then begin
 		; suffix = '_b'
 		ylabel = '!3Brightness (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
-		unit = '!3/as2'
+		unit = '/as2'
 	endif
 	if keyword_set(fx) then begin
 		; suffix = '_f'
