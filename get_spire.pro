@@ -10,8 +10,9 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
 	endif
 	; The beam center spacing of SLW and SSW
 	; Convert them into pixel size (arcsec2)
-	pix_slw = !PI/4*50.5^2
-	pix_ssw = !PI/4*32.5^2
+    ; SPIRE observar manual p. 48.  This is the averaged value.  The profile versus wavelength see p. 92.
+	pix_slw = !PI/4*34^2
+	pix_ssw = !PI/4*19^2
 	; The extended corrected data cube still has slices for each spaxel, but only take the central one and reduce them into 1D spectrum
 	; 12/19/14  It seems that 1-D spectrum is already in Jy unit.  No longer need to do the unit conversion
     data_slw = readfits(filename, hdr_slw, exten=5,/silent)
@@ -100,8 +101,9 @@ plotdir = outdir
 ;if file_test(plotdir) eq 0 then file_mkdir, plotdir
 ; The beam center spacing of SLW and SSW
 ; Convert them into pixel size (arcsec2)
-pix_slw = !PI/4*50.5^2
-pix_ssw = !PI/4*32.5^2
+; SPIRE observar manual p. 48.  This is the averaged value.  The profile versus wavelength see p. 92.
+pix_slw = !PI/4*34^2
+pix_ssw = !PI/4*19^2
 ; Read the object info from the header
 ;SLW
 ; !p.multi = [0,5,5]
