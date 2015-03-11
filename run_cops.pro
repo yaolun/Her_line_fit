@@ -48,7 +48,7 @@ for obj = 0, n_elements(objname)-1 do begin
 	if strcompress(objname[obj],/remove_all) eq 'L1551IRS5' then objname[obj] = 'L1551-IRS5'
 	if strmatch(objname[obj],'*-1') eq 1 then objname[obj] = strmid(objname[obj],0,strlen(objname[obj])-2)
 
-	;if strcompress(objname[obj],/remove_all) ne 'BHR71' then continue ; comment this line for all objects fitting
+	; if strcompress(objname[obj],/remove_all) ne 'BHR71' then continue ; comment this line for all objects fitting
 
 	;if strmatch(objname[obj],'*/*') ne 0 then objname[obj] = (strsplit(objname[obj],'/',/extract))[0]+'_'+(strsplit(objname[obj],'/',/extract))[1]
 endfor
@@ -101,7 +101,7 @@ if keyword_set(FWD) then begin
 		   'L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
 		   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
 	; Debug option
-	; cdf = ['BHR71']
+	cdf = ['Elias29']
 endif
 
 while i eq 1 do begin

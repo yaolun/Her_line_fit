@@ -120,10 +120,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	range_ch = [[119,120.3],[71.5,73],[59.5,60.7]] ; [179,180],[89,90.5],
 	cont_ch = [[115,119,120.3,125],[65,71.5,73,77],[55,59.5,60.7,65]] ; [175,179,180,185],[85,89,90.5,95],
 
-	line_name_other = ['OI3P1-3P2','NII_122','OI3P0-3P1','CII2P3_2-2P1_2']
-	line_center_other = [63.1836709,121.9,145.48055764,157.69228158]
-	range_other = [[62.73,63.73],[121.5,122.5],[145.13,146.13],[157.35,158.35]]
-	cont_other = [[62.9,63.1,63.3,63.6],[119,121.8,122.2,123],[144.95,145.45,145.65,152],[155,157.5,158.0,162]]
+	line_name_other = ['OI3P1-3P2','NII_122','OI3P0-3P1','CII2P3_2-2P1_2','OH_hf_61.4','OH_hf_163.12']
+	line_center_other = [63.1836709,121.9,145.48055764,157.69228158,61.46556395,163.12467358]
+	range_other = [[62.73,63.73],[121.5,122.5],[145.13,146.13],[157.35,158.35],[61.35,61.45],[163,07,163,17]]
+	cont_other = [[62.9,63.1,63.3,63.6],[119,121.8,122.2,123],[144.95,145.45,145.65,152],[155,157.5,158.0,162],[60,61.35,61.45,63],[162,163.07,163.17,165]]
 	
 	line_name = [line_name_oh2o, line_name_ph2o, line_name_co, line_name_oh, line_name_ch, line_name_other]
 	line_center = [line_center_oh2o, line_center_ph2o, line_center_co, line_center_oh, line_center_ch, line_center_other]
