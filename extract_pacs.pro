@@ -852,9 +852,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	flat_noise = flux_sub - continuum_sub
 
     	; Deal with the edge effect that can sabotage the SNR later
-    	edge_low = where(wl lt 100 and wl gt max(wl lt 100)-0.5)
-    	edge_hi = where(wl gt 100 and wl lt min(wl gt 100)+0.5)
-    	stop
+    	edge_low = where(wl lt 100 and wl gt max(wl[where(wl lt 100)])-0.5)
+    	edge_hi = where(wl gt 100 and wl lt min(wl[where(wl gt 100)])+0.5)
     	flat_noise[edge_low] = flat_noise[edge_low-n_elements(edge_low)]
     	flat_noise[edge_hi] = flat_noise[edge_hi+n_elements(edge_hi)]
 
@@ -1398,8 +1397,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		flat_noise = flux_sub - continuum_sub
 
     	; Deal with the edge effect that can sabotage the SNR later
-    	edge_low = where(wl lt 100 and wl gt max(wl lt 100)-0.5)
-    	edge_hi = where(wl gt 100 and wl lt min(wl gt 100)+0.5)
+    	edge_low = where(wl lt 100 and wl gt max(wl[where(wl lt 100)])-0.5)
+    	edge_hi = where(wl gt 100 and wl lt min(wl[where(wl gt 100)])+0.5)
     	flat_noise[edge_low] = flat_noise[edge_low-n_elements(edge_low)]
     	flat_noise[edge_hi] = flat_noise[edge_hi+n_elements(edge_hi)]
 
