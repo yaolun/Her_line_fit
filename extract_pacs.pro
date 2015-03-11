@@ -523,9 +523,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 
 			if (where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[0] ne -1 then begin
 				wll = wll[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
+				fluxl = fluxl[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
+				stdl = stdl[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
 			endif 
 			if (where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[0] ne -1 then begin
 				wll = wll[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
+				fluxl = fluxl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
+				stdl = stdl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
 			endif 
 
 			; use the plot_base feature to plot the actual spectrum (with line) here
@@ -1126,9 +1130,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 
 				if (where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[0] ne -1 then begin
 					wll = wll[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
+					fluxl = fluxl[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
+					stdl = stdl[where(wll gt range[1,(where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i])))[-1]])]
 				endif 
 				if (where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[0] ne -1 then begin
 					wll = wll[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
+					fluxl = fluxl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
+					stdl = stdl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
 				endif 
 
 				; use the plot_base feature to plot the actual spectrum (with line) here
