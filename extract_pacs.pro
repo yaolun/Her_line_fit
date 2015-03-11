@@ -352,7 +352,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             		indl = where((wl gt max([base_range[0],range[1,i-1]])) and (wl lt min([base_range[3],range[0,i+1]])))
             	end
             endcase
-
+            if line_name[i] eq 'OH_hf_163' then stop
 			if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
 			if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
 			wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
@@ -798,12 +798,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, lowest_E_n, /silent
     	endelse
-    	stop
     	; Line subtraction
     	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
     		if abs(snr_n[line]) ge noiselevel-2.0 then begin
-    		    if line_name_n[line] eq 'o-H2O3_30-3_21' then stop
 				if (lowest_E_n[line] ne 1) then continue
     			ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
     			wl_n = wl[ind]
