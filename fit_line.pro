@@ -260,8 +260,9 @@ if not keyword_set(baseline) then begin
                 if linename eq 'p-H2O6_15-6_06' then stop
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
-                indl = where((wl ge line[1]) and (wl le line[2]))
-                indb = where((global_noise[*,0] lt line[1]) or (global_noise[*,0] gt line[2]))
+                ; 1/e^2 full width = 1.699 * fwhm
+                indl = where((wl ge cen_wl-1.699/2*fwhm) and (wl le cen_wl+1.699/2*fwhm))
+                indb = where((global_noise[*,0] lt cen_wl-1.699/2*fwhm) or (global_noise[*,0] gt cen_wl+1.699/2*fwhm))
                 comb_noise = [residual[indl], global_noise[indb,1]]
                 comb_noise_wl = [wl[indl], global_noise[indb,0]]
                 comb_noise = comb_noise[sort(comb_noise_wl)]
@@ -315,8 +316,9 @@ if not keyword_set(baseline) then begin
             if keyword_set(global_noise) then begin
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
-                indl = where((wl ge line[1]) and (wl le line[5]))
-                indb = where((global_noise[*,0] lt line[1]) or (global_noise[*,0] gt line[5]))
+                ; 1/e^2 full width = 1.699 * fwhm
+                indl = where((wl ge min(cen_wl)-1.699/2*fwhm[where(cen_wl eq min(cen_wl))]) and (wl le max(cen_wl)+1.699/2*fwhm[where(cen_wl eq max(cen_wl))]))
+                indb = where((global_noise[*,0] lt min(cen_wl)-1.699/2*fwhm[where(cen_wl eq min(cen_wl)) or (global_noise[*,0] gt max(cen_wl)+1.699/2*fwhm[where(cen_wl eq max(cen_wl)))
                 comb_noise = [residual[indl], global_noise[indb,1]]
                 comb_noise_wl = [wl[indl], global_noise[indb,0]]
                 comb_noise = comb_noise[sort(comb_noise_wl)]
