@@ -255,7 +255,7 @@ if not keyword_set(baseline) then begin
             gauss_fine = height*exp(-(fine_wl-cen_wl)^2/2/p[2]^2)
             base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
             residual = flux - gauss
-            noise = stddev(residual[where(wl gt line[1] and wl lt line[2])])
+            noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[2]+5*dl)])
             if keyword_set(global_noise) then begin
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
@@ -316,7 +316,7 @@ if not keyword_set(baseline) then begin
             gauss_fine = height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)
             base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
             residual = flux - gauss
-            noise = stddev(residual[where(wl gt line[1] and wl lt line[5])])            ; if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
+            noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[5]+5*dl)])            ; if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
             if keyword_set(global_noise) then begin
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
