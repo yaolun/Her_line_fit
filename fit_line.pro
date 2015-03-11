@@ -318,7 +318,7 @@ if not keyword_set(baseline) then begin
                 ; Take the residual under the line area and use the global_noise at other place
                 ; 1/e^2 full width = 1.699 * fwhm
                 indl = where((wl ge min(cen_wl)-1.699/2*fwhm[where(cen_wl eq min(cen_wl))]) and (wl le max(cen_wl)+1.699/2*fwhm[where(cen_wl eq max(cen_wl))]))
-                indb = where((global_noise[*,0] lt min(cen_wl)-1.699/2*fwhm[where(cen_wl eq min(cen_wl)]) or (global_noise[*,0] gt max(cen_wl)+1.699/2*fwhm[where(cen_wl eq max(cen_wl))]))
+                indb = where((global_noise[*,0] lt min(cen_wl)-1.699/2*fwhm[where(cen_wl eq min(cen_wl))]) or (global_noise[*,0] gt max(cen_wl)+1.699/2*fwhm[where(cen_wl eq max(cen_wl))]))
                 comb_noise = [residual[indl], global_noise[indb,1]]
                 comb_noise_wl = [wl[indl], global_noise[indb,0]]
                 comb_noise = comb_noise[sort(comb_noise_wl)]
