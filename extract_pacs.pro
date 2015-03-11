@@ -341,7 +341,18 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
                 base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
             endif
             ; Select line+baseline
-            indl = where(wl gt base_range[0] and wl lt base_range[3])
+            case 1 of
+            	i eq 0: begin
+            		indl = where(wl gt base_range[0] and wl lt min(base_range[3],range[3,i+1]))
+            	end
+            	i eq n_elements(line_name)-1: begin
+            		indl = where(wl gt max(base_range[0],range[0,i-1]) and wl lt base_range[3])
+            	end
+            	(i ne 0) and (i ne n_elements(line_name)-1): begin
+            		indl = where(wl gt max(base_range[0],range[0,i-1]) and wl lt min(base_range[3],range[3,i+1]))
+            	end
+            endcase
+
 			if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
 			if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
 			wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
@@ -509,6 +520,14 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				indl = where(wl gt base_range[0] and wl lt max(wl))
 				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 			endif
+
+			if where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i]))[0] ne -1 then begin
+				wll = wll[where(wll gt range[1,where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i]))[-1]])]
+			endif 
+			if where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1]))[0] ne -1 then begin
+				wll = wll[where(wll lt range[1,where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1]))[-1]])]
+			endif 
+
 			; use the plot_base feature to plot the actual spectrum (with line) here
 			plot_base = [[wll],[fluxl]]
 			fit_line, filename, line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
@@ -914,7 +933,18 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
 				endif
 				; Select the line+baseline
-				indl = where(wl gt base_range[0] and wl lt base_range[3])
+            case 1 of
+            	i eq 0: begin
+            		indl = where(wl gt base_range[0] and wl lt min(base_range[3],range[3,i+1]))
+            	end
+            	i eq n_elements(line_name)-1: begin
+            		indl = where(wl gt max(base_range[0],range[0,i-1]) and wl lt base_range[3])
+            	end
+            	(i ne 0) and (i ne n_elements(line_name)-1): begin
+            		indl = where(wl gt max(base_range[0],range[0,i-1]) and wl lt min(base_range[3],range[3,i+1]))
+            	end
+            endcase
+
 				if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
 				if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
 				wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
@@ -1093,6 +1123,14 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					indl = where(wl gt base_range[0] and wl lt max(wl))
 					wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
 				endif
+
+				if where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i]))[0] ne -1 then begin
+					wll = wll[where(wll gt range[1,where((line_center gt min(wll)) and (line_center lt line_center_dg[2*i]))[-1]])]
+				endif 
+				if where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1]))[0] ne -1 then begin
+					wll = wll[where(wll lt range[1,where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1]))[-1]])]
+				endif 
+
 				; use the plot_base feature to plot the actual spectrum (with line) here
 				plot_base = [[wll],[fluxl]]
 				fit_line, filename, line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
