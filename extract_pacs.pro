@@ -285,10 +285,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	; if keyword_set(fixed_width) then name = name+'_fixwidth'
     openw, firstfit, name+'.txt', /get_lun
     if not keyword_set(current_pix) then begin
-		printf, firstfit, format='((a18,2x),17(a16,2x))', $
+		printf, firstfit, format='((a20,2x),17(a20,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend'
     endif else begin
-    	printf, firstfit, format='((a18,2x),18(a16,2x))', $
+    	printf, firstfit, format='((a20,2x),18(a20,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend'
     endelse
 
@@ -462,7 +462,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
         ; Print the fittng result into text file
 
         if status le 0 then begin
-            printf, firstfit, format = '((a18,2X),(a50))', line_name[i], errmsg
+            printf, firstfit, format = '((a20,2X),(a50))', line_name[i], errmsg
         endif else begin
             ; The read_line_ref procedure read the g, A, E_u from another file
             read_line_ref, line_name[i], E_u, A, g
@@ -502,10 +502,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             ; blend flag = 0: no blend; blend_flag = 1: Red blend; blend_flag = 2: Red/Blue blend; blend_flag = 3: Blue blend.
             ;
             if not keyword_set(current_pix) then begin
-            	printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+            	printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),(a20,2x))',$
             		line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, blend_msg
             endif else begin
-            	printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+            	printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
             		line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, current_pix, blend_msg
             endelse
         endelse 
@@ -585,7 +585,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			endif
 
 			if status eq 0 then begin
-				printf, firstfit, format = '((a18,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
+				printf, firstfit, format = '((a20,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
 			endif else begin
 				; Making sure the line classification is correct
 				i1 = where(line_name eq line_name_dg[2*i])
@@ -613,14 +613,14 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				blend_msg = 'x'
 				if (finite(snr,/nan))[0] eq 1 then continue
 				if not keyword_set(current_pix) then begin
-					printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+					printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),(a20,2x))',$
 						line_name_dg[2*i], line[0], cen_wl[0], sig_cen_wl[0], str[0], sig_str[0], fwhm[0], sig_fwhm[0], base_str[0], noise, snr[0], E_u[0], A[0], g[0], ra, dec, blend_msg
-					printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+					printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),(a20,2x))',$
 						line_name_dg[2*i+1], line[3], cen_wl[1], sig_cen_wl[1], str[1], sig_str[1], fwhm[1], sig_fwhm[1], base_str[1], noise, snr[1], E_u[1], A[1], g[1], ra, dec, blend_msg
 				endif else begin
-					printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+					printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
 						line_name_dg[2*i], line[0], cen_wl[0], sig_cen_wl[0], str[0], sig_str[0], fwhm[0], sig_fwhm[0], base_str[0], noise, snr[0], E_u[0], A[0], g[0], ra, dec, current_pix, blend_msg
-					printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+					printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
 						line_name_dg[2*i+1], line[3], cen_wl[1], sig_cen_wl[1], str[1], sig_str[1], fwhm[1], sig_fwhm[1], base_str[1], noise, snr[1], E_u[1], A[1], g[1], ra, dec, current_pix, blend_msg
 				endelse
 			endelse
@@ -698,10 +698,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	endfor
     openw, firstfit, name+'.txt', /get_lun
     if not keyword_set(current_pix) then begin
-    	printf, firstfit, format='((a18,2x),17(a16,2x))', $
+    	printf, firstfit, format='((a20,2x),17(a20,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
     endif else begin
-    	printf, firstfit, format='((a18,2x),18(a16,2x))', $
+    	printf, firstfit, format='((a20,2x),18(a20,2x))', $
     		'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
     endelse
     for line = 0, n_elements(line_name_n)-1 do begin
@@ -712,24 +712,24 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
      	; Reason for sig_str is that some sources have very poor spectra like EC82.  It will fit on the edge
      	if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) or (sig_str_n[line] eq -999)then lowest = '0'
      	if not keyword_set(current_pix) then begin
-     		printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+     		printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
             	line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
             	E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 			if keyword_set(print_all) and not keyword_set(global_noise) then begin
             	openw, gff, print_all+'.txt',/append,/get_lun
-				printf, gff, format = '((a16,2X),(a18,2x),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+				printf, gff, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
             		object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 				free_lun, gff
 				close, gff
 			endif
      	endif else begin
-     		printf, firstfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
+     		printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
             	line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
             	E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 			if keyword_set(print_all) and not keyword_set(global_noise) then begin
             	openw, gff, print_all+'.txt',/append,/get_lun
-				printf, gff, format = '((a16,2X),(a18,2x),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
+				printf, gff, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
             		object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 				free_lun, gff
@@ -917,10 +917,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		; name = name+'_global_noise'
 		openw, secondfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
-			printf, secondfit, format='((a18,2x),16(a16,2x))',$
+			printf, secondfit, format='((a20,2x),16(a20,2x))',$
 				'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend'
 		endif else begin
-			printf, secondfit, format='((a18,2x),17(a16,2x))',$
+			printf, secondfit, format='((a20,2x),17(a20,2x))',$
 				'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend'
 		endelse
     
@@ -1073,7 +1073,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			; Print the fittng result into text file
 
         	if status le 0 then begin
-				printf, secondfit, format = '((a18,2X),(a50))', line_name[i], errmsg
+				printf, secondfit, format = '((a20,2X),(a50))', line_name[i], errmsg
 			endif else begin
             	; The read_line_ref procedure read the g, A, E_u from another file
             	read_line_ref, line_name[i], E_u, A, g
@@ -1112,10 +1112,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				; Throw away the bogus results due to the missing segment in the spectrum
 				if finite(snr,/nan) eq 1 then continue
 				if not keyword_set(current_pix) then begin
-					printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+					printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),(a20,2x))',$
             			line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, blend_msg
 				endif else begin
-					printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+					printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
             			line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, current_pix, blend_msg
 				endelse
 			endelse 
@@ -1198,7 +1198,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					 noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,b3a=b3a,/fix_dg,/fixed_width,feedback=feedback
 				
 				if status eq 0 then begin
-					printf, secondfit, format = '((a18,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
+					printf, secondfit, format = '((a20,2X),(a50))', line_name_dg[2*i]+'_'+line_name_dg[2*i+1], errmsg
 				endif else begin
 					; Making sure the line classification is correct
 					i1 = where(line_name eq line_name_dg[2*i])
@@ -1227,14 +1227,14 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					; Throw away the bogus results due to the missing segment in the spectrum
 					if (finite(snr,/nan))[0] eq 1 then continue
 					if not keyword_set(current_pix) then begin
-						printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+						printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),(a20,2x))',$
 							line_name_dg[2*i], line[0], cen_wl[0], sig_cen_wl[0], str[0], sig_str[0], fwhm[0], sig_fwhm[0], base_str[0],noise,snr[0], E_u[0], A[0], g[0], ra, dec, blend_msg
-						printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),(a16,2x))',$
+						printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),(a20,2x))',$
 							line_name_dg[2*i+1], line[3], cen_wl[1], sig_cen_wl[1], str[1], sig_str[1], fwhm[1], sig_fwhm[1], base_str[1],noise,snr[1], E_u[1], A[1], g[1], ra, dec, blend_msg
 					endif else begin
-						printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+						printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
 							line_name_dg[2*i], line[0], cen_wl[0], sig_cen_wl[0], str[0], sig_str[0], fwhm[0], sig_fwhm[0], base_str[0],noise,snr[0], E_u[0], A[0], g[0], ra, dec, current_pix, blend_msg
-						printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+						printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
 							line_name_dg[2*i+1], line[3], cen_wl[1], sig_cen_wl[1], str[1], sig_str[1], fwhm[1], sig_fwhm[1], base_str[1],noise,snr[1], E_u[1], A[1], g[1], ra, dec, current_pix, blend_msg
 					endelse
 				endelse
@@ -1313,10 +1313,10 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		; openw, secondfit, outdir+name+'_global_noise.txt', /get_lun
 		openw, secondfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
-			printf, secondfit, format='((a18,2x),17(a16,2x))', $
+			printf, secondfit, format='((a20,2x),17(a20,2x))', $
     			'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
 		endif else begin
-			printf, secondfit, format='((a18,2x),18(a16,2x))', $
+			printf, secondfit, format='((a20,2x),18(a20,2x))', $
     			'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
 		endelse
 		for line = 0, n_elements(line_name_n)-1 do begin
@@ -1327,26 +1327,26 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			; Reason for sig_str is that some sources have very poor spectra like EC82.  It will fit on the edge
 			if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) or (sig_str_n[line] eq -999)then lowest = '0'
 			if not keyword_set(current_pix) then begin
-				printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+				printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
             		line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 				if keyword_set(print_all) then begin
             		;openw, gff, print_all+'_global_noise.txt',/append,/get_lun
             		openw, gff, print_all+'.txt',/append,/get_lun
-					printf, gff, format = '((a16,2X),(a18,2x),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),2(a16,2x))',$
+					printf, gff, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20.2x),2(g20.10,2X),2(a20,2x))',$
             			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 					free_lun, gff
 					close, gff
 				endif
 			endif else begin
-				printf, secondfit, format = '((a18,2X),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
+				printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
             		line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 				if keyword_set(print_all) then begin
             		;openw, gff, print_all+'_global_noise.txt',/append,/get_lun
             		openw, gff, print_all+'.txt',/append,/get_lun
-					printf, gff, format = '((a16,2X),(a18,2x),10(g16.10,2X),2(g16.10,2X),(i16,2x),2(g16.10,2X),3(a16,2x))',$
+					printf, gff, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
             			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 					free_lun, gff
