@@ -1333,7 +1333,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				if keyword_set(print_all) then begin
             		;openw, gff, print_all+'_global_noise.txt',/append,/get_lun
             		openw, gff, print_all+'.txt',/append,/get_lun
-					printf, gff, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20.2x),2(g20.10,2X),2(a20,2x))',$
+					printf, gff, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
             			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 					free_lun, gff
