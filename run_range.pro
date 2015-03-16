@@ -167,6 +167,7 @@ if keyword_set(FWD) then begin
 	; cdf = ['EC82','NGC1333-IRAS2A','Serpens-SMM1']
 	; cdf = ['Elias29','L1551-IRS5']
 endif
+stop
 while i eq 1 do begin
 	obj = where(objname eq objname[0])
 	current_obj = strcompress(objname[0],/remove_all)
