@@ -79,6 +79,7 @@ if keyword_set(pacs) then begin
 	endfor
 
 endif
+
 if not keyword_set(no_plot) then begin
 ;Plot the contour for each band
 	if keyword_set(spire) then begin
@@ -153,7 +154,7 @@ if not keyword_set(no_plot) then begin
 					dec = [dec, data_slw[pix].dec[data_ind]]
 				endelse
 			endfor
-
+			
 			if (n_elements(flux[where(flux ne 0)]) ge 1) and ((where(flux ne 0))[0] ne -1) then begin
 				if keyword_set(verbose) then print, 'Plotting ',objname,'-',line_name[i]
 ;				set_plot, 'ps'
@@ -252,13 +253,14 @@ if not keyword_set(no_plot) then begin
 				ra_tot_smooth = min_curve_surf(ra_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				
+				
         		plotposition = aspect(1.)
         		colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
         		loadct, 0, /silent
         		plot, ra_tot, dec_tot, psym=1,xrange=[140,-140],yrange=[-140,140], position=plotposition,/nodata,color=255
         		oplot, ra_tot, dec_tot, psym=1,color=0
 				cgloadct, 10, /reverse, file=colorfile, /silent
-				cgimage, base_str_smooth/1e-22, ra_tot_smooth[-1,0], dec_tot_smooth[0,0], position=[ra_tot_smooth[-1,0], dec_tot_smooth[0,0],ra_tot_smooth[0,0], dec_tot_smooth[0,-1]],/overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
+				cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[-1,0], dec_tot_smooth[0,0], position=[ra_tot_smooth[-1,0], dec_tot_smooth[0,0],ra_tot_smooth[0,0], dec_tot_smooth[0,-1]],/overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes
 				p = plotposition
 				; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
@@ -383,7 +385,7 @@ if not keyword_set(no_plot) then begin
         		plot, ra_tot, dec_tot, psym=1,xrange=[140,-140],yrange=[-140,140], position=plotposition,/nodata,color=255
         		oplot, ra_tot, dec_tot, psym=1,color=0
 				cgloadct, 10, /reverse, file=colorfile, /silent
-				cgimage, base_str_smooth/1e-22, ra_tot_smooth[-1,0], dec_tot_smooth[0,0], position=[ra_tot_smooth[-1,0], dec_tot_smooth[0,0],ra_tot_smooth[0,0], dec_tot_smooth[0,-1]],/overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
+				cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[-1,0], dec_tot_smooth[0,0], position=[ra_tot_smooth[-1,0], dec_tot_smooth[0,0],ra_tot_smooth[0,0], dec_tot_smooth[0,-1]],/overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes
 				p = plotposition
 				; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
@@ -536,7 +538,7 @@ if not keyword_set(no_plot) then begin
         		plot, ra_tot, dec_tot, psym=1,xrange=[40,-40],yrange=[-40,40], position=plotposition,/nodata,color=255
         		oplot, ra_tot, dec_tot, psym=1,color=0
 				cgloadct, 10, /reverse, file=colorfile, /silent
-		        cgimage, base_str_smooth/1e-22, ra_tot_smooth[0,0], dec_tot_smooth[0,0], /overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
+		        cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[0,0], dec_tot_smooth[0,0], /overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes		        p = plotposition
 		        ; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
 				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
