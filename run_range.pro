@@ -167,7 +167,7 @@ if keyword_set(FWD) then begin
 	; cdf = ['EC82','NGC1333-IRAS2A','Serpens-SMM1']
 	cdf = ['Elias29','L1551-IRS5']
 endif
-stop
+
 while i eq 1 do begin
 	obj = where(objname eq objname[0])
 	current_obj = strcompress(objname[0],/remove_all)
@@ -291,7 +291,6 @@ while i eq 1 do begin
 
 
 	; Fitting part
-	if current_obj eq 'L1551-IRS5' then stop
 	; For 1D spectra
 	if not keyword_set(cube) and not keyword_set(no_fit) then begin
 		if (n_elements(filename) eq 4 and (where(exception_obj eq current_obj))[0] eq -1) then begin
