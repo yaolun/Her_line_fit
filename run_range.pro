@@ -283,7 +283,7 @@ while i eq 1 do begin
 	if keyword_set(jitter) then exception_obj = ['HD50138','IRAM04191','IRS46','L1014','L1455-IRS3','RCrA-IRS5A','RCrA-IRS7C','Serpens-SMM4'] 
 	if keyword_set(nojitter) then exception_obj = ['HD203024','RCrA-IRS5A','RCrA-IRS5A','RCrA-IRS7C','Serpens-SMM4']
 	; force to use Local noise for all sources
-	if keyword_set(localnoise) then 	exception_obj = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD100546','HD104237','HD135344B','HD139614',$
+	if keyword_set(localnoise) then exception_obj = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD100546','HD104237','HD135344B','HD139614',$
 		   'HD141569','HD142527','HD142666','HD144432','HD144668','HD150193','HD163296','HD169142','HD179218','HD203024','HD245906','HD35187','HD36112','HD38120','HD50138',$
 		   'HD97048','HD98922','HH46','HH100','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
 		   'L1489','L1527','L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
@@ -291,7 +291,7 @@ while i eq 1 do begin
 
 
 	; Fitting part
-
+	if current_obj eq 'L1551-IRS5' then stop
 	; For 1D spectra
 	if not keyword_set(cube) and not keyword_set(no_fit) then begin
 		if (n_elements(filename) eq 4 and (where(exception_obj eq current_obj))[0] eq -1) then begin
