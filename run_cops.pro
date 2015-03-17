@@ -321,7 +321,7 @@ while i eq 1 do begin
 		skip = []
 		if (where(skip eq strcompress(current_obj,/remove_all)))[0] ne -1 then break
 		print, 'Plotting the contour plots...'
-		plot_contour, noise=3, indir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/spire;outdir+current_obj+'/cube/plots/contour/'
+		plot_contour, noise=3, indir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/spire,/brightness;outdir+current_obj+'/cube/plots/contour/'
 	endif
 
 	if not keyword_set(no_fit) then begin

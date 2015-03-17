@@ -1,7 +1,16 @@
-pro plot_contour, noise=noise, no_plot=no_plot,indir=indir,plotdir=plotdir,objname=objname,spire=spire,pacs=pacs,verbose=verbose
+pro plot_contour, noise=noise, no_plot=no_plot,indir=indir,plotdir=plotdir,objname=objname,spire=spire,pacs=pacs,verbose=verbose,brightness=brightness,fx=fx
 if file_test(plotdir,/directory) eq 0 then file_mkdir,plotdir
 ;Construct the data structure in each band
 if keyword_set(spire) then begin
+	if keyword_set(brightness) then begin
+		unit = '/arcsec!u2!n'
+		fx=0
+	endif
+	if keyword_set(fx) then begin
+		unit = ''
+		brightness=0
+	endif
+	
 	;SPIRE
 	;SLW
 	pixelname = ['SLWA1','SLWA2','SLWA3','SLWB1','SLWB2','SLWB3','SLWB4','SLWC1','SLWC2','SLWC3','SLWC4','SLWC5','SLWD1','SLWD2','SLWD3','SLWD4','SLWE1','SLWE2','SLWE3']
@@ -264,7 +273,7 @@ if not keyword_set(no_plot) then begin
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes
 				p = plotposition
 				; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
-				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n'+unit+']'
 				loadct, 13, /silent
 				device,font_size=14
 				catch, error_status
@@ -389,7 +398,7 @@ if not keyword_set(no_plot) then begin
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes
 				p = plotposition
 				; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
-				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n'+unit+']'
 				loadct, 13, /silent
 				device,font_size=14
 				catch, error_status
