@@ -95,17 +95,20 @@ endif
 
 if keyword_set(FWD) then begin
 	global_outname = '_lines'
-	cdf = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD104237','HD135344B','HD139614',$
-		   'HD141569','HD142527','HD142666','HD144432','HD144668','HD150193','HD163296','HD169142','HD179218','HD203024','HD245906','HD35187','HD36112','HD38120','HD50138',$
-		   'HD98922','HH46','HH100','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
-		   'L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
-		   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
+	cdf = ['B1-a','B1-c','B335','BHR71','Ced110-IRS4','FUOri','GSS30-IRS1','HH46','HH100','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','L1014','L1157','L1455-IRS3',$
+		   'L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO91','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
 	; Debug option
 	; cdf = ['BHR71']
 endif
+; ignore object for 1d fitting which is done separately 
+ignore_obj = ['B335','RCrA-IRS7B','BHR71']
+exception_obj = []
+; Force to use Local noise for all sources
+if keyword_set(localnoise) then exception_obj = objname
+
+
 
 stop
-
 while i eq 1 do begin
 	obj = where(objname eq objname[0])
 	current_obj = strcompress(objname[0],/remove_all)
@@ -144,18 +147,9 @@ while i eq 1 do begin
 	endif
 	
 	if keyword_set(single) then if current_obj ne single then continue  
-	;if current_obj ne 'IRAS12496' then continue
-	if file_test(outdir+current_obj+'/spire/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/spire/data'
-	ignore_obj = ['B335','RCrA-IRS7B','BHR71','HD142527','HD97048']
-	ignore_obj = []
-	exception_obj = []
-	; Force to use Local noise for all sources
-	if keyword_set(localnoise) then exception_obj = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD104237','HD135344B','HD139614',$
-		   'HD141569','HD142527','HD142666','HD144432','HD144668','HD150193','HD163296','HD169142','HD179218','HD203024','HD245906','HD35187','HD36112','HD38120','HD50138',$
-		   'HD98922','HH46','HH100','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
-		   'L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
-		   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
 
+	if file_test(outdir+current_obj+'/spire/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/spire/data'
+	
 	if (where(ignore_obj eq current_obj))[0] ne -1 and not keyword_set(cube) then continue
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
 	
@@ -182,27 +176,27 @@ while i eq 1 do begin
 	; For 1D spectra (extended corrected spectra)
 	if not keyword_set(cube) and not keyword_set(no_fit) then begin
 		; skip_obj = ['B335','RCrA-ISR7B','BHR71','HD142527','HD97048']
-		skip_obj = []
-		if (where(skip_obj eq current_obj))[0] ne -1 then continue
+;		skip_obj = []
+;		if (where(skip_obj eq current_obj))[0] ne -1 then continue
 		; In case some spectra are complete enough to perform the smooth interpolation
 		
 		; special treatment for L1455-IRS3 since the corrected spectrum is not exist.
 ;		if current_obj ne 'L1455-IRS3' then begin
-			if (where(exception_obj eq current_obj))[0] eq -1 then begin
-				noisetype='Global'
-				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire_corrected',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-							   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
-				msg = ''
-				if keyword_set(fixed_width) then msg = '_fixwidth'
-				outname = '_lines';+msg+'_global_noise'
-			endif else begin
-				noisetype='Local'
-				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire_corrected',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-							   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
-				msg = ''
-				if keyword_set(fixed_width) then msg = '_fixwidth'
-				outname = '_lines';+msg
-			endelse
+		if (where(exception_obj eq current_obj))[0] eq -1 then begin
+			noisetype='Global'
+			extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire_corrected',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
+						   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+			msg = ''
+			if keyword_set(fixed_width) then msg = '_fixwidth'
+			outname = '_lines';+msg+'_global_noise'
+		endif else begin
+			noisetype='Local'
+			extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire_corrected',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
+						   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+			msg = ''
+			if keyword_set(fixed_width) then msg = '_fixwidth'
+			outname = '_lines';+msg
+		endelse
 ;		endif else begin
 ;			if (where(exception_obj eq current_obj))[0] eq -1 then begin
 ;				noisetype='Global'

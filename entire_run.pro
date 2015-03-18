@@ -139,44 +139,44 @@ run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiseleve
 ;stop
 ;SPIRE for only text file format
 ; B335, RcrA-IRS7B, BHR71, HD142527, HD97048
-;obj = ['B335','RCrA-IRS7B','BHR71']; ,'HD142527','HD97048']
-;ra = [294.2700500,285.4640808,180.40109,-65.147993,239.1745453,67.89822744]
-;dec = [7.548758507,-36.93764496,-65.147993,-42.32313156,-77.6548556,18.12826098]
-;for i = 0, n_elements(obj)-1 do begin
-;	if file_test(outdir+'full_source_list.txt') eq 0 then begin
-;		openw, tot_list, outdir+'full_source_list.txt',/get_lun
-;		printf, tot_list, format='(4(a16,2x))', 'Object','PACS/SPIRE','Reduction','Noise'
-;		free_lun, tot_list
-;		close, tot_list
-;	endif
-;		
-;	openw, tot_list, outdir+'full_source_list.txt',/get_lun, /append
-;	printf, tot_list, format='(4(a16,2x))', obj[i],'SPIRE','Standard','Global'
-;	free_lun, tot_list
-;	close, tot_list
-;	
-;	if file_test(outdir+obj[i]+'/spire/data/',/directory) eq 0 then file_mkdir, outdir+obj[i]+'/spire/data/'
-;	file_copy, cops_dir+obj[i]+'_spire_corrected.txt', outdir+obj[i]+'/spire/data/',/overwrite
-;	
-;	readcol, cops_dir+obj[i]+'_spire_corrected.txt', format='D,D', wl, flux,/silent
-;	
-;	set_plot, 'ps'
-;	!p.font=0
-;	loadct,13,/silent
-;	!p.thick=3 & !x.thick=3 & !y.thick=3
-;    device, filename = outdir+obj[i]+'/spire/data/'+obj[i]+'_spire_corrected.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
-;    plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)'
-;	al_legend, [obj[i]],textcolor=[0],/left
-;	device, /close_file,decomposed=1
-;	!p.multi = 0 
-;	if not keyword_set(local) then begin
-;		extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,global_noise=20,$
-;		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
-;	endif else begin
-;		extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,$
-;		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
-;	endelse
-;endfor
+obj = ['B335','RCrA-IRS7B','BHR71']; ,'HD142527','HD97048']
+ra = [294.2700500,285.4640808,180.40109,-65.147993,239.1745453,67.89822744]
+dec = [7.548758507,-36.93764496,-65.147993,-42.32313156,-77.6548556,18.12826098]
+for i = 0, n_elements(obj)-1 do begin
+	if file_test(outdir+'full_source_list.txt') eq 0 then begin
+		openw, tot_list, outdir+'full_source_list.txt',/get_lun
+		printf, tot_list, format='(4(a16,2x))', 'Object','PACS/SPIRE','Reduction','Noise'
+		free_lun, tot_list
+		close, tot_list
+	endif
+		
+	openw, tot_list, outdir+'full_source_list.txt',/get_lun, /append
+	printf, tot_list, format='(4(a16,2x))', obj[i],'SPIRE','Standard','Global'
+	free_lun, tot_list
+	close, tot_list
+	
+	if file_test(outdir+obj[i]+'/spire/data/',/directory) eq 0 then file_mkdir, outdir+obj[i]+'/spire/data/'
+	file_copy, cops_dir+obj[i]+'_spire_corrected.txt', outdir+obj[i]+'/spire/data/',/overwrite
+	
+	readcol, cops_dir+obj[i]+'_spire_corrected.txt', format='D,D', wl, flux,/silent
+	
+	set_plot, 'ps'
+	!p.font=0
+	loadct,13,/silent
+	!p.thick=3 & !x.thick=3 & !y.thick=3
+    device, filename = outdir+obj[i]+'/spire/data/'+obj[i]+'_spire_corrected.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
+    plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)'
+	al_legend, [obj[i]],textcolor=[0],/left
+	device, /close_file,decomposed=1
+	!p.multi = 0 
+	if not keyword_set(local) then begin
+		extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,global_noise=20,$
+		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
+	endif else begin
+		extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,$
+		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
+	endelse
+endfor
 
 ; Refine the source list
 ;
