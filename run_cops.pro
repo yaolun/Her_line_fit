@@ -106,9 +106,6 @@ exception_obj = []
 ; Force to use Local noise for all sources
 if keyword_set(localnoise) then exception_obj = objname
 
-
-
-stop
 while i eq 1 do begin
 	obj = where(objname eq objname[0])
 	current_obj = strcompress(objname[0],/remove_all)

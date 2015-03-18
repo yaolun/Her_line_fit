@@ -103,8 +103,6 @@ close, gff
 
 ; Run through every project and reduction
 
-run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/corrected,/cops,no_plot=no_plot,print_all=outname+'_spire_1d',/refine,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-
 ;DIGIT
 ;
 proj = 'digit'
