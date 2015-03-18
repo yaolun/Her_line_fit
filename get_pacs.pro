@@ -100,11 +100,13 @@ if keyword_set(general) then begin
 	for x = 0, 4 do begin
 		for y = 0, 4 do begin
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.txt',/get_lun
+			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)' 
 			for dum = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2x))',wl[dum],flux[x,y,dum],std[x,y,dum]
 			free_lun, lun
 			close, lun
 			
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_coord.txt',/get_lun
+			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)' 
 			for dum = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.8,2x))', wl[dum], ra[x,y,dum], dec[x,y,dum]
 			free_lun, lun
 			close, lun
@@ -257,6 +259,7 @@ endif else begin
 
 			;openw, lun, outdir+objname+'_pacs_coord.txt',/append
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_coord.txt',/get_lun
+			printf, lun, format='3(a16,2x)', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)'
 			if n_elements(wl_b2a) ne 0 then begin
 				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_b2a[x,y,dum],ra_b2a[x,y,dum],dec_b2a[x,y,dum]
 				wl = [wl,reform(wl_b2a[x,y,*])] & flux = [flux,reform(flux_b2a[x,y,*])]
@@ -402,6 +405,7 @@ if keyword_set(general) then begin
 	device, /close_file,decomposed=1
 	!p.multi = 0
 	openw, lun, outdir+objname+name+'_trim.txt',/get_lun
+	printf, lun, format='3(a16,2x)', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
 	for i = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2X))',wl[i],flux[i],std[i]
 	free_lun, lun
 	close, lun
@@ -475,6 +479,7 @@ endif else begin
 		device, /close_file,decomposed=1
 		!p.multi = 0
 		openw, lun, outdir+objname+name+'_trim.txt',/get_lun
+		printf, lun, format='3(a16,2x)', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
 		for i = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2X))',wl[i],flux[i],std[i]
 		free_lun, lun
 		close, lun
@@ -592,6 +597,7 @@ if (where(special_list eq objname))[0] ne -1 then begin
 		if keyword_set(centralno) then name = '_centralSpaxel_PointSourceCorrected_CorrectedNO'
 		
 		openw, lun, outdir+objname+name+'_trim.txt',/get_lun
+		printf, lun, format='3(a16,2x)', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
 		for i = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2X))',wl[i],flux[i],std[i]
 		free_lun, lun
 		close, lun

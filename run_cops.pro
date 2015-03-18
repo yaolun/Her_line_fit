@@ -104,6 +104,8 @@ if keyword_set(FWD) then begin
 	; cdf = ['BHR71']
 endif
 
+stop
+
 while i eq 1 do begin
 	obj = where(objname eq objname[0])
 	current_obj = strcompress(objname[0],/remove_all)
@@ -178,12 +180,12 @@ while i eq 1 do begin
 
 	; For 1D spectra (extended corrected spectra)
 	if not keyword_set(cube) and not keyword_set(no_fit) then begin
-		skip_obj = ['B335','RCrA-ISR7B','BHR71','HD142527','HD97048']
+		; skip_obj = ['B335','RCrA-ISR7B','BHR71','HD142527','HD97048']
 		if (where(skip_obj eq current_obj))[0] ne -1 then continue
 		; In case some spectra are complete enough to perform the smooth interpolation
 		
 		; special treatment for L1455-IRS3 since the corrected spectrum is not exist.
-		if current_obj ne 'L1455-IRS43' then begin
+;		if current_obj ne 'L1455-IRS3' then begin
 			if (where(exception_obj eq current_obj))[0] eq -1 then begin
 				noisetype='Global'
 				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire_corrected',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
@@ -199,23 +201,23 @@ while i eq 1 do begin
 				if keyword_set(fixed_width) then msg = '_fixwidth'
 				outname = '_lines';+msg
 			endelse
-		endif else begin
-			if (where(exception_obj eq current_obj))[0] eq -1 then begin
-				noisetype='Global'
-				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-							   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
-				msg = ''
-				if keyword_set(fixed_width) then msg = '_fixwidth'
-				outname = '_lines';+msg+'_global_noise'
-			endif else begin
-				noisetype='Local'
-				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-							   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
-				msg = ''
-				if keyword_set(fixed_width) then msg = '_fixwidth'
-				outname = '_lines';+msg
-			endelse
-		endelse
+;		endif else begin
+;			if (where(exception_obj eq current_obj))[0] eq -1 then begin
+;				noisetype='Global'
+;				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
+;							   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+;				msg = ''
+;				if keyword_set(fixed_width) then msg = '_fixwidth'
+;				outname = '_lines';+msg+'_global_noise'
+;			endif else begin
+;				noisetype='Local'
+;				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
+;							   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+;				msg = ''
+;				if keyword_set(fixed_width) then msg = '_fixwidth'
+;				outname = '_lines';+msg
+;			endelse
+;		endelse
 	endif
 	; For cube
 	;
