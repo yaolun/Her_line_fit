@@ -147,6 +147,7 @@ while i eq 1 do begin
 	;if current_obj ne 'IRAS12496' then continue
 	if file_test(outdir+current_obj+'/spire/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/spire/data'
 	ignore_obj = ['B335','RCrA-IRS7B','BHR71','HD142527','HD97048']
+	ignore_obj = []
 	exception_obj = []
 	; Force to use Local noise for all sources
 	if keyword_set(localnoise) then exception_obj = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD104237','HD135344B','HD139614',$
@@ -181,6 +182,7 @@ while i eq 1 do begin
 	; For 1D spectra (extended corrected spectra)
 	if not keyword_set(cube) and not keyword_set(no_fit) then begin
 		; skip_obj = ['B335','RCrA-ISR7B','BHR71','HD142527','HD97048']
+		skip_obj = []
 		if (where(skip_obj eq current_obj))[0] ne -1 then continue
 		; In case some spectra are complete enough to perform the smooth interpolation
 		
