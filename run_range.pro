@@ -32,10 +32,10 @@ if keyword_set(cube) then suffix = 'os8_sf7'
 if keyword_set(jitter) then word2 = suffix+'.fits'
 if keyword_set(nojitter) then word2 = suffix+'_nojitter.fits'
 case 1 of
-	keyword_set(central9): search_word = '*central9Spaxels*'+word2
-	keyword_set(centralyes): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3YES*'+word2
-	keyword_set(centralno): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3NO*'+word2
-	keyword_set(cube): search_word = 'OBSID*finalcubes_*'+word2
+	keyword_set(central9): search_word = '*central9Spaxels_PointSourceCorrected_slice_00*'+word2
+	keyword_set(centralyes): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3YES_slice_00*'+word2
+	keyword_set(centralno): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3NO_slice_00*'+word2
+	keyword_set(cube): search_word = 'OBSID*finalcubes_slice00*'+word2
 endcase
 
 ; Get the data listing
@@ -165,7 +165,7 @@ if keyword_set(FWD) then begin
 		   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
 	; Debugging purpose
 	; cdf = ['EC82','NGC1333-IRAS2A','Serpens-SMM1']
-	; cdf = ['Elias29','L1551-IRS5']
+	cdf = ['L1489']
 endif
 
 while i eq 1 do begin
@@ -266,9 +266,9 @@ while i eq 1 do begin
 	;
 	general = 0
 	if (proj eq 'wish') and (current_obj ne 'NGC1333-IRAS4A') and (current_obj ne 'NGC1333-IRAS4B') then general = 1
-	if keyword_set(central9) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/central9,ra=ra,dec=dec,general=general,datadir=indir
-	if keyword_set(centralyes) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralyes,ra=ra,dec=dec,general=general,datadir=indir
-	if keyword_set(centralno) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralno,ra=ra,dec=dec,general=general,datadir=indir
+	if keyword_set(central9) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/central9,ra=ra,dec=dec,general=general,datadir=indir,coorddir=outdir+current_obj+'/pacs/data/cube/'
+	if keyword_set(centralyes) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralyes,ra=ra,dec=dec,general=general,datadir=indir,coorddir=outdir+current_obj+'/pacs/data/cube/'
+	if keyword_set(centralno) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralno,ra=ra,dec=dec,general=general,datadir=indir,coorddir=outdir+current_obj+'/pacs/data/cube/'
 	if keyword_set(cube) then get_pacs, outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename, suffix='os8_sf7',general=general;,datadir=indir
 	suffix='os8_sf7'
 

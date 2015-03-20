@@ -101,13 +101,13 @@ if keyword_set(general) then begin
 		for y = 0, 4 do begin
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.txt',/get_lun
 			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)' 
-			for dum = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2x))',wl[dum],flux[x,y,dum],std[x,y,dum]
+			for dum = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.10,2x))',wl[dum],flux[x,y,dum],std[x,y,dum]
 			free_lun, lun
 			close, lun
 			
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_coord.txt',/get_lun
 			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)' 
-			for dum = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.8,2x))', wl[dum], ra[x,y,dum], dec[x,y,dum]
+			for dum = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.12,2x))', wl[dum], ra[x,y,dum], dec[x,y,dum]
 			free_lun, lun
 			close, lun
 			
@@ -235,19 +235,19 @@ endif else begin
 			; Write into ACSII file
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.txt',/get_lun
 			if n_elements(wl_b2a) ne 0 then begin
-				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_b2a[x,y,dum],flux_b2a[x,y,dum],std_b2a[x,y,dum]
+				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(3(g16.10,2x))',wl_b2a[x,y,dum],flux_b2a[x,y,dum],std_b2a[x,y,dum]
 				wl = [wl,reform(wl_b2a[x,y,*])] & flux = [flux,reform(flux_b2a[x,y,*])] & std = [std,reform(std_b2a[x,y,*])]
 			endif
 			if n_elements(wl_b2b) ne 0 then begin
-				for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_b2b[x,y,dum],flux_b2b[x,y,dum],std_b2b[x,y,dum]
+				for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(3(g16.10,2x))',wl_b2b[x,y,dum],flux_b2b[x,y,dum],std_b2b[x,y,dum]
 				wl = [wl,reform(wl_b2b[x,y,*])] & flux = [flux,reform(flux_b2b[x,y,*])] & std = [std,reform(std_b2b[x,y,*])]
 			endif
 			if n_elements(wl_r1s) ne 0 then begin
-				for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_r1s[x,y,dum],flux_r1s[x,y,dum],std_r1s[x,y,dum]
+				for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(3(g16.10,2x))',wl_r1s[x,y,dum],flux_r1s[x,y,dum],std_r1s[x,y,dum]
 				wl = [wl,reform(wl_r1s[x,y,*])] & flux = [flux,reform(flux_r1s[x,y,*])] & std = [std,reform(std_r1s[x,y,*])]
 			endif
 			if n_elements(wl_r1l) ne 0 then begin
-				for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_r1l[x,y,dum],flux_r1l[x,y,dum],std_r1l[x,y,dum]
+				for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(3(g16.10,2x))',wl_r1l[x,y,dum],flux_r1l[x,y,dum],std_r1l[x,y,dum]
 				wl = [wl,reform(wl_r1l[x,y,*])] & flux = [flux,reform(flux_r1l[x,y,*])] & std = [std,reform(std_r1l[x,y,*])]
 			endif
 			free_lun, lun
@@ -261,22 +261,22 @@ endif else begin
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_coord.txt',/get_lun
 			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)'
 			if n_elements(wl_b2a) ne 0 then begin
-				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_b2a[x,y,dum],ra_b2a[x,y,dum],dec_b2a[x,y,dum]
+				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(3(g16.12,2x))',wl_b2a[x,y,dum],ra_b2a[x,y,dum],dec_b2a[x,y,dum]
 				wl = [wl,reform(wl_b2a[x,y,*])] & flux = [flux,reform(flux_b2a[x,y,*])]
 				ra = [ra,reform(ra_b2a[x,y,*])] & dec = [dec,reform(dec_b2a[x,y,*])]
 			endif
 			if n_elements(wl_b2b) ne 0 then begin
-			    for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_b2b[x,y,dum],ra_b2b[x,y,dum],dec_b2b[x,y,dum]
+			    for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(3(g16.12,2x))',wl_b2b[x,y,dum],ra_b2b[x,y,dum],dec_b2b[x,y,dum]
 			    wl = [wl,reform(wl_b2b[x,y,*])] & flux = [flux,reform(flux_b2b[x,y,*])]
 				ra = [ra,reform(ra_b2b[x,y,*])] & dec = [dec,reform(dec_b2b[x,y,*])]
 			endif
 			if n_elements(wl_r1s) ne 0 then begin
-			    for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_r1s[x,y,dum],ra_r1s[x,y,dum],dec_r1s[x,y,dum]
+			    for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(3(g16.12,2x))',wl_r1s[x,y,dum],ra_r1s[x,y,dum],dec_r1s[x,y,dum]
 			    wl = [wl,reform(wl_r1s[x,y,*])] & flux = [flux,reform(flux_r1s[x,y,*])]
 				ra = [ra,reform(ra_r1s[x,y,*])] & dec = [dec,reform(dec_r1s[x,y,*])]
 			endif
 			if n_elements(wl_r1l) ne 0 then begin
-			    for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(3(g16.6,2x))',wl_r1l[x,y,dum],ra_r1l[x,y,dum],dec_r1l[x,y,dum]
+			    for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(3(g16.12,2x))',wl_r1l[x,y,dum],ra_r1l[x,y,dum],dec_r1l[x,y,dum]
 			    wl = [wl,reform(wl_r1l[x,y,*])] & flux = [flux,reform(flux_r1l[x,y,*])]
 				ra = [ra,reform(ra_r1l[x,y,*])] & dec = [dec,reform(dec_r1l[x,y,*])]
 			endif
@@ -311,11 +311,27 @@ endif else begin
 endelse
 end
 
-pro get_pacs_1d, outdir=outdir, objname=objname, filename=filename, central9=central9, centralyes=centralyes, centralno=centralno, linescan=linescan, ra=ra, dec=dec, general=general, datadir=datadir;, wish=wish
+pro get_pacs_1d, outdir=outdir, objname=objname, filename=filename, central9=central9, centralyes=centralyes, centralno=centralno, linescan=linescan, ra=ra, dec=dec, general=general, datadir=datadir, coorddir=coorddir;, wish=wish
 objname = strcompress(objname,/remove_all)
 special_list = ['NGC1333-IRAS2A','Serpens-SMM1','G327-06','DR21(OH)','NGC7538-IRS1','NGC6334-I','G34.3+0.1']
 if (where(special_list eq objname))[0] eq -1 then begin
+	
+if file_test(coorddir+objname+'_pacs_pixel13_coord.txt') eq 1 then begin
+	readcol, coorddir+objname+'_pacs_pixel13_coord.txt', format='D,D,D', wl_coord, ra, dec, /silent
+	ra = mean(ra)
+	dec = mean(dec)
+endif else begin
+	print, 'Make sure you have extracted the cube products'
+	read, coordfile, PROMPT='Where is the coordinate file (cube)?'
+	readcol, coordfile, format='D,D,D', wl_coord, ra, dec, /silent
+	ra = mean(ra)
+	dec = mean(dec)
+endelse
 if keyword_set(general) then begin
+	hdr = headfits(filename[0],/silent)
+		
+;	ra = double(sxpar(hdr,'RA'))
+;	dec = double(sxpar(hdr,'Dec'))
 	wl = []
 	flux = []
 	for foo = 0, n_elements(filename)-1 do begin
@@ -411,8 +427,9 @@ if keyword_set(general) then begin
 	close, lun
 endif else begin
 	hdr = headfits(filename[0],/silent)
-	ra = float(sxpar(hdr,'RA'))
-	dec = float(sxpar(hdr,'Dec'))
+	ra = double(sxpar(hdr,'RA'))
+	dec = double(sxpar(hdr,'Dec'))
+	
 	objname = strcompress(objname,/remove_all)
 	wl_b2a = [] & flux_b2a = [] & std_b2a = []
 	wl_b2b = [] & flux_b2b = [] & std_b2b = []
@@ -489,8 +506,8 @@ endif
 
 if (where(special_list eq objname))[0] ne -1 then begin
 	hdr = headfits(filename[0],/silent)
-	ra = float(sxpar(hdr,'RA'))
-	dec = float(sxpar(hdr,'Dec'))
+	ra = double(sxpar(hdr,'RA'))
+	dec = double(sxpar(hdr,'Dec'))
 	objname = strcompress(objname,/remove_all)
 	
 	if not keyword_set(datadir) then begin
