@@ -316,8 +316,8 @@ objname = strcompress(objname,/remove_all)
 special_list = ['NGC1333-IRAS2A','Serpens-SMM1','G327-06','DR21(OH)','NGC7538-IRS1','NGC6334-I','G34.3+0.1']
 if (where(special_list eq objname))[0] eq -1 then begin
 	
-if file_test(coorddir+objname+'_pacs_pixel13_coord.txt') eq 1 then begin
-	readcol, coorddir+objname+'_pacs_pixel13_coord.txt', format='D,D,D', wl_coord, ra, dec, /silent
+if file_test(coorddir+objname+'_pacs_pixel13_coord_os8_sf7.txt') eq 1 then begin
+	readcol, coorddir+objname+'_pacs_pixel13_coord_os8_sf7.txt', format='D,D,D', wl_coord, ra, dec, /silent
 	ra = mean(ra)
 	dec = mean(dec)
 endif else begin

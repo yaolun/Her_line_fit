@@ -165,7 +165,7 @@ if keyword_set(FWD) then begin
 		   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
 	; Debugging purpose
 	; cdf = ['EC82','NGC1333-IRAS2A','Serpens-SMM1']
-	cdf = ['L1489']
+	; cdf = ['L1489']
 endif
 
 while i eq 1 do begin
