@@ -319,7 +319,7 @@ if (where(special_list eq objname))[0] eq -1 then begin
 
 if file_test(coorddir+objname+'_pacs_pixel13_os8_sf7_coord.txt') eq 1 then begin
 	readcol, coorddir+objname+'_pacs_pixel13_os8_sf7_coord.txt', format='D,D,D', wl_coord, ra, dec, /silent
-
+	stop
 	ra = mean(ra)
 	dec = mean(dec)
 endif else begin
