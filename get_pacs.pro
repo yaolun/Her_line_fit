@@ -319,7 +319,7 @@ if (where(special_list eq objname))[0] eq -1 then begin
 
 if file_test(coorddir+objname+'_pacs_pixel13_os8_sf7_coord.txt') eq 1 then begin
 	readcol, coorddir+objname+'_pacs_pixel13_os8_sf7_coord.txt', format='D,D,D', wl_coord, ra, dec, /silent
-	stop
+
 	ra = mean(ra)
 	dec = mean(dec)
 endif else begin
@@ -429,8 +429,8 @@ if keyword_set(general) then begin
 	close, lun
 endif else begin
 	hdr = headfits(filename[0],/silent)
-	ra = double(sxpar(hdr,'RA'))
-	dec = double(sxpar(hdr,'Dec'))
+;	ra = double(sxpar(hdr,'RA'))
+;	dec = double(sxpar(hdr,'Dec'))
 	
 	objname = strcompress(objname,/remove_all)
 	wl_b2a = [] & flux_b2a = [] & std_b2a = []
@@ -508,8 +508,8 @@ endif
 
 if (where(special_list eq objname))[0] ne -1 then begin
 	hdr = headfits(filename[0],/silent)
-	ra = double(sxpar(hdr,'RA'))
-	dec = double(sxpar(hdr,'Dec'))
+;	ra = double(sxpar(hdr,'RA'))
+;	dec = double(sxpar(hdr,'Dec'))
 	objname = strcompress(objname,/remove_all)
 	
 	if not keyword_set(datadir) then begin
