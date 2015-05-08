@@ -93,15 +93,21 @@ if not keyword_set(print_all) and not keyword_set(FWD) then begin
 	global_outname = 'Unknown'
 endif
 
-if keyword_set(FWD) then begin
-	global_outname = '_lines'
-	cdf = ['B1-a','B1-c','B335','BHR71','Ced110-IRS4','FUOri','GSS30-IRS1','HH46','HH100','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','L1014','L1157','L1455-IRS3',$
-		   'L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO91','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
-	; Debug option
-	; cdf = ['BHR71']
+global_outname = '_lines'
+
+if obj_flag ne 0 then begin
+	if keyword_set(FWD) then begin
+		cdf = ['B1-a','B1-c','B335','BHR71','Ced110-IRS4','FUOri','GSS30-IRS1','HH46','HH100','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','L1014','L1157','L1455-IRS3',$
+			   'L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO91','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
+		; Debug option
+		; cdf = ['BHR71']
+	endif else begin
+		cdf = obj_flag
+	endelse
 endif
 ; ignore object for 1d fitting which is done separately 
 ignore_obj = ['B335','RCrA-IRS7B','BHR71']
+ignore_obj = []
 exception_obj = []
 ; Force to use Local noise for all sources
 if keyword_set(localnoise) then exception_obj = objname
