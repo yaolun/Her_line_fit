@@ -96,7 +96,7 @@ endif
 global_outname = '_lines'
 
 if obj_flag[0] ne '0' then begin
-	if keyword_set(FWD) then begin
+	if obj_flag[0] eq '1' then begin
 		cdf = ['B1-a','B1-c','B335','BHR71','Ced110-IRS4','FUOri','GSS30-IRS1','HH46','HH100','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','L1014','L1157','L1455-IRS3',$
 			   'L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO91','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
 		; Debug option
