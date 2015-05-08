@@ -157,7 +157,7 @@ endif
 
 global_outname = '_lines'
 
-if obj_flag ne 0 then begin
+if obj_flag[0] ne '0' then begin
 	if keyword_set(FWD) then begin
 		; Set the source list that we want to report to the archive
 		cdf = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD100546','HD104237','HD135344B','HD139614',$
