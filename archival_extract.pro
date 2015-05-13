@@ -21,10 +21,15 @@ datadir = '/scratch/.hcss/lstore/'
 for i = 0, n_elements(objlist)-1 do begin
 	obj = objlist[i]
 	OBSID_dum = OBSID[i,*]
-	filename = [datadir+OBSID_dum[0]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[0]+'_20hps3drbs_00.fits',$
-				datadir+OBSID_dum[0]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[0]+'_20hps3drrs_00.fits',$
-				datadir+OBSID_dum[1]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[1]+'_20hps3drbs_00.fits',$
-				datadir+OBSID_dum[1]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[1]+'_20hps3drrs_00.fits']
+	if n_elements(OBSID_dum) eq 2 then begin
+		filename = [datadir+OBSID_dum[0]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[0]+'_20hps3drbs_00.fits',$
+					datadir+OBSID_dum[0]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[0]+'_20hps3drrs_00.fits',$
+					datadir+OBSID_dum[1]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[1]+'_20hps3drbs_00.fits',$
+					datadir+OBSID_dum[1]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[1]+'_20hps3drrs_00.fits']
+	endif else begin
+		filename = [datadir+OBSID_dum[0]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[0]+'_20hps3drbs_00.fits',$
+					datadir+OBSID_dum[0]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[0]+'_20hps3drrs_00.fits']
+	endelse
 	get_pacs, outdir='~/test/herschel_archival/'+obj+'/',objname=obj, filename=filename, suffix='archival'
 	summed_three, '~/test/herschel_archival/'+obj+'/cube/', '~/test/herschel_archival/'+obj+'/', 'archival', obj, wl, flux
 endfor
