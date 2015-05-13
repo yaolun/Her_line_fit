@@ -20,7 +20,7 @@ datadir = '/scratch/.hcss/lstore/'
 
 for i = 0, n_elements(objlist)-1 do begin
 	obj = objlist[i]
-	OBSID_dum = OBSID[i,*]
+	OBSID_dum = OBSID[*,i]
 	if OBSID_dum[1] ne 'na' then begin
 		filename = [datadir+OBSID_dum[0]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[0]+'_20hps3drbs_00.fits',$
 					datadir+OBSID_dum[0]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[0]+'_20hps3drrs_00.fits',$
