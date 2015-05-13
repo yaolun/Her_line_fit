@@ -91,8 +91,7 @@ for i = 0, n_elements(objlist)-1 do begin
 	device, filename = '~/test/herschel_archival/'+obj+'/'+obj+'_summed_3x3.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 14, decomposed = 0, /color
   	loadct ,13,/silent
 	!p.thick = 3 & !x.thick = 3 & !y.thick = 3
-	plot, wl, flux, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (Jy)', /nodata, position=[0.15,0.1,0.95,0.95]
-	plot, wl, flux, thick=2, color=0
+	plot, wl, flux, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (Jy)', thick=2, color=0 
 	; plot, wl, continuum, thick=2, color=60
 	; al_legend, ['summed 3x3', 'smoothed cont.'], textcolors=[0,60], /right
 	device, /close_file, decomposed = 1
