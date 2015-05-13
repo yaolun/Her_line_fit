@@ -77,6 +77,26 @@ for i = 0, n_elements(objlist)-1 do begin
 
 	get_pacs, outdir='~/test/herschel_archival/'+obj+'/',objname=obj, filename=filename, suffix='archival'
 	summed_three, '~/test/herschel_archival/'+obj+'/cube/', '~/test/herschel_archival/'+obj+'/', 'archival', obj, wl, flux
+	spec_continuum_smooth,wl,flux,continuum, continuum_error,w1 = min(wl), w2 = max(wl), sbin=10,upper=0.9, lower=0.9
+
+	; print out the smoothed continuum
+	openw, sed, '~/test/herschel_archival/'+obj+'/'+obj+'summed_3x3_smooth.txt', /get_lun
+	printf, sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)'
+	for k =0, n_elements(wl)-1 do printf, sed, format='(2(g16.6,2x))', wl[k],continuum[k]
+	free_lun, sed
+	close, sed
+
+    set_plot, 'ps'
+	!p.font = 0
+	device, filename = '~/test/herschel_archival/'+obj+'/'+obj+'_summed_3x3.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 14, decomposed = 0, /color
+  	loadct ,13,/silent
+	!p.thick = 3 & !x.thick = 3 & !y.thick = 3
+	plot, wl, flux, xtitle = '!3Wavelength (!9m!3m)', ytitle = '!3Flux Density (Jy)', /nodata, position=[0.15,0.1,0.95,0.95]
+	plot, wl, flux, thick=2, color=0
+	plot, wl, continuum, thick=2, color=60
+	al_legend, ['summed 3x3', 'smoothed cont.'], textcolors=[0,60], /right
+	device, /close_file, decomposed = 1
+	!p.multi = 0
 endfor
 
 end
