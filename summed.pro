@@ -180,7 +180,7 @@ for i = 0, n_elements(pixel)-1 do begin
 	endfor
 	print, line, ' lines matched in pixel'+strtrim(string(pixel[i]),1)+'!'
 endfor
-openw, lun, outdir+objname+msg+'pacs_summed_3x3.txt',/get_lun
+openw, lun, outdir+objname+msg+'_pacs_summed_3x3.txt',/get_lun
 for i =0, n_elements(wl)-1 do printf,lun, format='(2(g16.6,2x))',wl[i],flux[i]
 free_lun, lun
 close, lun
