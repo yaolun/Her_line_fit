@@ -31,7 +31,7 @@ for i = 0, n_elements(objlist)-1 do begin
 					datadir+OBSID_dum[0]+'/herschel.pacs.signal.PacsRebinnedCube/hpacs'+OBSID_dum[0]+'_20hps3drrs_00.fits']
 	endelse
 	if file_test(filename[0]) eq 0 then begin
-		print obj+': FITS is not found!'
+		print, obj+': FITS is not found!'
 		continue
 	endif
 	get_pacs, outdir='~/test/herschel_archival/'+obj+'/',objname=obj, filename=filename, suffix='archival'
