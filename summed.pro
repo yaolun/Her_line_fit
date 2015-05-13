@@ -160,15 +160,15 @@ if keyword_set(plot) then begin
 	!p.multi = 0
 endif
 end
-pro summed_three,wl, flux,nojitter=nojitter
+pro summed_three, indir, outdir, suffix, objname, wl, flux,nojitter=nojitter
 msg = ''
 if keyword_set(nojitter) then  msg = 'nojitter/'
-readcol, '~/tmc1/data/'+msg+'pacs_pixel13.txt',format='D,D',wl, flux,/silent
+readcol, indir+objname+msg+'_pacs_pixel13_'+suffix+'.txt',format='D,D',wl, flux,/silent
 pixel = [6,7,8,11,12,13,16,17,18]
 flux = fltarr(n_elements(flux))
 for i = 0, n_elements(pixel)-1 do begin
 	line = 0
-	readcol, '~/tmc1/data/'+msg+'pacs_pixel'+strtrim(string(pixel[i]),1)+'.txt',format='D,D',wll, fluxx,/silent
+	readcol, indir+objname+msg+'_pacs_pixel'+strtrim(string(pixel[i]),1)+'_'+suffix+'.txt',format='D,D',wll, fluxx,/silent
 	for j =0, n_elements(wl)-1 do begin
 		for k = 0, n_elements(wll)-1 do begin
 		    if wl[j] eq wll[k] then begin
@@ -180,7 +180,7 @@ for i = 0, n_elements(pixel)-1 do begin
 	endfor
 	print, line, ' lines matched in pixel'+strtrim(string(pixel[i]),1)+'!'
 endfor
-openw, lun, '~/tmc1/data/'+msg+'pacs_summed_3x3.txt',/get_lun
+openw, lun, outdir+objname+msg+'pacs_summed_3x3.txt',/get_lun
 for i =0, n_elements(wl)-1 do printf,lun, format='(2(g16.6,2x))',wl[i],flux[i]
 free_lun, lun
 close, lun
