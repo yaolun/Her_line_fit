@@ -264,8 +264,6 @@ if not keyword_set(no_plot) then begin
 				ra_tot_smooth = min_curve_surf(ra_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				
-				if objname eq 'TMR1' then stop
-				
         		plotposition = aspect(1.)
         		colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
         		loadct, 0, /silent
@@ -390,8 +388,6 @@ if not keyword_set(no_plot) then begin
 				dec_smooth = min_curve_surf(dec,ra,dec,/double);,nx=100,ny=100)
 				ra_tot_smooth = min_curve_surf(ra_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
-				
-				if objname eq 'TMR1' then stop
 				
         		plotposition = aspect(1.)
         		colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
