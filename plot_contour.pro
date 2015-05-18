@@ -521,7 +521,7 @@ if not keyword_set(no_plot) then begin
 		        	level = level[where(level ge 3*noise[0])]
 		        	if 3*noise ge max(flux) then stop
 		        endelse
-		        if (line_name[i] eq 'CO17-16') and (objname eq 'TMR1') then stop
+
 		        ra = (ra-ra_cen[0])*3600*cos(dec*!pi/180.)
 				;ra = (ra_cen_pacs*cos(dec_cen_pacs*!pi/180.)-ra*cos(dec*!pi/180.))*3600
 				dec = (dec-dec_cen[0])*3600

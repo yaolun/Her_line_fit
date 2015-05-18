@@ -105,9 +105,9 @@ if obj_flag[0] ne '0' then begin
 		cdf = obj_flag
 	endelse
 endif
-print, cdf
+
 ; ignore object for 1d fitting which is done separately 
-ignore_obj = ['B335','RCrA-IRS7B','BHR71']
+;ignore_obj = ['B335','RCrA-IRS7B','BHR71']
 ignore_obj = []
 exception_obj = []
 ; Force to use Local noise for all sources
@@ -141,7 +141,7 @@ while i eq 1 do begin
 
 		noisetype = 'None'
 		; Print source info
-		if keyword_set(no_fit) then begin
+		if (keyword_set(no_fit)) and (not keyword_set(contour)) then begin
 			printf, tot_list, format='(4(a16,2x))',current_obj, 'SPIRE', reduction, noisetype
 			free_lun, tot_list
 			close, tot_list
