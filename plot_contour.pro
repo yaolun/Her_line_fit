@@ -579,9 +579,9 @@ if not keyword_set(no_plot) then begin
 		        loadct, 0, /silent
 		        ;xyouts, 0, 30, title_name(line_name[i]),color=255
 		        al_legend,[title_name(line_name[i])],textcolors=[0],/right,box=0, charsize=1
-		        al_legend,[objname],textcolors=[0],/left,box=0, charsize=1
+		        al_legend,[objname],textcolors=[0],/left,box=0, charsize=1.5
 		        exit_pacs: 
-		        device, /close_file, decomposed = 1
+		        device, /close_file, decomposed = 1.5
 		        !p.multi = 0
 		        cleanplot,/silent
 		        ;stop
