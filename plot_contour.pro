@@ -556,7 +556,7 @@ if not keyword_set(no_plot) then begin
 		        ; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
 				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-18!n W/m!u2!n]'
 		        loadct, 13, /silent
-		        device,font_size=14
+		        device,font_size=10
 		        ; if encounter an error skip this one and keep going
 		        catch, error_status
 		        if error_status ne 0 then begin
