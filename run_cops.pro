@@ -94,7 +94,7 @@ if not keyword_set(print_all) and not keyword_set(FWD) then begin
 endif
 
 global_outname = '_lines'
-
+print, obj_flag[0]
 if obj_flag[0] ne '0' then begin
 	if obj_flag[0] eq '1' then begin
 		cdf = ['B1-a','B1-c','B335','BHR71','Ced110-IRS4','FUOri','GSS30-IRS1','HH46','HH100','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','L1014','L1157','L1455-IRS3',$
