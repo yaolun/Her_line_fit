@@ -521,7 +521,7 @@ if not keyword_set(no_plot) then begin
 		        	level = level[where(level ge 3*noise[0])]
 		        	if 3*noise ge max(flux) then stop
 		        endelse
-		        ;if line_name[i] eq 'CII2P3_2-2P1_2' then stop
+		        if (line_name[i] eq 'CO17-16') and (objname eq 'TMR1') then stop
 		        ra = (ra-ra_cen[0])*3600*cos(dec*!pi/180.)
 				;ra = (ra_cen_pacs*cos(dec_cen_pacs*!pi/180.)-ra*cos(dec*!pi/180.))*3600
 				dec = (dec-dec_cen[0])*3600
@@ -537,7 +537,7 @@ if not keyword_set(no_plot) then begin
 		        ra_tot_smooth = min_curve_surf(ra_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				
-				if objname eq 'TMR1' then stop
+				if (line_name[i] eq 'CO17-16') and (objname eq 'TMR1') then stop
 				
 				;if line_name[i] eq 'CO20-19' then stop
 		        ;plotposition = aspect(1.)
