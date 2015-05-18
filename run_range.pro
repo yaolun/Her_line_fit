@@ -422,6 +422,6 @@ while i eq 1 do begin
 	num_obj = num_obj+1
 endwhile
 print, 'Finish fitting', strtrim(string(num_obj),1),'objects (PACS)',format='(a14,x,a3,x,a7)'
-print, obj_flag
+
 if not keyword_set(FWD) then toc
 end
