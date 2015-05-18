@@ -105,6 +105,7 @@ if obj_flag[0] ne '0' then begin
 		cdf = obj_flag
 	endelse
 endif
+print, cdf
 ; ignore object for 1d fitting which is done separately 
 ignore_obj = ['B335','RCrA-IRS7B','BHR71']
 ignore_obj = []
