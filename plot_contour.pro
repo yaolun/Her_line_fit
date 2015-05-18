@@ -289,7 +289,7 @@ if not keyword_set(no_plot) then begin
 		        	oplot, [0], [0], psym=1, color=250, symsize=1.5
 		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5
 		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='black',xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
-		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='blue',xrange=[140,-140],yrange=[-140,140],/onimage
+		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='blue',xrange=[140,-140],yrange=[-140,140],/onimage, label=0	
 		        endif else begin
 		        	oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5
 		        	oplot, [0], [0], psym=1, color=250, symsize=1.5
@@ -414,7 +414,7 @@ if not keyword_set(no_plot) then begin
 		        	oplot, [0], [0], psym=1, color=250, symsize=1.5
 		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5
 		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='black',xrange=[140,-140],yrange=[-140,140],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
-		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='blue',xrange=[140,-140],yrange=[-140,140],/onimage
+		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='blue',xrange=[140,-140],yrange=[-140,140],/onimage, label=0
 		        endif else begin
 		        	oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5
 		        	oplot, [0], [0], psym=1, color=250, symsize=1.5
@@ -569,7 +569,7 @@ if not keyword_set(no_plot) then begin
 		        	oplot, [0], [0], psym=1, color=250, symsize=1.5
 		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5
 		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='black',xrange=[40,-40],yrange=[-40,40],/nodata,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)'
-		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='blue',xrange=[40,-40],yrange=[-40,40],/onimage
+		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='blue',xrange=[40,-40],yrange=[-40,40],/onimage, label=0
 		        endif else begin
 		        	oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5
 		        	oplot, [0], [0], psym=1, color=250, symsize=1.5
