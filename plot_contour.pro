@@ -537,8 +537,6 @@ if not keyword_set(no_plot) then begin
 		        ra_tot_smooth = min_curve_surf(ra_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				dec_tot_smooth = min_curve_surf(dec_tot,ra_tot,dec_tot,/double);,nx=100,ny=100)
 				
-				if (line_name[i] eq 'CO17-16') and (objname eq 'TMR1') then stop
-				
 				;if line_name[i] eq 'CO20-19' then stop
 		        ;plotposition = aspect(1.)
 		        ;plot, ra, dec, psym=1,xtitle='RA offset (arcsec)', ytitle='Dec offset (arcsec)',xrange=[40,-40],yrange=[-40,40], position=plotposition
@@ -549,7 +547,7 @@ if not keyword_set(no_plot) then begin
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
 		        loadct, 0, /silent
         		plot, ra_tot, dec_tot, psym=1,xrange=[40,-40],yrange=[-40,40], position=plotposition,/nodata,color=255
-        		oplot, ra_tot, dec_tot, psym=1,color=0, charsize=14
+        		oplot, ra_tot, dec_tot, psym=1,color=0, symsize=14
 				cgloadct, 10, /reverse, file=colorfile, /silent
 		        cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[0,0], dec_tot_smooth[0,0], /overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes		        p = plotposition
