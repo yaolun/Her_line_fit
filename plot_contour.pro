@@ -7,7 +7,7 @@ if keyword_set(spire) then begin
 		fx=0
 	endif
 	if keyword_set(fx) then begin
-		unit = ''
+		unit = '/arcsec!u2!n'
 		brightness=0
 	endif
 	
@@ -23,18 +23,19 @@ if keyword_set(spire) then begin
 		fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str)), validity: dblarr(n_elements(validity))},n_elements(pixelname))
 	for pix = 0, n_elements(pixelname)-1 do begin
     	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D, D,D,D,D,D, D,D,D,D,D, D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+		; beam size = 35"
 		data_slw[pix].line = name
 		data_slw[pix].lab_wl = lab_wl
 		data_slw[pix].wl = wl
-		data_slw[pix].flux = str
-		data_slw[pix].flux_sig = sig_str
+		data_slw[pix].flux = str /!pi*(35/2.0)^2
+		data_slw[pix].flux_sig = sig_str /!pi*(35/2.0)^2
 		data_slw[pix].fwhm = fwhm
 		data_slw[pix].ra = ra
 		data_slw[pix].dec = dec
 		data_slw[pix].snr = snr
 		data_slw[pix].validity = validity
 		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
-		data_slw[pix].base_str = base_str*fwhm;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
+		data_slw[pix].base_str = base_str*fwhm /!pi*(35/2.0)^2 ;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
 	endfor
 	;SSW
 	pixelname = ['SSWA1','SSWA2','SSWA3','SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3','SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
@@ -45,18 +46,19 @@ if keyword_set(spire) then begin
 		fwhm: dblarr(n_elements(fwhm)), snr: dblarr(n_elements(snr)), base_str: dblarr(n_elements(base_str)), validity: dblarr(n_elements(validity))}, n_elements(pixelname))
 	for pix = 0, n_elements(pixelname)-1 do begin
     	readcol, indir+objname+'_'+pixelname[pix]+suffix, format='A,D,D,D,D, D,D,D,D,D, D,D,D,D,D, D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
+		; beam size = 19"
 		data_ssw[pix].line = name
 		data_ssw[pix].lab_wl = lab_wl
 		data_ssw[pix].wl = wl
-		data_ssw[pix].flux = str
-		data_ssw[pix].flux_sig = sig_str
+		data_ssw[pix].flux = str /!pi*(19/2.0)^2
+		data_ssw[pix].flux_sig = sig_str /!pi*(19/2.0)^2
 		data_ssw[pix].fwhm = fwhm
 		data_ssw[pix].ra = ra
 		data_ssw[pix].dec = dec
 		data_ssw[pix].snr = snr
 		data_ssw[pix].validity = validity
 		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
-		data_ssw[pix].base_str = base_str*fwhm;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
+		data_ssw[pix].base_str = base_str*fwhm /!pi*(19/2.0)^2 ;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
 	endfor
 endif
 if keyword_set(pacs) then begin
@@ -273,7 +275,7 @@ if not keyword_set(no_plot) then begin
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes
 				p = plotposition
 				; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
-				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n'+unit+']'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-18!n W/m!u2!n'+unit+']'
 				loadct, 13, /silent
 				device,font_size=14
 				catch, error_status
@@ -398,7 +400,7 @@ if not keyword_set(no_plot) then begin
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes
 				p = plotposition
 				; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
-				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n'+unit+']'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-18!n W/m!u2!n'+unit+']'
 				loadct, 13, /silent
 				device,font_size=14
 				catch, error_status
@@ -550,7 +552,7 @@ if not keyword_set(no_plot) then begin
 		        cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[0,0], dec_tot_smooth[0,0], /overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes		        p = plotposition
 		        ; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
-				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-18!n W/m!u2!n]'
 		        loadct, 13, /silent
 		        device,font_size=14
 		        ; if encounter an error skip this one and keep going
