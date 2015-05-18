@@ -258,7 +258,7 @@ while i eq 1 do begin
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
 	
 	; design for copying the FITS 
-	if keyword_set(no_fit) then begin
+	if (keyword_set(no_fit)) and (not keyword_set(contour)) then begin
 		if keyword_set(jitter) then begin
 			printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype	
 			free_lun, tot_list
