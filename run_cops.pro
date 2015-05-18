@@ -330,7 +330,10 @@ while i eq 1 do begin
 		printf, tot_list, format='(4(a16,2x))',current_obj, 'SPIRE', reduction, noisetype
 		free_lun, tot_list
 		close, tot_list
-	endif
+	endif else begin
+		free_lun, tot_list
+		close, tot_list
+	endelse
 
 	num_obj = num_obj+1
 endwhile
