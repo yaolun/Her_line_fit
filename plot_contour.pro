@@ -1,15 +1,24 @@
 pro plot_contour, noise=noise, no_plot=no_plot,indir=indir,plotdir=plotdir,objname=objname,spire=spire,pacs=pacs,verbose=verbose,brightness=brightness,fx=fx
 if file_test(plotdir,/directory) eq 0 then file_mkdir,plotdir
+
+; determine flux unit
+if keyword_set(brightness) then begin
+	unit = '/arcsec!u2!n'
+	fx=0
+	beam_slw = !pi*(35/2.0)^2
+	beam_ssw = !pi*(19/2.0)^2
+	beam_pacs = !pi*(9.4/2.0)^2
+endif
+if keyword_set(fx) then begin
+	unit = ''
+	brightness=0
+	beam_slw = 1
+	beam_ssw = 1
+	beam_pacs = 1
+endif
 ;Construct the data structure in each band
 if keyword_set(spire) then begin
-	if keyword_set(brightness) then begin
-		unit = '/arcsec!u2!n'
-		fx=0
-	endif
-	if keyword_set(fx) then begin
-		unit = '/arcsec!u2!n'
-		brightness=0
-	endif
+
 	
 	;SPIRE
 	;SLW
@@ -27,15 +36,15 @@ if keyword_set(spire) then begin
 		data_slw[pix].line = name
 		data_slw[pix].lab_wl = lab_wl
 		data_slw[pix].wl = wl
-		data_slw[pix].flux = str /!pi*(35/2.0)^2
-		data_slw[pix].flux_sig = sig_str /!pi*(35/2.0)^2
+		data_slw[pix].flux = str / beam_slw
+		data_slw[pix].flux_sig = sig_str / beam_slw
 		data_slw[pix].fwhm = fwhm
 		data_slw[pix].ra = ra
 		data_slw[pix].dec = dec
 		data_slw[pix].snr = snr
 		data_slw[pix].validity = validity
 		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
-		data_slw[pix].base_str = base_str*fwhm /!pi*(35/2.0)^2 ;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
+		data_slw[pix].base_str = base_str*fwhm / beam_slw ;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
 	endfor
 	;SSW
 	pixelname = ['SSWA1','SSWA2','SSWA3','SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3','SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
@@ -50,15 +59,15 @@ if keyword_set(spire) then begin
 		data_ssw[pix].line = name
 		data_ssw[pix].lab_wl = lab_wl
 		data_ssw[pix].wl = wl
-		data_ssw[pix].flux = str /!pi*(19/2.0)^2
-		data_ssw[pix].flux_sig = sig_str /!pi*(19/2.0)^2
+		data_ssw[pix].flux = str / beam_ssw
+		data_ssw[pix].flux_sig = sig_str / beam_ssw
 		data_ssw[pix].fwhm = fwhm
 		data_ssw[pix].ra = ra
 		data_ssw[pix].dec = dec
 		data_ssw[pix].snr = snr
 		data_ssw[pix].validity = validity
 		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
-		data_ssw[pix].base_str = base_str*fwhm /!pi*(19/2.0)^2 ;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
+		data_ssw[pix].base_str = base_str*fwhm / beam_ssw ;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
 	endfor
 endif
 if keyword_set(pacs) then begin
@@ -78,15 +87,15 @@ if keyword_set(pacs) then begin
 		data_pacs[pix].line = name
 		data_pacs[pix].lab_wl = lab_wl
 		data_pacs[pix].wl = wl
-		data_pacs[pix].flux = str
-		data_pacs[pix].flux_sig = sig_str
+		data_pacs[pix].flux = str / beam_pacs
+		data_pacs[pix].flux_sig = sig_str / beam_pacs
 		data_pacs[pix].fwhm = fwhm
 		data_pacs[pix].ra = ra
 		data_pacs[pix].dec = dec
 		data_pacs[pix].snr = snr
 		data_pacs[pix].validity = validity
 		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
-		data_pacs[pix].base_str = base_str*fwhm;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
+		data_pacs[pix].base_str = base_str*fwhm / beam_pacs ;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
 	endfor
 
 endif
@@ -552,7 +561,7 @@ if not keyword_set(no_plot) then begin
 		        cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[0,0], dec_tot_smooth[0,0], /overplot,/normal,xrange=[max(ra_tot_smooth[*,0]),min(ra_tot_smooth[*,0])],$
 					yrange=[min(dec_tot_smooth[0,*]),max(dec_tot_smooth[0,*])];,xrange=[max(ra),min(ra)],yrange=[min(dec),max(dec)],color=0,/axes		        p = plotposition
 		        ; cgcolorbar,range=[min(base_str_smooth)/1e-22,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-22!n W/cm!u2!n]'
-				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-18!n W/m!u2!n]'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-18!n W/m!u2!n'+unit+']'
 		        loadct, 13, /silent
 		        device,font_size=10
 		        ; if encounter an error skip this one and keep going
