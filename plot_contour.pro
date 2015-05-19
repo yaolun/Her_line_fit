@@ -602,8 +602,8 @@ if not keyword_set(no_plot) then begin
 		        cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[0,0], dec_tot_smooth[0,0],$
 		        		/overplot,/normal,/fit_inside,xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',$
 		        		oposition=oposition
-		        op = oposition
-				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[op[2]+0.03,op[1],op[2]+0.055,op[3]],title='F!dbase!n [10!u-18!n W/m!u2!n'+unit+']'
+		        ; op = oposition
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-18!n W/m!u2!n'+unit+']'
 		        loadct, 13, /silent
         		; plot, ra_tot, dec_tot, psym=1,xrange=[40,-40],yrange=[-40,40], position=plotposition,/nodata,color=255
         		oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5
