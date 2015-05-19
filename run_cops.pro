@@ -158,15 +158,15 @@ while i eq 1 do begin
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
 	
 	; design for cpoying FITS files
-	if keyword_set(no_fit) then continue
+	; if keyword_set(no_fit) then continue
 	; "filename" contains the all of the filepath of the object in each iteration
 	; Extract the fits files of each object now.  Output a two-column spectrum in ascii file and a whole spectrum plot.
 	;
-	if keyword_set(corrected) then begin
+	if keyword_set(corrected) and (not keyword_set(no_fit)) then begin
 		get_spire_1d, outdir=outdir+current_obj+'/spire/data/',object=current_obj,filename=filename,/fx
 		get_radec_spire, filename=filename, pix, ra, dec, /central
 	endif
-	if keyword_set(cube) then begin
+	if keyword_set(cube) and (not keyword_set(no_fit)) then begin
 		get_spire, outdir=outdir+current_obj+'/spire/data/cube/',object=current_obj,filename=filename,/brightness;/fx
 		get_radec_spire, filename=filename, pix_slw, ra_slw, dec_slw, /slw
 		get_radec_spire, filename=filename, pix_ssw, ra_ssw, dec_ssw, /ssw
