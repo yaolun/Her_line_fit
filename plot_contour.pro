@@ -596,7 +596,7 @@ if not keyword_set(no_plot) then begin
 		  ;       cleanplot,/silent
 		  ;       plotposition = aspect(1.)
 				; p = plotposition
-				position = [0.5*(30-max(ra_tot_smooth[*,0]))/30, 0.5*(30+min(dec_tot_smooth[0,*])),$
+				position = [0.5*(30-max(ra_tot_smooth[*,0]))/30, 0.5*(30+min(dec_tot_smooth[0,*]))/30,$
 							1-0.5*(min(ra_tot_smooth[*,0])+30)/30, 1-0.5*(30-max(dec_tot_smooth[0,*]))/30]
 				print, position
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
