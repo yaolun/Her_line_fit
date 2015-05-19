@@ -594,7 +594,7 @@ if not keyword_set(no_plot) then begin
 		  ;       device, /close_file, decomposed = 1
 		  ;       !p.multi = 0
 		  ;       cleanplot,/silent
-
+		  		print, min(dec_tot_smooth[*,0]), max(dec_tot_smooth[*,0])
 		        plotposition = aspect(1.)
 				p = plotposition
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
@@ -607,7 +607,7 @@ if not keyword_set(no_plot) then begin
 				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[op[2]+0.03,op[1],op[2]+0.055,op[3]],title='F!dbase!n [10!u-18!n W/m!u2!n'+unit+']'
 		        loadct, 13, /silent
         		; plot, ra_tot, dec_tot, psym=1,xrange=[40,-40],yrange=[-40,40], position=plotposition,/nodata,color=255
-        		oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5
+        		oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition
 		        ; if encounter an error skip this one and keep going
 		        catch, error_status
 		        if error_status ne 0 then begin
@@ -618,17 +618,17 @@ if not keyword_set(no_plot) then begin
 					goto, exit_pacs
 		        endif
 		        if n_elements(flux[where(flux ne 0)]) ge 3 then begin
-		        	oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5;,xrange=[140,-140],yrange=[-140,140], position=plotposition
-		        	oplot, [0], [0], psym=1, color=250, symsize=1.5
-		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5
+		        	oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition;,xrange=[140,-140],yrange=[-140,140], position=plotposition
+		        	oplot, [0], [0], psym=1, color=250, symsize=1.5, position=oposition
+		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5, position=oposition
 		        	; cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='black',xrange=[40,-40],yrange=[-40,40],/nodata,label=0,xtitle='!nRA offset (arcsec)', ytitle='!nDec offset (arcsec)'
 		        	; cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='blue',xrange=[40,-40],yrange=[-40,40],/onimage,label=0
 		        	; cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=oposition, color='black',/onimage,/nodata,label=0
 		        	; cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=oposition, color='blue',/onimage,label=0
 		        endif else begin
-		        	oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5
-		        	oplot, [0], [0], psym=1, color=250, symsize=1.5
-		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5
+		        	oplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition
+		        	oplot, [0], [0], psym=1, color=250, symsize=1.5, position=oposition
+		        	oplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5, position=oposition
 		        	; cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, position=oposition, color=0,/nodata,label=0
 		        endelse
 		        loadct, 0, /silent
