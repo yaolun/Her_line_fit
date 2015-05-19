@@ -594,12 +594,14 @@ if not keyword_set(no_plot) then begin
 		  ;       device, /close_file, decomposed = 1
 		  ;       !p.multi = 0
 		  ;       cleanplot,/silent
-		        plotposition = aspect(1.)
-				p = plotposition
+		  ;       plotposition = aspect(1.)
+				; p = plotposition
+				position = [0.5*(30-max(ra_tot_smooth[*,0]))/30, 0.5*(30+min(dec_tot_smooth[0,*])),$
+							1-0.5*(min(ra_tot_smooth[*,0])+30)/30, 1-0.5*(30-max(dec_tot_smooth[0,*]))/30]
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
 		        cgloadct, 10, /reverse, file=colorfile, /silent
 		        cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[0,0], dec_tot_smooth[0,0],$
-		        		/normal,/axe,xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',$
+		        		/normal,/axe,xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',position=position$
 		        		oposition=oposition,/keep_aspect_ratio,xrange=[max(ra_tot_smooth[*,0]), min(ra_tot_smooth[*,0])],$
 		        		yrange=[min(dec_tot_smooth[0,*]), max(dec_tot_smooth[0,*])]
 		        op = oposition
@@ -622,7 +624,7 @@ if not keyword_set(no_plot) then begin
 		        	cgplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5, position=oposition, /overplot
 		        	; cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='black',xrange=[40,-40],yrange=[-40,40],/nodata,label=0,xtitle='!nRA offset (arcsec)', ytitle='!nDec offset (arcsec)'
 		        	; cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, position=plotposition, color='blue',xrange=[40,-40],yrange=[-40,40],/onimage,label=0
-		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color='black',/onimage,/nodata,label=0
+		        	; cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color='black',/onimage,/nodata,label=0
 		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color='blue',/onimage,label=0
 		        endif else begin
 		        	cgplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition, /overplot
