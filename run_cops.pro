@@ -333,7 +333,6 @@ while i eq 1 do begin
 	endif else begin
 		free_lun, tot_list
 		close, tot_list
-		print, 'file is closed'
 	endelse
 
 	num_obj = num_obj+1
