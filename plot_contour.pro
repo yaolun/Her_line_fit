@@ -327,7 +327,7 @@ if not keyword_set(no_plot) then begin
 		        		 xrange=[max(ra_tot_smooth[*,0]), min(ra_tot_smooth[*,0])],$
 		        		 yrange=[min(dec_tot_smooth[0,*]), max(dec_tot_smooth[0,*])]
 		        op = oposition
-				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[plotposition[2]+0.03,plotposition[1],plotposition[2]+0.055,plotposition[3]],title='!nF!dbase!n [10!u-18!n W m!u-2!n'+unit+']'
+				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[plotposition[2]+0.03,plotposition[1],plotposition[2]+0.055,plotposition[3]],title='!3F!dbase!n [10!u-18!n W m!u-2!n'+unit+']'
 		        loadct, 13, /silent
         		cgplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition, /overplot
 		        ; if encounter an error skip this one and keep going
@@ -356,8 +356,8 @@ if not keyword_set(no_plot) then begin
 		        loadct, 0, /silent
 		        ;xyouts, 0, 30, title_name(line_name[i]),color=255
 		        ; place it in the upper right
-		        al_legend,['!n'+title_name(line_name[i])+'!n'],textcolors=[0], box=0, charsize=1.5,pos=[0.55,0.87],/normal
-		        al_legend,['!n'+objname+'!n'],textcolors=[0], box=0, charsize=1.5, pos=[0.3,0.87],/normal
+		        al_legend,['!3'+title_name(line_name[i])+'!n'],textcolors=[0], box=0, charsize=1.5,pos=[0.55,0.87],/normal
+		        al_legend,['!3'+objname+'!n'],textcolors=[0], box=0, charsize=1.5, pos=[0.3,0.87],/normal
 		        exit_slw: 
 		        device, /close_file, decomposed = 1
 		        !p.multi = 0
