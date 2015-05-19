@@ -602,7 +602,7 @@ if not keyword_set(no_plot) then begin
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
 		        cgloadct, 10, /reverse, file=colorfile, /silent
 		        cgimage, base_str_smooth/max(base_str_smooth)*255,position[0],position[1]$
-		        		/normal,xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',$
+		        		xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',$
 		        		oposition=oposition,/keep_aspect_ratio;, xrange=[30,-30], yrange=[-30,30]
 		        		; xrange=[max(ra_tot_smooth[*,0]), min(ra_tot_smooth[*,0])],$
 		        		; yrange=[min(dec_tot_smooth[0,*]), max(dec_tot_smooth[0,*])]
