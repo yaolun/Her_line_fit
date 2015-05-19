@@ -601,7 +601,7 @@ if not keyword_set(no_plot) then begin
 							plotposition[2]-0.5*(min(ra_tot_smooth[*,0])+30)/30, plotposition[3]-0.5*(30-max(dec_tot_smooth[0,*]))/30]
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
 		        cgloadct, 10, /reverse, file=colorfile, /silent
-		        cgimage, base_str_smooth/max(base_str_smooth)*255,position[0],position[1]$
+		        cgimage, base_str_smooth/max(base_str_smooth)*255,position[0],position[1],$
 		        		xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',$
 		        		oposition=oposition,/keep_aspect_ratio;, xrange=[30,-30], yrange=[-30,30]
 		        		; xrange=[max(ra_tot_smooth[*,0]), min(ra_tot_smooth[*,0])],$
