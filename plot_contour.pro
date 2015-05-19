@@ -598,6 +598,7 @@ if not keyword_set(no_plot) then begin
 				; p = plotposition
 				position = [0.5*(30-max(ra_tot_smooth[*,0]))/30, 0.5*(30+min(dec_tot_smooth[0,*])),$
 							1-0.5*(min(ra_tot_smooth[*,0])+30)/30, 1-0.5*(30-max(dec_tot_smooth[0,*]))/30]
+				print, position
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
 		        cgloadct, 10, /reverse, file=colorfile, /silent
 		        cgimage, base_str_smooth/max(base_str_smooth)*255,$
