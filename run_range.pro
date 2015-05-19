@@ -407,8 +407,8 @@ while i eq 1 do begin
 		skip = [];'HBC722_379','HBC722_173','AS205'
 		if (where(skip eq strcompress(current_obj,/remove_all)))[0] ne -1 then continue
 		print, 'Plotting the contour plots...'
-		if keyword_set(jitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs;outdir+current_obj+'/cube/plots/contour/'
-		if keyword_set(nojitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs
+		if keyword_set(jitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs,/brightness;outdir+current_obj+'/cube/plots/contour/'
+		if keyword_set(nojitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs,/brightness
 	endif
 
 	if not keyword_set(no_fit) then begin
