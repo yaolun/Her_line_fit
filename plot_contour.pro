@@ -594,7 +594,6 @@ if not keyword_set(no_plot) then begin
 		  ;       device, /close_file, decomposed = 1
 		  ;       !p.multi = 0
 		  ;       cleanplot,/silent
-		  		print, min(dec_tot_smooth[*,0]), max(dec_tot_smooth[*,0])
 		        plotposition = aspect(1.)
 				p = plotposition
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
@@ -602,7 +601,7 @@ if not keyword_set(no_plot) then begin
 		        cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[0,0], dec_tot_smooth[0,0],$
 		        		/normal,/axe,xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',$
 		        		oposition=oposition,/keep_aspect_ratio,xrange=[max(ra_tot_smooth[*,0]), min(ra_tot_smooth[*,0])],$
-		        		yrange=[min(dec_tot_smooth[*,0]), max(dec_tot_smooth[*,0])]
+		        		yrange=[min(dec_tot_smooth[0,*]), max(dec_tot_smooth[0,*])]
 		        op = oposition
 				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[op[2]+0.03,op[1],op[2]+0.055,op[3]],title='F!dbase!n [10!u-18!n W/m!u2!n'+unit+']'
 		        loadct, 13, /silent
