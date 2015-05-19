@@ -600,7 +600,7 @@ if not keyword_set(no_plot) then begin
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
 		        cgloadct, 10, /reverse, file=colorfile, /silent
 		        cgimage, base_str_smooth/max(base_str_smooth)*255, ra_tot_smooth[0,0], dec_tot_smooth[0,0],$
-		        		/overplot,/normal,/fit_inside,xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',$
+		        		/overplot,/normal,/axe,xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',$
 		        		oposition=oposition
 		        ; op = oposition
 				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[p[2]+0.03,p[1],p[2]+0.055,p[3]],title='F!dbase!n [10!u-18!n W/m!u2!n'+unit+']'
