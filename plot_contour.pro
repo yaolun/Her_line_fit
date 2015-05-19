@@ -356,8 +356,8 @@ if not keyword_set(no_plot) then begin
 		        loadct, 0, /silent
 		        ;xyouts, 0, 30, title_name(line_name[i]),color=255
 		        ; place it in the upper right
-		        al_legend,['!n'+title_name(line_name[i])],textcolors=[0], box=0, charsize=1.5,pos=[0.55,0.87],/normal
-		        al_legend,['!n'+objname],textcolors=[0], box=0, charsize=1.5, pos=[0.3,0.87],/normal
+		        al_legend,['!n'+title_name(line_name[i])+'!n'],textcolors=[0], box=0, charsize=1.5,pos=[0.55,0.87],/normal
+		        al_legend,['!n'+objname+'!n'],textcolors=[0], box=0, charsize=1.5, pos=[0.3,0.87],/normal
 		        exit_slw: 
 		        device, /close_file, decomposed = 1
 		        !p.multi = 0
