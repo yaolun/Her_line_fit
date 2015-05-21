@@ -5,8 +5,11 @@ if file_test(plotdir,/directory) eq 0 then file_mkdir,plotdir
 if keyword_set(brightness) then begin
 	unit = '!n arcsec!u-2!n'
 	fx=0
-	beam_slw = !pi*(35/2.0)^2
-	beam_ssw = !pi*(19/2.0)^2
+;	beam_slw = !pi*(35/2.0)^2
+;	beam_ssw = !pi*(19/2.0)^2
+	; default setting is extracting SPIRe spectra with brightness keyword, therefore the unit is already in /arcsec2
+	beam_slw = 1
+	beam_ssw = 1
 	beam_pacs = !pi*(9.4/2.0)^2
 endif
 if keyword_set(fx) then begin
