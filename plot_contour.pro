@@ -596,20 +596,19 @@ if not keyword_set(no_plot) then begin
 		  ;       cleanplot,/silent
 		  ;       plotposition = aspect(1.)
 				; p = plotposition
-				plotposition = [0.1,0.1,0.9,0.95]
-				position = [0.5*(30-max(ra_tot_smooth[*,0]))/30+plotposition[0], 0.5*(30+min(dec_tot_smooth[0,*]))/30+plotposition[1],$
-							plotposition[2]-0.5*(min(ra_tot_smooth[*,0])+30)/30, plotposition[3]-0.5*(30-max(dec_tot_smooth[0,*]))/30]
+				position = [0.5*(30-max(ra_tot_smooth[*,0]))/30, 0.5*(30+min(dec_tot_smooth[0,*]))/30,$
+							1-0.5*(min(ra_tot_smooth[*,0])+30)/30, 1-0.5*(30-max(dec_tot_smooth[0,*]))/30]
 		        colorFile = '~/programs/misc/fsc_brewer.tbl';Filepath(SUBDIRECTORY=['resource','colors'], 'fsc_brewer.tbl')
 		        cgloadct, 10, /reverse, file=colorfile, /silent
-		        cgimage, base_str_smooth/max(base_str_smooth)*255,position[0],position[1],$
-		        		xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',$
-		        		oposition=oposition,/keep_aspect_ratio;, xrange=[30,-30], yrange=[-30,30]
+		        cgimage, base_str_smooth/max(base_str_smooth)*255,position[0],position[1]$
+		        		/normal,/axe,xtitle='!nRA offset (arcsec)',ytitle='!nDec offset (arcsec)',position=position,$
+		        		oposition=oposition,/keep_aspect_ratio, xrange=[30,-30], yrange=[-30,30]
 		        		; xrange=[max(ra_tot_smooth[*,0]), min(ra_tot_smooth[*,0])],$
 		        		; yrange=[min(dec_tot_smooth[0,*]), max(dec_tot_smooth[0,*])]
 		        op = oposition
 				cgcolorbar,range=[0,max(base_str_smooth)/1e-22],/vertical,/right,Position=[op[2]+0.03,op[1],op[2]+0.055,op[3]],title='F!dbase!n [10!u-18!n W/m!u2!n'+unit+']'
 		        loadct, 13, /silent
-        		cgplot, ra_tot, dec_tot, psym=1,xrange=[30,-30],yrange=[-30,30], position=plotposition,/nodata,color=255
+        		; plot, ra_tot, dec_tot, psym=1,xrange=[40,-40],yrange=[-40,40], position=plotposition,/nodata,color=255
         		cgplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition, /overplot
 		        ; if encounter an error skip this one and keep going
 		        catch, error_status
