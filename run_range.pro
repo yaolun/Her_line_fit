@@ -64,8 +64,6 @@ endfor
 digit_file = digit_file[sort(objname)]
 objname = objname[sort(objname)]
 
-print, objname
-
 for obj = 0, n_elements(objname)-1 do begin
 	if strmatch(objname[obj],'*-1') eq 1 then objname[obj] = strmid(objname[obj],0,strlen(objname[obj])-2)
 	if strcompress(objname[obj],/remove_all) eq 'SerSMM1' then objname[obj] = 'Serpens-SMM1'
@@ -157,6 +155,8 @@ if not keyword_set(print_all) and not keyword_set(FWD) then begin
 	print_all = 'temp'
 	global_outname = 'Unknown'
 endif
+
+print, objname
 
 global_outname = '_lines'
 
