@@ -80,6 +80,8 @@ for obj = 0, n_elements(objname)-1 do begin
 	if strmatch(digit_file[obj],'*1342211174*',/fold_case) eq 1 then objname[obj] = 'HBC722_Dec2010'
 endfor
 
+print, objname
+
 objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 
