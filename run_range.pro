@@ -165,6 +165,8 @@ if obj_flag[0] ne '0' then begin
 			   'HD97048','HD98922','HH46','HH100','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
 			   'L1489','L1527','L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
 			   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
+		; WISH sources
+		cdf = ['NGC1333-IRAS2A','NGC1333-IRAS4A','NGC1333-IRAS4B','Serpens-SMM1']
 		; Debugging purpose
 		; cdf = ['EC82','NGC1333-IRAS2A','Serpens-SMM1']
 		; cdf = ['L1489']
