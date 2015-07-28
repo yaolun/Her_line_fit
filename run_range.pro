@@ -110,8 +110,8 @@ if not keyword_set(cube) then begin
 	;endif
 endif
 if keyword_set(cube) and proj eq 'wish' then begin
-	objname = objname[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
-	digit_file = digit_file[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
+	; objname = objname[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
+	; digit_file = digit_file[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
 ;	objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 ;	digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 endif
