@@ -302,7 +302,7 @@ while i eq 1 do begin
 	; For 1D spectra
 	if not keyword_set(cube) and not keyword_set(no_fit) then begin
 		; if (n_elements(filename) eq 4 and (where(exception_obj eq current_obj))[0] eq -1) then begin
-		if (where(exception_obj eq current_obj))[0] eq -1) then begin
+		if (where(exception_obj eq current_obj))[0] eq -1 then begin
 			noisetype='Global'
 			outname = '_lines_fixwidth_global_noise'
 			extract_pacs, indir=outdir+current_obj+'/pacs/data/', filename=current_obj+name+'_trim', outdir=outdir+current_obj+'/pacs/advanced_products/', plotdir=outdir+current_obj+'/pacs/advanced_products/plots/', noiselevel=noiselevel,$
