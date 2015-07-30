@@ -167,7 +167,7 @@ if obj_flag[0] ne '0' then begin
 			   'L1489','L1527','L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
 			   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
 		; WISH sources
-		cdf = ['NGC1333-IRAS2A','NGC1333-IRAS4A','NGC1333-IRAS4B','Serpens-SMM1']
+		; cdf = ['NGC1333-IRAS2A','NGC1333-IRAS4A','NGC1333-IRAS4B','Serpens-SMM1']
 		; Debugging purpose
 		; cdf = ['EC82','NGC1333-IRAS2A','Serpens-SMM1']
 		; cdf = ['L1489']
@@ -301,8 +301,8 @@ while i eq 1 do begin
 	; Fitting part
 	; For 1D spectra
 	if not keyword_set(cube) and not keyword_set(no_fit) then begin
-		; if (n_elements(filename) eq 4 and (where(exception_obj eq current_obj))[0] eq -1) then begin
-		if (where(exception_obj eq current_obj))[0] eq -1 then begin
+		if (n_elements(filename) eq 4 and (where(exception_obj eq current_obj))[0] eq -1) then begin
+		; if (where(exception_obj eq current_obj))[0] eq -1 then begin
 			noisetype='Global'
 			outname = '_lines_fixwidth_global_noise'
 			extract_pacs, indir=outdir+current_obj+'/pacs/data/', filename=current_obj+name+'_trim', outdir=outdir+current_obj+'/pacs/advanced_products/', plotdir=outdir+current_obj+'/pacs/advanced_products/plots/', noiselevel=noiselevel,$
