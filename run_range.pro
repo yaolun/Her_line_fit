@@ -80,8 +80,6 @@ for obj = 0, n_elements(objname)-1 do begin
 	if strmatch(digit_file[obj],'*1342211174*',/fold_case) eq 1 then objname[obj] = 'HBC722_Dec2010'
 endfor
 
-print, digit_file
-
 objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 
@@ -157,8 +155,6 @@ if not keyword_set(print_all) and not keyword_set(FWD) then begin
 	print_all = 'temp'
 	global_outname = 'Unknown'
 endif
-
-print, objname
 
 global_outname = '_lines'
 
@@ -304,6 +300,8 @@ while i eq 1 do begin
 
 	; Fitting part
 	; For 1D spectra
+	print, filename
+	print, exception_obj
 	if not keyword_set(cube) and not keyword_set(no_fit) then begin
 		if (n_elements(filename) eq 4 and (where(exception_obj eq current_obj))[0] eq -1) then begin
 			noisetype='Global'
