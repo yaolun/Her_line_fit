@@ -194,6 +194,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
     		printf, firstfit, format='((a20,2x),17(a20,2x))',$
     			'Line','LabWL (um)','ObsWL (um)','Sig_Cen (um)','Str(W/cm2'+unit+')','Sig_str(W/cm2'+unit+')','FWHM (um)','Sig_FWHM (um)','Base(W/cm2/um'+unit+')','Noise(W/cm2/um'+unit+')','SNR','E_u (K)','A (s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend'
     	endelse
+    	stop
 		for i = 0, n_elements(line_name)-1 do begin
 			if (keyword_set(double_gauss)) and ((where(excluded_line eq line_name[i]))[0] ne -1) then continue
         	; select the baseline
@@ -222,11 +223,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
                 indl = where(wl gt base_range[0] and wl lt max(wl))
                 wll = wl[indl] & fluxl = flux[indl]
             endif
-
-            print, 'baseline fit', line_center[i], base_range
-           	print, 'line index', indl
-           	print, left
-           	print, right
 
 			; fit the baseline and return the baseline parameter in 'base_para'
 			; 7 % of flux uncertainty in SPIRE spectrometer (Observer manual 5.3.6)
