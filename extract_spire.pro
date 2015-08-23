@@ -223,6 +223,9 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
                 wll = wl[indl] & fluxl = flux[indl]
             endif
 
+            print, 'baseline fit', line_center[i], base_range
+           	print, 'line index', indl, wll
+
 			; fit the baseline and return the baseline parameter in 'base_para'
 			; 7 % of flux uncertainty in SPIRE spectrometer (Observer manual 5.3.6)
 			; use the plot_base feature to plot the actual spectrum (with line) here
