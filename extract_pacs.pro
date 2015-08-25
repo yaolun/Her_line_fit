@@ -877,7 +877,14 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		free_lun, flat_sed
     		close,flat_sed
     	endif
-		
+	    openw, noise_sed, outdir+filename+'_noise_spectrum.txt',/get_lun
+		printf, noise_sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
+		print_flatnoise = flat_noise*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
+		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
+		for k =0, n_elements(wl)-1 do printf, noise_sed, format='(3(g16.6,2x))',wl[k],print_flatnoise[k],stdd[k]
+		free_lun, noise_sed
+		close,noise_sed
+
     	set_plot, 'ps'
 		!p.font = 0
 		loadct,12,/silent
@@ -1421,7 +1428,14 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		free_lun, flat_sed
     		close,flat_sed
     	endif
-    	
+		openw, noise_sed, outdir+filename+'_noise_spectrum.txt',/get_lun
+		printf, noise_sed, format='(3(a16,2x))','Wave (um)','Flux (Jy)','Uncertainty (Jy)'
+		print_flatnoise = flat_noise *1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
+		stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
+		for k =0, n_elements(wl)-1 do printf, noise_sed, format='(3(g16.6,2x))',wl[k],print_flatnoise[k],stdd[k]
+		free_lun, noise_sed
+		close,noise_sed   
+
 		; Plot the results
 		set_plot, 'ps'
 		!p.font = 0

@@ -635,13 +635,21 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endif
 			if keyword_set(flat) then begin
     			openw, flat_sed, name_dum+'_flat_spectrum.txt',/get_lun
-				if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-    			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+				if keyword_set(fx) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+    			if keyword_set(brightness) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 				flat = (flux - continuum_sub) *1d26*1d6*(wl*1d-6)^2/c*1d4
 				for k =0, n_elements(wl)-1 do printf, flat_sed, format='(2(g16.6,2x))',wl[k],flat[k]
 				free_lun, flat_sed
 				close,flat_sed
 			endif
+			openw, noise_sed, name_dum+'_noise_spectrum.txt',/get_lun
+			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+			print_flatnoise = flat_noise *1d26*1d6*(wl*1d-6)^2/c*1d4
+			for k =0, n_elements(wl)-1 do printf, noise_sed, format='(2(g16.6,2x))',wl[k],print_flatnoise[k]
+			free_lun, noise_sed
+			close,noise_sed
+
 			cleanplot,/silent
 			; Plot the results
 			set_plot, 'ps'
@@ -1068,13 +1076,20 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endif
 			if keyword_set(flat) then begin
     			openw, flat_sed, name_dum+'_flat_spectrum.txt',/get_lun
-				if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-    			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+				if keyword_set(fx) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+    			if keyword_set(brightness) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 				flat = (flux - continuum_sub) *1d26*1d6*(wl*1d-6)^2/c*1d4
 				for k =0, n_elements(wl)-1 do printf, flat_sed, format='(2(g16.6,2x))',wl[k],flat[k]
 				free_lun, flat_sed
 				close,flat_sed
 			endif
+			openw, noise_sed, name_dum+'_noise_spectrum.txt',/get_lun
+			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+			print_flatnoise = flat_noise *1d26*1d6*(wl*1d-6)^2/c*1d4
+			for k =0, n_elements(wl)-1 do printf, noise_sed, format='(2(g16.6,2x))',wl[k],print_flatnoise[k]
+			free_lun, noise_sed
+			close,noise_sed
 
 			; Plot the results
 			set_plot, 'ps'
