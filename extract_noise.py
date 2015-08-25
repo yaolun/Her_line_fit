@@ -44,10 +44,16 @@ def extract_noise(indir, obj, spire=False, pacs=False, noiselevel=3, cube=None):
 		if (fitting['SNR'][i] < noiselevel) or (fitting['Validity'][i] == 0):
 			continue
 		else:
-			line_gauss = gauss(wl_flat[(wl_flat > fitting['ObsWL(um)'][i]-size*fitting['FWHM(um)'][i]) & (wl_flat < fitting['ObsWL(um)'][i]+size*fitting['FWHM(um)'][i])], \
-				fitting['Str(W/cm2)'][i]*1e7/(fitting['FWHM(um)'][i]/2.354)/(2*np.pi)**0.5,\
-				fitting['FWHM(um)'][i]/2.354,\
-				fitting['ObsWL(um)'][i])
+			if (spire) & (cube != None):
+				line_gauss = gauss(wl_flat[(wl_flat > fitting['ObsWL(um)'][i]-size*fitting['FWHM(um)'][i]) & (wl_flat < fitting['ObsWL(um)'][i]+size*fitting['FWHM(um)'][i])], \
+					fitting['Str(W/cm2/as2)'][i]*1e7/(fitting['FWHM(um)'][i]/2.354)/(2*np.pi)**0.5,\
+					fitting['FWHM(um)'][i]/2.354,\
+					fitting['ObsWL(um)'][i])
+			else:
+				line_gauss = gauss(wl_flat[(wl_flat > fitting['ObsWL(um)'][i]-size*fitting['FWHM(um)'][i]) & (wl_flat < fitting['ObsWL(um)'][i]+size*fitting['FWHM(um)'][i])], \
+					fitting['Str(W/cm2)'][i]*1e7/(fitting['FWHM(um)'][i]/2.354)/(2*np.pi)**0.5,\
+					fitting['FWHM(um)'][i]/2.354,\
+					fitting['ObsWL(um)'][i])
 
 			flux_lines[(wl_flat > fitting['ObsWL(um)'][i]-size*fitting['FWHM(um)'][i]) & (wl_flat < fitting['ObsWL(um)'][i]+size*fitting['FWHM(um)'][i])] = \
 			flux_lines[(wl_flat > fitting['ObsWL(um)'][i]-size*fitting['FWHM(um)'][i]) & (wl_flat < fitting['ObsWL(um)'][i]+size*fitting['FWHM(um)'][i])] + line_gauss
