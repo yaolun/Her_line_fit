@@ -50,14 +50,14 @@ def extract_noise(indir, obj, spire=False, pacs=False, noiselevel=3):
 		foo.write('%16f \t %16f \n' % (wl_flat[i], (flux_flat[i]-flux_lines[i]) * (wl_flat[i]*1e-4)**2*1e4/c * 1e23))
 	foo.close()
 
-	(wl_noise, flux_noise) = np.genfromtxt(indir+obj+suffix[0:-17]+'noise.txt', skip_header=1).T
+	# (wl_noise, flux_noise) = np.genfromtxt(indir+obj+suffix[0:-17]+'noise.txt', skip_header=1).T
 
-	import matplotlib.pyplot as plt
-	# plt.plot(wl_flat, flux_lines)
-	# plt.plot(wl_flat, flux_flat-flux_lines+5e-11, alpha=0.5)
-	plt.plot(wl_noise, flux_noise)
-	plt.plot(wl_flat, flux_flat * (wl_flat*1e-4)**2*1e4/c * 1e23, alpha=0.5)
-	plt.savefig('/Users/yaolun/test/noise.pdf', dpi=300, format='pdf', bbox_inches='tight')
+	# import matplotlib.pyplot as plt
+	# # plt.plot(wl_flat, flux_lines)
+	# # plt.plot(wl_flat, flux_flat-flux_lines+5e-11, alpha=0.5)
+	# plt.plot(wl_noise, flux_noise)
+	# plt.plot(wl_flat, flux_flat * (wl_flat*1e-4)**2*1e4/c * 1e23, alpha=0.5)
+	# plt.savefig('/Users/yaolun/test/noise.pdf', dpi=300, format='pdf', bbox_inches='tight')
 
 # indir = '/Users/yaolun/bhr71/fitting/BHR71/'
 # obj = 'BHR71'
