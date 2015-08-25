@@ -1,4 +1,4 @@
-def extract_noise(indir, obj, spire=False, pacs=False, noiselevel=3):
+def extract_noise(indir, obj, spire=False, pacs=False, noiselevel=3, cube=None):
 	import numpy as np
 	from astropy.io import ascii
 	import astropy.constants as const
@@ -12,15 +12,17 @@ def extract_noise(indir, obj, spire=False, pacs=False, noiselevel=3):
 		return height * np.exp(-(x - center)**2/2/width**2)
 
 	if pacs:
-		indir = indir + '/pacs/advanced_products/'
 		suffix = '_centralSpaxel_PointSourceCorrected_CorrectedYES_trim_flat_spectrum.txt'
+		if cube != None:
+			suffix = '_pacs_pixel'+str(cube)+'_os8_sf7_flat_spectrum.txt'
 		if os.path.exists(indir+obj+suffix) == False:
 			print obj+' do not have smoothed continuum.  Skipped'
 			return None
 		[wl_flat,flux_flat,unc_flat] = np.genfromtxt(indir+obj+suffix,dtype='float',skip_header=1).T
 	if spire:
-		indir = indir + '/spire/advanced_products/'
 		suffix = '_spire_corrected_flat_spectrum.txt'
+		if cube != None:
+			suffix = '_'+str(cube)+'_flat_spectrum.txt'
 		if os.path.exists(indir+obj+suffix) == False:
 			print obj+' do not have smoothed continuum.  Skipped'
 			return None

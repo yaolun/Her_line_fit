@@ -36,7 +36,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; get_radec_slw, coord, plot_coord & ra = coord[0,*] & dec = coord[1,*]
 		endif
 		if keyword_set(ssw) then begin
-			pixelname = [ ]
+			pixelname = ['SSWA1','SSWA2','SSWA3','SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3','SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
 			ra_dum = [] & dec_dum = []
 			for ipix = 0, n_elements(pixelname)-1 do begin
 				ra_dum = [ra_dum, ra[where(coordpix eq pixelname[ipix])]]
