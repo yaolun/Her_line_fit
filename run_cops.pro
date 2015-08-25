@@ -108,7 +108,7 @@ endif
 
 ; ignore object for 1d fitting which is done separately 
 ;ignore_obj = ['B335','RCrA-IRS7B','BHR71']
-ignore_obj = []
+ignore_obj = ['BHR71']
 exception_obj = []
 ; Force to use Local noise for all sources
 if keyword_set(localnoise) then exception_obj = objname

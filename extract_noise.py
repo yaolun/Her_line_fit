@@ -11,11 +11,17 @@ def extract_noise(indir, obj, spire=False, pacs=False, noiselevel=3):
 		return height * np.exp(-(x - center)**2/2/width**2)
 
 	if pacs:
+		indir = indir + 'pacs/advanced_products/'
 		suffix = '_centralSpaxel_PointSourceCorrected_CorrectedYES_trim_flat_spectrum.txt'
 		[wl_flat,flux_flat,unc_flat] = np.genfromtxt(indir+obj+suffix,dtype='float',skip_header=1).T
 	if spire:
+		indir = indir + 'spire/advanced_products/'
 		suffix = '_spire_corrected_flat_spectrum.txt'
 		[wl_flat,flux_flat] = np.genfromtxt(indir+obj+suffix,dtype='float',skip_header=1).T
+
+	# original unit: um and Jy
+	# convert to um and erg/s/cm2/um
+	flux_flat = flux_flat * c/(wl_flat*1e-4)**2*1e-4 *1e-23
 
 	# spectra in unit of um and Jy
 
@@ -26,21 +32,33 @@ def extract_noise(indir, obj, spire=False, pacs=False, noiselevel=3):
 	flux_lines = np.zeros_like(flux_flat)
 	size = 10
 	for i in range(0, len(fitting['Line'])):
-		if fitting['SNR'][i] < noiselevel:
+		if (fitting['SNR'][i] < noiselevel) or (fitting['Validity'][i] == 0):
 			continue
 		else:
-			# factor?
 			line_gauss = gauss(wl_flat[(wl_flat > fitting['ObsWL(um)'][i]-size*fitting['FWHM(um)'][i]) & (wl_flat < fitting['ObsWL(um)'][i]+size*fitting['FWHM(um)'][i])], \
-				fitting['Str(W/cm2)'][i]/(fitting['FWHM(um)'][i]*1e-4)/(2*np.pi)**0.5 * (fitting['ObsWL(um)'][i]*1e-4)**2/c * 1e7,\
+				fitting['Str(W/cm2)'][i]*1e7/(fitting['FWHM(um)'][i]/2.354)/(2*np.pi)**0.5,\
 				fitting['FWHM(um)'][i]/2.354,\
 				fitting['ObsWL(um)'][i])
 
-			flux_lines[(wl_flat > fitting['ObsWL(um)'][i]-size*fitting['FWHM(um)'][i]) & (wl_flat < fitting['ObsWL(um)'][i]+size*fitting['FWHM(um)'][i])] = line_gauss
+			flux_lines[(wl_flat > fitting['ObsWL(um)'][i]-size*fitting['FWHM(um)'][i]) & (wl_flat < fitting['ObsWL(um)'][i]+size*fitting['FWHM(um)'][i])] = \
+			flux_lines[(wl_flat > fitting['ObsWL(um)'][i]-size*fitting['FWHM(um)'][i]) & (wl_flat < fitting['ObsWL(um)'][i]+size*fitting['FWHM(um)'][i])] + line_gauss
+
+	# write out the noise spectrum
+	foo = open(indir+obj+suffix[0:-17]+'noise.txt','w')
+	foo.write('%16s \t %16s \n' % ('Wave (um)', 'Flux (Jy)'))
+	for i in range(0, len(wl_flat)):
+		foo.write('%16f \t %16f \n' % (wl_flat[i], (flux_flat[i]-flux_lines[i]) * (wl_flat[i]*1e-4)**2*1e4/c * 1e23))
+	foo.close()
+
+	(wl_noise, flux_noise) = np.genfromtxt(indir+obj+suffix[0:-17]+'noise.txt', skip_header=1).T
 
 	import matplotlib.pyplot as plt
-	plt.plot(wl_flat, flux_lines)
-	plt.savefig('/Users/yaolun/test/linesum.pdf', dpi=300, format='pdf', bbox_inches='tight')
+	# plt.plot(wl_flat, flux_lines)
+	# plt.plot(wl_flat, flux_flat-flux_lines+5e-11, alpha=0.5)
+	plt.plot(wl_noise, flux_noise)
+	plt.plot(wl_flat, flux_flat * (wl_flat*1e-4)**2*1e4/c * 1e23, alpha=0.5)
+	plt.savefig('/Users/yaolun/test/noise.pdf', dpi=300, format='pdf', bbox_inches='tight')
 
-indir = '/Users/yaolun/bhr71/fitting/BHR71/pacs/advanced_products/'
-obj = 'BHR71'
-extract_noise(indir, obj, pacs=True)
+# indir = '/Users/yaolun/bhr71/fitting/BHR71/'
+# obj = 'BHR71'
+# extract_noise(indir, obj, spire=True)
