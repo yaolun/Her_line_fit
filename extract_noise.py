@@ -2,6 +2,7 @@ def extract_noise(indir, obj, spire=False, pacs=False, noiselevel=3):
 	import numpy as np
 	from astropy.io import ascii
 	import astropy.constants as const
+	import os
 
 	# constant setup
 	c = const.c.cgs.value
