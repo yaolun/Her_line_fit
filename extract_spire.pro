@@ -36,7 +36,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; get_radec_slw, coord, plot_coord & ra = coord[0,*] & dec = coord[1,*]
 		endif
 		if keyword_set(ssw) then begin
-			pixelname = [ ]
+			pixelname = ['SSWA1','SSWA2','SSWA3','SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3','SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
 			ra_dum = [] & dec_dum = []
 			for ipix = 0, n_elements(pixelname)-1 do begin
 				ra_dum = [ra_dum, ra[where(coordpix eq pixelname[ipix])]]
@@ -194,7 +194,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
     		printf, firstfit, format='((a20,2x),17(a20,2x))',$
     			'Line','LabWL (um)','ObsWL (um)','Sig_Cen (um)','Str(W/cm2'+unit+')','Sig_str(W/cm2'+unit+')','FWHM (um)','Sig_FWHM (um)','Base(W/cm2/um'+unit+')','Noise(W/cm2/um'+unit+')','SNR','E_u (K)','A (s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend'
     	endelse
-    	stop
+
 		for i = 0, n_elements(line_name)-1 do begin
 			if (keyword_set(double_gauss)) and ((where(excluded_line eq line_name[i]))[0] ne -1) then continue
         	; select the baseline
@@ -635,13 +635,21 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endif
 			if keyword_set(flat) then begin
     			openw, flat_sed, name_dum+'_flat_spectrum.txt',/get_lun
-				if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-    			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+				if keyword_set(fx) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+    			if keyword_set(brightness) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 				flat = (flux - continuum_sub) *1d26*1d6*(wl*1d-6)^2/c*1d4
 				for k =0, n_elements(wl)-1 do printf, flat_sed, format='(2(g16.6,2x))',wl[k],flat[k]
 				free_lun, flat_sed
 				close,flat_sed
 			endif
+			openw, noise_sed, name_dum+'_noise_spectrum.txt',/get_lun
+			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+			print_flatnoise = flat_noise *1d26*1d6*(wl*1d-6)^2/c*1d4
+			for k =0, n_elements(wl)-1 do printf, noise_sed, format='(2(g16.6,2x))',wl[k],print_flatnoise[k]
+			free_lun, noise_sed
+			close,noise_sed
+
 			cleanplot,/silent
 			; Plot the results
 			set_plot, 'ps'
@@ -1068,13 +1076,20 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endif
 			if keyword_set(flat) then begin
     			openw, flat_sed, name_dum+'_flat_spectrum.txt',/get_lun
-				if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-    			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+				if keyword_set(fx) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+    			if keyword_set(brightness) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 				flat = (flux - continuum_sub) *1d26*1d6*(wl*1d-6)^2/c*1d4
 				for k =0, n_elements(wl)-1 do printf, flat_sed, format='(2(g16.6,2x))',wl[k],flat[k]
 				free_lun, flat_sed
 				close,flat_sed
 			endif
+			openw, noise_sed, name_dum+'_noise_spectrum.txt',/get_lun
+			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
+			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+			print_flatnoise = flat_noise *1d26*1d6*(wl*1d-6)^2/c*1d4
+			for k =0, n_elements(wl)-1 do printf, noise_sed, format='(2(g16.6,2x))',wl[k],print_flatnoise[k]
+			free_lun, noise_sed
+			close,noise_sed
 
 			; Plot the results
 			set_plot, 'ps'
