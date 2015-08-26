@@ -508,6 +508,9 @@ endif else begin
 				end
 			endcase
 		endfor
+
+		stop
+
 		wl = [wl_b2a, wl_b2b, wl_r1s, wl_r1l]
 		flux = [flux_b2a, flux_b2b, flux_r1s, flux_r1l]
 		std = [std_b2a, std_b2b, std_r1s, std_r1l]
