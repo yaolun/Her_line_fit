@@ -316,6 +316,11 @@ pro get_pacs_1d, outdir=outdir, objname=objname, filename=filename, central9=cen
 	 			 coorddir=coorddir, trim_detail=trim_detail;, wish=wish
 objname = strcompress(objname,/remove_all)
 special_list = ['NGC1333-IRAS2A','Serpens-SMM1','G327-06','DR21(OH)','NGC7538-IRS1','NGC6334-I','G34.3+0.1']
+
+if keyword_set(central9) then name = '_central9Spaxels_PointSourceCorrected'
+if keyword_set(centralyes) then name = '_centralSpaxel_PointSourceCorrected_CorrectedYES'
+if keyword_set(centralno) then name = '_centralSpaxel_PointSourceCorrected_CorrectedNO'
+
 if (where(special_list eq objname))[0] eq -1 then begin
 	
 
@@ -413,9 +418,7 @@ if keyword_set(general) then begin
 	flux = flux[sort(wl)]
 	std = std[sort(wl)]
 	wl = wl[sort(wl)]
-	if keyword_set(central9) then name = '_central9Spaxels_PointSourceCorrected'
-	if keyword_set(centralyes) then name = '_centralSpaxel_PointSourceCorrected_CorrectedYES'
-	if keyword_set(centralno) then name = '_centralSpaxel_PointSourceCorrected_CorrectedNO'
+
 	set_plot, 'ps'
 	!p.font=0
 	loadct,13,/silent
@@ -439,6 +442,7 @@ endif else begin
 	wl_b2b = [] & flux_b2b = [] & std_b2b = []
 	wl_r1s = [] & flux_r1s = [] & std_r1s = []
 	wl_r1l = [] & flux_r1l = [] & std_r1l = []
+
 	if not keyword_set(linescan) then begin
 		for i = 0, n_elements(filename)-1 do begin
 			data = readfits(filename[i], hdr, exten=1,/silent)
@@ -510,9 +514,6 @@ endif else begin
 		wl = wl[where(flux gt 0)]
 		std = std[where(flux gt 0)]
 		flux = flux[where(flux gt 0)]
-		if keyword_set(central9) then name = '_central9Spaxels_PointSourceCorrected'
-		if keyword_set(centralyes) then name = '_centralSpaxel_PointSourceCorrected_CorrectedYES'
-		if keyword_set(centralno) then name = '_centralSpaxel_PointSourceCorrected_CorrectedNO'
 		set_plot, 'ps'
 		!p.font=0
 		loadct,13,/silent
