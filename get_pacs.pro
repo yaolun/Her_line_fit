@@ -311,7 +311,9 @@ endif else begin
 endelse
 end
 
-pro get_pacs_1d, outdir=outdir, objname=objname, filename=filename, central9=central9, centralyes=centralyes, centralno=centralno, linescan=linescan, ra=ra, dec=dec, general=general, datadir=datadir, coorddir=coorddir;, wish=wish
+pro get_pacs_1d, outdir=outdir, objname=objname, filename=filename, central9=central9, centralyes=centralyes,$
+	 			 centralno=centralno, linescan=linescan, ra=ra, dec=dec, general=general, datadir=datadir,$
+	 			 coorddir=coorddir, trim_detail=trim_detail;, wish=wish
 objname = strcompress(objname,/remove_all)
 special_list = ['NGC1333-IRAS2A','Serpens-SMM1','G327-06','DR21(OH)','NGC7538-IRS1','NGC6334-I','G34.3+0.1']
 if (where(special_list eq objname))[0] eq -1 then begin
@@ -455,21 +457,49 @@ endif else begin
 					flux_b2a = flux_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
 					std_b2a = std_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
 					wl_b2a = wl_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
+					if keyword_set(trim_detail) then begin
+						openw, lun, outdir+objname+name+'_b2a.txt', /get_lun
+						printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
+						for i = 0, n_elements(wl_dum)-1 do printf, lun, format='(3(g16.6,2X))',wl_dum[i],flux_dum[i],std_dum[i]
+						free_lun, lun
+						close, lun
+					endif
 				end
 				band eq 'B2B': begin
 					flux_b2b = flux_dum[where(wl_dum ge 72.3 and wl_dum le 95.05)]
 					std_b2b = std_dum[where(wl_dum ge 72.3 and wl_dum le 95.05)]
 					wl_b2b = wl_dum[where(wl_dum ge 72.3 and wl_dum le 95.05)]
+					if keyword_set(trim_detail) then begin
+						openw, lun, outdir+objname+name+'_b2b.txt', /get_lun
+						printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
+						for i = 0, n_elements(wl_dum)-1 do printf, lun, format='(3(g16.6,2X))',wl_dum[i],flux_dum[i],std_dum[i]
+						free_lun, lun
+						close, lun
+					endif
 				end
 				band eq 'R1': begin
 					if min(wl_dum) lt 130 then begin
 						flux_r1s = flux_dum[where(wl_dum ge 103 and wl_dum le 143)]
 						std_r1s = std_dum[where(wl_dum ge 103 and wl_dum le 143)]
 						wl_r1s = wl_dum[where(wl_dum ge 103 and wl_dum le 143)]
+						if keyword_set(trim_detail) then begin
+							openw, lun, outdir+objname+name+'_r1s.txt', /get_lun
+							printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
+							for i = 0, n_elements(wl_dum)-1 do printf, lun, format='(3(g16.6,2X))',wl_dum[i],flux_dum[i],std_dum[i]
+							free_lun, lun
+							close, lun
+						endif
 					endif else begin
 						flux_r1l = flux_dum[where(wl_dum ge 143 and wl_dum le 190.31)]
 						std_r1l = std_dum[where(wl_dum ge 143 and wl_dum le 190.31)]
 						wl_r1l = wl_dum[where(wl_dum ge 143 and wl_dum le 190.31)]
+						if keyword_set(trim_detail) then begin
+							openw, lun, outdir+objname+name+'_r1l.txt', /get_lun
+							printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
+							for i = 0, n_elements(wl_dum)-1 do printf, lun, format='(3(g16.6,2X))',wl_dum[i],flux_dum[i],std_dum[i]
+							free_lun, lun
+							close, lun
+						endif
 					endelse
 				end
 			endcase

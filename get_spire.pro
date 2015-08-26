@@ -1,4 +1,4 @@
-pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, brightness=brightness,fx=fx
+pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, brightness=brightness,fx=fx,trim_detail=trim_detail
 
 	if file_test(outdir) eq 0 then file_mkdir, outdir
 
@@ -28,6 +28,23 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
     		flux_slw = tbget(hdr_slw, data_slw, 2);*(!PI/180/3600)^2*1e26                                   ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
 			flux_ssw = tbget(hdr_ssw, data_ssw, 2);*(!PI/180/3600)^2*1e26                                   ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
 		endif
+        ; option for writing out the untrimmed spectra
+        if keyword_set(trim_detail) do begin
+            ; SSW
+            openw, lun, outdir+object+'_spire_corrected_ssw.txt', /get_lun
+            if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+            if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+            for k = 0, n_elements(wl_ssw)-1 do printf, lun, format = '(2(g12.6,2X))', wl_ssw[k], flux_ssw[k]
+            free_lun, lun
+            close, lun
+            ; SSW
+            openw, lun, outdir+object+'_spire_corrected_slw.txt', /get_lun
+            if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
+            if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wave (um)', 'I_nu(Jy/as2)'
+            for k = 0, n_elements(wl_slw)-1 do printf, lun, format = '(2(g12.6,2X))', wl_slw[k], flux_slw[k]
+            free_lun, lun
+            close, lun
+        endif
 		; Trim the spectrum
 		flux_ssw = flux_ssw[where(wl_ssw le 304 and wl_ssw gt 195)]
 		wl_ssw = wl_ssw[where(wl_ssw le 304 and wl_ssw gt 195)]
