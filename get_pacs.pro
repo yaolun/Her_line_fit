@@ -464,7 +464,7 @@ endif else begin
 					if keyword_set(trim_detail) then begin
 						openw, print_b2a, outdir+objname+name+'_b2a.txt', /get_lun
 						printf, print_b2a, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-						for i = 0, n_elements(wl_dum)-1 do printf, print_b2a, format='(3(g16.6,2X))',wl_dum[i],flux_dum[i],std_dum[i]
+						for j = 0, n_elements(wl_dum)-1 do printf, print_b2a, format='(3(g16.6,2X))',wl_dum[j],flux_dum[j],std_dum[j]
 						free_lun, print_b2a
 						close, print_b2a
 					endif
@@ -476,7 +476,7 @@ endif else begin
 					if keyword_set(trim_detail) then begin
 						openw, print_b2b, outdir+objname+name+'_b2b.txt', /get_lun
 						printf, print_b2b, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-						for i = 0, n_elements(wl_dum)-1 do printf, print_b2b, format='(3(g16.6,2X))',wl_dum[i],flux_dum[i],std_dum[i]
+						for j = 0, n_elements(wl_dum)-1 do printf, print_b2b, format='(3(g16.6,2X))',wl_dum[j],flux_dum[j],std_dum[j]
 						free_lun, print_b2b
 						close, print_b2b
 					endif
@@ -489,7 +489,7 @@ endif else begin
 						if keyword_set(trim_detail) then begin
 							openw, print_r1s, outdir+objname+name+'_r1s.txt', /get_lun
 							printf, print_r1s, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-							for i = 0, n_elements(wl_dum)-1 do printf, print_r1s, format='(3(g16.6,2X))',wl_dum[i],flux_dum[i],std_dum[i]
+							for j = 0, n_elements(wl_dum)-1 do printf, print_r1s, format='(3(g16.6,2X))',wl_dum[j],flux_dum[j],std_dum[j]
 							free_lun, print_r1s
 							close, print_r1s
 						endif
@@ -500,7 +500,7 @@ endif else begin
 						if keyword_set(trim_detail) then begin
 							openw, print_r1l, outdir+objname+name+'_r1l.txt', /get_lun
 							printf, print_r1l, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-							for i = 0, n_elements(wl_dum)-1 do printf, print_r1l, format='(3(g16.6,2X))',wl_dum[i],flux_dum[i],std_dum[i]
+							for j = 0, n_elements(wl_dum)-1 do printf, print_r1l, format='(3(g16.6,2X))',wl_dum[j],flux_dum[j],std_dum[j]
 							free_lun, print_r1l
 							close, print_r1l
 						endif
