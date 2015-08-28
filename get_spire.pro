@@ -29,7 +29,7 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
 			flux_ssw = tbget(hdr_ssw, data_ssw, 2);*(!PI/180/3600)^2*1e26                                   ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
 		endif
         ; option for writing out the untrimmed spectra
-        if keyword_set(trim_detail) do begin
+        if keyword_set(trim_detail) then begin
             ; SSW
             openw, lun, outdir+object+'_spire_corrected_ssw.txt', /get_lun
             if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wave (um)', 'Flux (Jy)'
