@@ -46,10 +46,14 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
             close, lun
         endif
 		; Trim the spectrum
-		flux_ssw = flux_ssw[where(wl_ssw le 304 and wl_ssw gt 195)]
-		wl_ssw = wl_ssw[where(wl_ssw le 304 and wl_ssw gt 195)]
-		flux_slw = flux_slw[where(wl_slw gt 304)]
-		wl_slw = wl_slw[where(wl_slw gt 304)]
+        ; flux_ssw = flux_ssw[where(wl_ssw le 304 and wl_ssw gt 195)]
+        ; wl_ssw = wl_ssw[where(wl_ssw le 304 and wl_ssw gt 195)]
+        ; flux_slw = flux_slw[where(wl_slw gt 304)]
+        ; wl_slw = wl_slw[where(wl_slw gt 304)]
+        flux_ssw = flux_ssw[where(wl_ssw le 310 and wl_ssw gt 195)]
+        wl_ssw = wl_ssw[where(wl_ssw le 310 and wl_ssw gt 195)]
+        flux_slw = flux_slw[where(wl_slw gt 310)]
+        wl_slw = wl_slw[where(wl_slw gt 310)]
 		flux_ssw = flux_ssw[sort(wl_ssw)]
 		wl_ssw = wl_ssw[sort(wl_ssw)]
 		flux_slw = flux_slw[sort(wl_slw)]
@@ -62,10 +66,14 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
 		flux = tbget(hdr,data,2)
 		flux = flux[sort(wl)]
 		wl = wl[sort(wl)]
-		wl_ssw = wl[where(wl gt 195 and wl le 304)]
-		flux_ssw = flux[where(wl gt 195 and wl le 304)]
-		wl_slw = wl[where(wl gt 304)]
-		flux_slw = wl[where(wl gt 304)]
+		; wl_ssw = wl[where(wl gt 195 and wl le 304)]
+		; flux_ssw = flux[where(wl gt 195 and wl le 304)]
+		; wl_slw = wl[where(wl gt 304)]
+		; flux_slw = wl[where(wl gt 304)]
+        wl_ssw = wl[where(wl gt 195 and wl le 310)]
+        flux_ssw = flux[where(wl gt 195 and wl le 310)]
+        wl_slw = wl[where(wl gt 310)]
+        flux_slw = wl[where(wl gt 310)]
 	endelse
     
     ; Sort the spectrum
@@ -151,8 +159,10 @@ for i =2, 20 do begin
     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_slw                            ;convert W m-2 Hz-1 sr-1 to Jy
     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 304)]
-    wl = wl[where(wl gt 304)]
+    ; flux = flux[where(wl gt 304)]
+    ; wl = wl[where(wl gt 304)]
+    flux = flux[where(wl gt 310)]
+    wl = wl[where(wl gt 310)]
     flux = flux[sort(wl)]
     wl = wl[sort(wl)]
     ; plot spaxel spectrum
@@ -171,8 +181,10 @@ for i = 21, 55 do begin
     wl = 2.998e10/tbget(hdr, data, 1)*1e-5
     if keyword_set(fx) then flux = tbget(hdr,data, 2)*(!PI/180/3600)^2*1e26*pix_ssw                            ;convert W m-2 Hz-1 sr-1 to Jy
     if keyword_set(brightness) then flux = tbget(hdr, data, 2)*(!PI/180/3600)^2*1e26                           ;convert W m-2 Hz-1 sr-1 to Jy arcsec-2
-    flux = flux[where(wl gt 195 and wl le 304)]
-    wl = wl[where(wl gt 195 and wl le 304)]
+    ; flux = flux[where(wl gt 195 and wl le 304)]
+    ; wl = wl[where(wl gt 195 and wl le 304)]
+    flux = flux[where(wl gt 195 and wl le 310)]
+    wl = wl[where(wl gt 195 and wl le 310)]
     flux = flux[sort(wl)]
     wl = wl[sort(wl)]
     ; plot spaxel spectrum
