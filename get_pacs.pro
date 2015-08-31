@@ -331,10 +331,15 @@ if file_test(coorddir+objname+'_pacs_pixel13_os8_sf7_coord.txt') eq 1 then begin
 	dec = mean(dec)
 endif else begin
 	print, 'Make sure you have extracted the cube products'
-	read, coordfile, PROMPT='Where is the coordinate file (cube)?'
-	readcol, coordfile, format='D,D,D', wl_coord, ra, dec, /silent
-	ra = mean(ra)
-	dec = mean(dec)
+	read, coordfile, PROMPT='Where is the coordinate file (cube)? (type 0 to escape)'
+	if coordfile eq 0 then begin
+		ra = 0.0
+		dec = 0.0
+	endif else begin
+		readcol, coordfile, format='D,D,D', wl_coord, ra, dec, /silent
+		ra = mean(ra)
+		dec = mean(dec)
+	endelse
 endelse
 if keyword_set(general) then begin
 	hdr = headfits(filename[0],/silent)
