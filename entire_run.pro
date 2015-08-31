@@ -179,9 +179,12 @@ for i = 2, 2 do begin
 	!p.font=0
 	loadct,13,/silent
 	!p.thick=3 & !x.thick=3 & !y.thick=3
-   device, filename = outdir+obj[i]+'/spire/data/'+obj[i]+'_spire_corrected.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
-   plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)'
+    device, filename = outdir+obj[i]+'/spire/data/'+obj[i]+'_spire_corrected.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
+    plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)' ,/nodata
+    oplot, wl[where(wl gt 195 and wl le 310)], flux[where(wl gt 195 and wl le 310)], color=250, thick=2
+    oplot, wl[where(wl gt 310)], flux[where(wl gt 310)], color=60, thich=2
 	al_legend, [obj[i]],textcolor=[0],/left
+	al_legend, ['SPIRE-SSW','SPIRE-SLW'],textcolors=[60,250],/right
 	device, /close_file,decomposed=1
 	!p.multi = 0 
 	if not keyword_set(local) then begin
