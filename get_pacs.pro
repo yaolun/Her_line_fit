@@ -331,7 +331,8 @@ if file_test(coorddir+objname+'_pacs_pixel13_os8_sf7_coord.txt') eq 1 then begin
 	dec = mean(dec)
 endif else begin
 	print, 'Make sure you have extracted the cube products'
-	read, coordfile, PROMPT='Where is the coordinate file (cube)? (type 0 to escape)'
+	; read, coordfile, PROMPT='Where is the coordinate file (cube)? (type 0 to escape)'
+	coordfile = 0
 	if coordfile eq 0 then begin
 		ra = 0.0
 		dec = 0.0
@@ -524,7 +525,7 @@ endif else begin
 		!p.font=0
 		loadct,13,/silent
 		!p.thick=3 & !x.thick=3 & !y.thick=3
-		device, filename = outdir+objname+name+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
+		device, filename = outdir+objname+name+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 		plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = '!3Flux (Jy)!3',/nodata
 		;if objname eq 'EC82' then stop
 		if n_elements(wl_b2a) gt 1 then oplot, wl_b2a, flux_b2a, color=60 , thick=2   ;blue

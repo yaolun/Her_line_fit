@@ -90,7 +90,7 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
 	!p.font=0
 	loadct,13,/silent
 	!p.thick=3 & !x.thick=3 & !y.thick=3
-    device, filename = outdir+object+'_spire_corrected.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
+    device, filename = outdir+object+'_spire_corrected.eps', /helvetica, /portrait, /encapsulated, font_size = 12, isolatin = 1, decomposed = 0, /color
     plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)',/nodata
 	oplot, wl_slw, flux_slw, color=250, thick=2
 	oplot, wl_ssw, flux_ssw, color=60, thick=2
