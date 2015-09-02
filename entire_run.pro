@@ -103,51 +103,49 @@ printf, gff, format='(20(a20,2x))',$
 free_lun, gff
 close, gff
 
+; everything in one ASCII file
+openw, all, outdir+outname+'_lines.txt',/get_lun
+printf, all, format='(20(a20,2x))',$
+     'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2/as2)','Sig_str(W/cm2/as2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um/as2)','Noise(W/cm2/um/as2)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
+free_lun, all
+close, all
+
 ; Run through every project and reduction
 
 ;DIGIT
 ;
 proj = 'digit'
 
-; run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
-; run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
 
-run_digit,indir=digit_dir,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-
-; run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-; run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
 
 
 ;FOOSH
 proj = 'foosh'	
 
-; run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
-; run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
 
-run_digit,indir=foosh_dir,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-run_digit,indir=foosh_dir,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-
-; run_digit,indir=foosh_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-; run_digit,indir=foosh_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=foosh_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=foosh_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
 
 
 ;WISH
 proj='wish'
 
-; run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
-; run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
 
-run_digit,indir=digit_dir,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-
-; run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-; run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
 
 
 ;COPS
-; run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/corrected,/cops,no_plot=no_plot,print_all=outname+'_spire_1d',/refine,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
-; run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/cube,/cops,no_plot=no_plot,print_all=outname+'_spire_cube',/refine,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/corrected,/cops,no_plot=no_plot,print_all=outname+'_spire_1d',/refine,/double_gauss,/FWD,obj_flag=obj_flag,localnoise=localnoise
+run_cops,indir=cops_dir,outdir=outdir,localbaseline=10,global_noise=20,noiselevel=3,/cube,/cops,no_plot=no_plot,print_all=outname+'_spire_cube',/refine,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
 
 
 ;stop
@@ -182,7 +180,7 @@ for i = 2, 2 do begin
     device, filename = outdir+obj[i]+'/spire/data/'+obj[i]+'_spire_corrected.eps', /helvetica, /portrait, /encapsulated, font_size = 8, isolatin = 1, decomposed = 0, /color
     plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)' ,/nodata
     oplot, wl[where(wl gt 195 and wl le 310)], flux[where(wl gt 195 and wl le 310)], color=250, thick=2
-    oplot, wl[where(wl gt 310)], flux[where(wl gt 310)], color=60, thich=2
+    oplot, wl[where(wl gt 310)], flux[where(wl gt 310)], color=60, thick=2
 	al_legend, [obj[i]],textcolor=[0],/left
 	al_legend, ['SPIRE-SSW','SPIRE-SLW'],textcolors=[60,250],/right
 	device, /close_file,decomposed=1

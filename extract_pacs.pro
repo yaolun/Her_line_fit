@@ -722,6 +722,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 				free_lun, gff
 				close, gff
+				; ASCII file that has everything
+				openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
+				printf, all, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
+            		object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
+					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
+				free_lun, all
+				close, all
 			endif
      	endif else begin
      		printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
@@ -734,6 +741,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 				free_lun, gff
 				close, gff
+				; ASCII file that has everything
+				openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
+				printf, all, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
+            		object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
+					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
+				free_lun, all
+				close, all
 			endif
      	endelse
     endfor
@@ -1345,6 +1359,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 					free_lun, gff
 					close, gff
+					; ASCII file that has everything
+					openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
+					printf, all, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
+            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
+						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
+					free_lun, all
+					close, all
 				endif
 			endif else begin
 				printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
@@ -1358,6 +1379,13 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 					free_lun, gff
 					close, gff
+					; ASCII file that has everything
+					openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
+					printf, all, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
+            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line], noise_n[line], snr_n[line],$
+						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
+					free_lun, all
+					close, all
 				endif
 			endelse
 		endfor

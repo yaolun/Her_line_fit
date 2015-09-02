@@ -475,8 +475,12 @@ if not keyword_set(baseline) then begin
             if total(line_str)/noise gt 2 then msg = 'over_2sigma' else msg = ''
     		print, 'Double Gaussian fitting fail'
     		print, errmsg
-    		stop
-    		pause
+            if strmatch(outdir, '*EC82*', /fold_case) eq 1 then begin
+                print, 'EC82 failed.'
+            endif else begin
+                stop
+    		    pause
+            endelse
             ;msg = ''
         endif
         if not keyword_set(no_plot) then begin
