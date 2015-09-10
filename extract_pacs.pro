@@ -22,7 +22,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     if keyword_set(current_pix) then readcol, indir+filename+'_coord.txt', format='D,D,D', wl_coord, ra_tot, dec_tot, /silent
     ; Get rid off the NaN
     wl = wl[where(finite(flux) eq 1)]
-    std = std[where(finite(flux) eq 1)]
+    ; std = std[where(finite(flux) eq 1)]
+    std = flux[where(finite(flux) eq 1)] * 0
     flux = flux[where(finite(flux) eq 1)]
     ; Convert the flux to appropriate unit
     c = 2.998d8
