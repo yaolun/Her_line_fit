@@ -100,8 +100,8 @@ if keyword_set(general) then begin
 	for x = 0, 4 do begin
 		for y = 0, 4 do begin
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.txt',/get_lun
-			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)' 
-			for dum = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.10,2x))',wl[dum],flux[x,y,dum],std[x,y,dum]
+			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)' 
+			for dum = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.10,2x))',wl[dum],flux[x,y,dum];,std[x,y,dum]
 			free_lun, lun
 			close, lun
 			
@@ -234,20 +234,21 @@ endif else begin
 			dec = []
 			; Write into ACSII file
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.txt',/get_lun
+			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'
 			if n_elements(wl_b2a) ne 0 then begin
-				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(3(g16.10,2x))',wl_b2a[x,y,dum],flux_b2a[x,y,dum],std_b2a[x,y,dum]
+				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(2(g16.10,2x))',wl_b2a[x,y,dum],flux_b2a[x,y,dum]; ,std_b2a[x,y,dum]
 				wl = [wl,reform(wl_b2a[x,y,*])] & flux = [flux,reform(flux_b2a[x,y,*])] & std = [std,reform(std_b2a[x,y,*])]
 			endif
 			if n_elements(wl_b2b) ne 0 then begin
-				for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(3(g16.10,2x))',wl_b2b[x,y,dum],flux_b2b[x,y,dum],std_b2b[x,y,dum]
+				for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(2(g16.10,2x))',wl_b2b[x,y,dum],flux_b2b[x,y,dum]; ,std_b2b[x,y,dum]
 				wl = [wl,reform(wl_b2b[x,y,*])] & flux = [flux,reform(flux_b2b[x,y,*])] & std = [std,reform(std_b2b[x,y,*])]
 			endif
 			if n_elements(wl_r1s) ne 0 then begin
-				for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(3(g16.10,2x))',wl_r1s[x,y,dum],flux_r1s[x,y,dum],std_r1s[x,y,dum]
+				for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(2(g16.10,2x))',wl_r1s[x,y,dum],flux_r1s[x,y,dum]; ,std_r1s[x,y,dum]
 				wl = [wl,reform(wl_r1s[x,y,*])] & flux = [flux,reform(flux_r1s[x,y,*])] & std = [std,reform(std_r1s[x,y,*])]
 			endif
 			if n_elements(wl_r1l) ne 0 then begin
-				for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(3(g16.10,2x))',wl_r1l[x,y,dum],flux_r1l[x,y,dum],std_r1l[x,y,dum]
+				for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(2(g16.10,2x))',wl_r1l[x,y,dum],flux_r1l[x,y,dum]; ,std_r1l[x,y,dum]
 				wl = [wl,reform(wl_r1l[x,y,*])] & flux = [flux,reform(flux_r1l[x,y,*])] & std = [std,reform(std_r1l[x,y,*])]
 			endif
 			free_lun, lun
@@ -434,8 +435,8 @@ if keyword_set(general) then begin
 	device, /close_file,decomposed=1
 	!p.multi = 0
 	openw, lun, outdir+objname+name+'_trim.txt',/get_lun
-	printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-	for i = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2X))',wl[i],flux[i],std[i]
+	printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+	for i = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2X))',wl[i],flux[i]; ,std[i]
 	free_lun, lun
 	close, lun
 endif else begin
@@ -469,8 +470,8 @@ endif else begin
 					wl_b2a = wl_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
 					if keyword_set(trim_detail) then begin
 						openw, print_b2a, outdir+objname+name+'_b2a.txt', /get_lun
-						printf, print_b2a, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-						for j = 0, n_elements(wl_dum)-1 do printf, print_b2a, format='(3(g16.6,2X))',wl_dum[j],flux_dum[j],std_dum[j]
+						printf, print_b2a, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+						for j = 0, n_elements(wl_dum)-1 do printf, print_b2a, format='(2(g16.6,2X))',wl_dum[j],flux_dum[j];,std_dum[j]
 						free_lun, print_b2a
 						close, print_b2a
 					endif
@@ -481,8 +482,8 @@ endif else begin
 					wl_b2b = wl_dum[where(wl_dum ge 72.3 and wl_dum le 95.05)]
 					if keyword_set(trim_detail) then begin
 						openw, print_b2b, outdir+objname+name+'_b2b.txt', /get_lun
-						printf, print_b2b, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-						for j = 0, n_elements(wl_dum)-1 do printf, print_b2b, format='(3(g16.6,2X))',wl_dum[j],flux_dum[j],std_dum[j]
+						printf, print_b2b, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+						for j = 0, n_elements(wl_dum)-1 do printf, print_b2b, format='(2(g16.6,2X))',wl_dum[j],flux_dum[j];,std_dum[j]
 						free_lun, print_b2b
 						close, print_b2b
 					endif
@@ -494,8 +495,8 @@ endif else begin
 						wl_r1s = wl_dum[where(wl_dum ge 103 and wl_dum le 143)]
 						if keyword_set(trim_detail) then begin
 							openw, print_r1s, outdir+objname+name+'_r1s.txt', /get_lun
-							printf, print_r1s, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-							for j = 0, n_elements(wl_dum)-1 do printf, print_r1s, format='(3(g16.6,2X))',wl_dum[j],flux_dum[j],std_dum[j]
+							printf, print_r1s, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+							for j = 0, n_elements(wl_dum)-1 do printf, print_r1s, format='(2(g16.6,2X))',wl_dum[j],flux_dum[j];,std_dum[j]
 							free_lun, print_r1s
 							close, print_r1s
 						endif
@@ -505,8 +506,8 @@ endif else begin
 						wl_r1l = wl_dum[where(wl_dum ge 143 and wl_dum le 190.31)]
 						if keyword_set(trim_detail) then begin
 							openw, print_r1l, outdir+objname+name+'_r1l.txt', /get_lun
-							printf, print_r1l, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-							for j = 0, n_elements(wl_dum)-1 do printf, print_r1l, format='(3(g16.6,2X))',wl_dum[j],flux_dum[j],std_dum[j]
+							printf, print_r1l, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+							for j = 0, n_elements(wl_dum)-1 do printf, print_r1l, format='(2(g16.6,2X))',wl_dum[j],flux_dum[j];,std_dum[j]
 							free_lun, print_r1l
 							close, print_r1l
 						endif
@@ -536,8 +537,8 @@ endif else begin
 		device, /close_file,decomposed=1
 		!p.multi = 0
 		openw, lun, outdir+objname+name+'_trim.txt',/get_lun
-		printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-		for i = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2X))',wl[i],flux[i],std[i]
+		printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)';, 'Error(Jy)'
+		for i = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2X))',wl[i],flux[i];,std[i]
 		free_lun, lun
 		close, lun
 	endif
@@ -654,8 +655,8 @@ if (where(special_list eq objname))[0] ne -1 then begin
 		if keyword_set(centralno) then name = '_centralSpaxel_PointSourceCorrected_CorrectedNO'
 		
 		openw, lun, outdir+objname+name+'_trim.txt',/get_lun
-		printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'Flux(Jy)', 'Error(Jy)'
-		for i = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.6,2X))',wl[i],flux[i],std[i]
+		printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+		for i = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2X))',wl[i],flux[i]; ,std[i]
 		free_lun, lun
 		close, lun
 	endif
