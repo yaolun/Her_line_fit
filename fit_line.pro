@@ -94,20 +94,11 @@ if not keyword_set(baseline) then begin
     ; define the initial guess of the line profile
     ;--------------------------------------------
     ; First, construct the structure of the constrain.  Here to constrain that the width of the Gaussian cannot larger than the range of the wavelength put into this program
-    ; r = -700*(median(wl)-200)/470+1000
-    ; dl = median(wl)/r  resolution element
-    ; if not keyword_set(fixed_width) then begin
     if max(wl) gt 200 then begin
         ; instrument resolution 1.2 GHz and plus apodize 1.5 factor in the pipeline
         ; FWHM = 1.207*delta_sigma  (from silde: spire dp webinar by Nanyao Lu)
         dl = 1.5*1.207*(1.2*1e9*(line[0]*1e-4)^2/c)/2.354 * 1e4
     endif else begin
-        ;     dl = 0.1/2.354
-        ; endif else begin
-        ;     dl = 0.03/2.354
-        ; endelse
-    ;Use the theoretical value of line width
-    ; endif else begin
         ; the width in these files are the FWHM.
         readcol, '~/bhr71/data/spectralresolution_order1.txt', format='D,D', wl1, res1,/silent
         readcol, '~/bhr71/data/spectralresolution_order2.txt', format='D,D', wl2, res2,/silent
@@ -127,7 +118,9 @@ if not keyword_set(baseline) then begin
         	endif
         endif
     endelse
-    ; endelse
+    ; Calculate the over sample rate
+    over_sample = dl/mean(wl[1:-1]-wl[0:-2])
+;    print, 'over_sample', over_sample
 
     ;-------------------------------------------e
     ;For single Gaussian fit
@@ -257,7 +250,7 @@ if not keyword_set(baseline) then begin
             gauss_fine = height*exp(-(fine_wl-cen_wl)^2/2/p[2]^2)
             base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
             residual = flux - gauss
-            noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[2]+5*dl)])
+            noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[2]+5*dl)]) * (over_sample)^0.5
             if keyword_set(global_noise) then begin
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
@@ -273,7 +266,7 @@ if not keyword_set(baseline) then begin
                 comb_noise_wl = [wl[indl], global_noise[indb,0]]
                 comb_noise = comb_noise[sort(comb_noise_wl)]
                 comb_noise_wl = comb_noise_wl[sort(comb_noise_wl)]
-                noise = stddev(comb_noise)
+                noise = stddev(comb_noise) * (over_sample)^0.5
             	; noise = stddev(global_noise[*,1])
                 ; Use Eq. 4.57 from Robinson's note
                 ; if n_elements(global_noise[0,*]) eq 3 then begin
@@ -318,7 +311,7 @@ if not keyword_set(baseline) then begin
             gauss_fine = height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)
             base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
             residual = flux - gauss
-            noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[5]+5*dl)])            ; if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
+            noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[5]+5*dl)]) * (over_sample)^0.5            ; if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
             if keyword_set(global_noise) then begin
                 ; stich the residual and global_noise together
                 ; Take the residual under the line area and use the global_noise at other place
@@ -331,7 +324,7 @@ if not keyword_set(baseline) then begin
                 comb_noise_wl = [wl[indl], global_noise[indb,0]]
                 comb_noise = comb_noise[sort(comb_noise_wl)]
                 comb_noise_wl = comb_noise_wl[sort(comb_noise_wl)]
-                noise = stddev(comb_noise)
+                noise = stddev(comb_noise) * (over_sample)^0.5
                 ; noise = stddev(global_noise[*,1])
                 ; Use Eq. 4.57 from Robinson's note
                 ; if n_elements(global_noise[0,*]) eq 3 then begin

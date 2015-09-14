@@ -891,7 +891,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		free_lun, flat_sed
     		close,flat_sed
     	endif
-	    openw, noise_sed, outdir+filename+'_noise_spectrum.txt',/get_lun
+	    openw, noise_sed, outdir+filename+'_residual_spectrum.txt',/get_lun
 		printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)';,'Uncertainty (Jy)'
 		print_flatnoise = flat_noise*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
 		; stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
@@ -1456,7 +1456,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		free_lun, flat_sed
     		close,flat_sed
     	endif
-		openw, noise_sed, outdir+filename+'_noise_spectrum.txt',/get_lun
+		openw, noise_sed, outdir+filename+'_residual_spectrum.txt',/get_lun
 		printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)';,'Uncertainty (Jy)'
 		print_flatnoise = flat_noise *1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
 		; stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23

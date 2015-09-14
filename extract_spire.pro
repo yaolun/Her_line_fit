@@ -656,7 +656,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				free_lun, flat_sed
 				close,flat_sed
 			endif
-			openw, noise_sed, name_dum+'_noise_spectrum.txt',/get_lun
+			openw, noise_sed, name_dum+'_residual_spectrum.txt',/get_lun
 			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
 			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 			print_flatnoise = flat_noise *1d26*1d6*(wl*1d-6)^2/c*1d4
@@ -1111,7 +1111,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				free_lun, flat_sed
 				close,flat_sed
 			endif
-			openw, noise_sed, name_dum+'_noise_spectrum.txt',/get_lun
+			openw, noise_sed, name_dum+'_residual_spectrum.txt',/get_lun
 			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
 			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
 			print_flatnoise = flat_noise *1d26*1d6*(wl*1d-6)^2/c*1d4
