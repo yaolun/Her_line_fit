@@ -16,12 +16,14 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		no_plot = 0
 	endelse
     ; The path to the data that you want to fit.  wavelength in um and flux in Jy.
-    readcol, indir+filename+'.txt', format='D,D,D', wl, flux, std,/silent
+    ; readcol, indir+filename+'.txt', format='D,D,D', wl, flux, std,/silent
+    readcol, indir+filename+'.txt', format='D,D', wl, flux,/silent
     ; Read the corrdinates information if we are fitting data cube.
     if keyword_set(current_pix) then readcol, indir+filename+'_coord.txt', format='D,D,D', wl_coord, ra_tot, dec_tot, /silent
     ; Get rid off the NaN
     wl = wl[where(finite(flux) eq 1)]
-    std = std[where(finite(flux) eq 1)]
+    ; std = std[where(finite(flux) eq 1)]
+    std = flux[where(finite(flux) eq 1)] * 0
     flux = flux[where(finite(flux) eq 1)]
     ; Convert the flux to appropriate unit
     c = 2.998d8
