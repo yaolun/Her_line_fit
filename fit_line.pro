@@ -119,7 +119,12 @@ if not keyword_set(baseline) then begin
         endif
     endelse
     ; Calculate the over sample rate
-    over_sample = dl/mean(wl[1:-1]-wl[0:-2])
+    if n_elements(wl) le 1 then begin
+        ; if wl point equal to 1 or fewer, fitting cannot be proceded.  over_sample is meaningless.
+        over_sample = 1
+    endif else begin
+        over_sample = dl/mean(wl[1:-1]-wl[0:-2])
+    endelse
 ;    print, 'over_sample', over_sample
 
     ;-------------------------------------------e

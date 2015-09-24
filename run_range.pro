@@ -21,9 +21,9 @@ if not keyword_set(FWD) then tic
 if not keyword_set(outdir) then outdir = indir
 if file_test(outdir) eq 0 then file_mkdir, outdir
 if keyword_set(no_plot) then begin
-	no_plot = 1
+    no_plot = 1
 endif else begin
-	no_plot = 0
+	 no_plot = 0
 endelse
 
 objname = []
@@ -32,86 +32,86 @@ if keyword_set(cube) then suffix = 'os8_sf7'
 if keyword_set(jitter) then word2 = suffix+'.fits'
 if keyword_set(nojitter) then word2 = suffix+'_nojitter.fits'
 case 1 of
-	keyword_set(central9): search_word = '*central9Spaxels_PointSourceCorrected_slice_00*'+word2
-	keyword_set(centralyes): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3YES_slice_00*'+word2
-	keyword_set(centralno): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3NO_slice_00*'+word2
-	keyword_set(cube): search_word = 'OBSID*finalcubes_slice00*'+word2
+  	keyword_set(central9): search_word = '*central9Spaxels_PointSourceCorrected_slice_00*'+word2
+  	keyword_set(centralyes): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3YES_slice_00*'+word2
+  	keyword_set(centralno): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3NO_slice_00*'+word2
+  	keyword_set(cube): search_word = 'OBSID*finalcubes_slice00*'+word2
 endcase
 
 ; Get the data listing
 ;
 filelist = file_search(indir, search_word)
 if n_elements(filelist) eq 0 then begin
-	return
-	end
+  	return
+  	end
 digit_file = []
 for file = 0, n_elements(filelist)-1 do begin
-	hdr = headfits(filelist[file])
-	scan_mode = sxpar(hdr,'INSTMODE')
-	; Fit the data observed by digit programs (simplify the data format)
-	;
-	case 1 of
-		proj eq 'digit': proj_name = ['KPOT_nevans_1','SDP_nevans_3']
-		proj eq 'foosh': proj_name = ['OT1_jgreen02_2','TOO_jgreen02_4']
-		proj eq 'wish' : proj_name = ['KPGT_evandish_1','SDP_evandish_3']
-	endcase
-	if (total(sxpar(hdr, 'PROPOSAL') eq proj_name) eq 0) or (scan_mode ne 'PacsRangeSpec') then begin
-		continue
-	endif
-	objname = [objname, sxpar(hdr, 'OBJECT')]
-	digit_file = [digit_file, filelist[file]]
+  	hdr = headfits(filelist[file])
+  	scan_mode = sxpar(hdr,'INSTMODE')
+  	; Fit the data observed by digit programs (simplify the data format)
+  	;
+  	case 1 of
+    		proj eq 'digit': proj_name = ['KPOT_nevans_1','SDP_nevans_3']
+    		proj eq 'foosh': proj_name = ['OT1_jgreen02_2','TOO_jgreen02_4']
+    		proj eq 'wish' : proj_name = ['KPGT_evandish_1','SDP_evandish_3']
+  	endcase
+  	if (total(sxpar(hdr, 'PROPOSAL') eq proj_name) eq 0) or (scan_mode ne 'PacsRangeSpec') then begin
+        continue
+  	endif
+  	objname = [objname, sxpar(hdr, 'OBJECT')]
+  	digit_file = [digit_file, filelist[file]]
 endfor
 digit_file = digit_file[sort(objname)]
 objname = objname[sort(objname)]
 
 for obj = 0, n_elements(objname)-1 do begin
-	if strmatch(objname[obj],'*-1') eq 1 then objname[obj] = strmid(objname[obj],0,strlen(objname[obj])-2)
-	if strcompress(objname[obj],/remove_all) eq 'SerSMM1' then objname[obj] = 'Serpens-SMM1'
-	if strcompress(objname[obj],/remove_all) eq 'NGC1333IRAS4B' then objname[obj] = 'NGC1333-IRAS4B'
-	if strcompress(objname[obj],/remove_all) eq 'NGC1333IRAS4A' then objname[obj] = 'NGC1333-IRAS4A'
-	if strcompress(objname[obj],/remove_all) eq 'NGC1333IRAS2' then objname[obj] = 'NGC1333-IRAS2A'
-	if strcompress(objname[obj],/remove_all) eq 'VLA1623-243' then objname[obj] = 'VLA1623'
-	if strcompress(objname[obj],/remove_all) eq 'IRAS03245+3002' then objname[obj] = 'IRAS03245'
-	if strcompress(objname[obj],/remove_all) eq 'IRAS03301+3111' then objname[obj] = 'IRAS03301'
-	if strcompress(objname[obj],/remove_all) eq 'FUOrionis' then objname[obj] = 'FUOri'
-	if strmatch(digit_file[obj],'*1342221379*',/fold_case) eq 1 then objname[obj] = 'HBC722_May2011'
-	if strmatch(digit_file[obj],'*1342221380*',/fold_case) eq 1 then objname[obj] = 'HBC722_May2011'
-	if strmatch(digit_file[obj],'*1342211173*',/fold_case) eq 1 then objname[obj] = 'HBC722_Dec2010'
-	if strmatch(digit_file[obj],'*1342211174*',/fold_case) eq 1 then objname[obj] = 'HBC722_Dec2010'
+  	if strmatch(objname[obj],'*-1') eq 1 then objname[obj] = strmid(objname[obj],0,strlen(objname[obj])-2)
+  	if strcompress(objname[obj],/remove_all) eq 'SerSMM1' then objname[obj] = 'Serpens-SMM1'
+  	if strcompress(objname[obj],/remove_all) eq 'NGC1333IRAS4B' then objname[obj] = 'NGC1333-IRAS4B'
+  	if strcompress(objname[obj],/remove_all) eq 'NGC1333IRAS4A' then objname[obj] = 'NGC1333-IRAS4A'
+  	if strcompress(objname[obj],/remove_all) eq 'NGC1333IRAS2' then objname[obj] = 'NGC1333-IRAS2A'
+  	if strcompress(objname[obj],/remove_all) eq 'VLA1623-243' then objname[obj] = 'VLA1623'
+  	if strcompress(objname[obj],/remove_all) eq 'IRAS03245+3002' then objname[obj] = 'IRAS03245'
+  	if strcompress(objname[obj],/remove_all) eq 'IRAS03301+3111' then objname[obj] = 'IRAS03301'
+  	if strcompress(objname[obj],/remove_all) eq 'FUOrionis' then objname[obj] = 'FUOri'
+  	if strmatch(digit_file[obj],'*1342221379*',/fold_case) eq 1 then objname[obj] = 'HBC722_May2011'
+  	if strmatch(digit_file[obj],'*1342221380*',/fold_case) eq 1 then objname[obj] = 'HBC722_May2011'
+  	if strmatch(digit_file[obj],'*1342211173*',/fold_case) eq 1 then objname[obj] = 'HBC722_Dec2010'
+  	if strmatch(digit_file[obj],'*1342211174*',/fold_case) eq 1 then objname[obj] = 'HBC722_Dec2010'
 endfor
 
 objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 
 if not keyword_set(cube) then begin
-	; Exclude every with 'basic' and not using 'os8sf7' parameters
-	;
-;	objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
-;	digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
-;	objname = objname[where(strmatch(digit_file, '*os8sf7*',/fold_case) eq 1)]
-;	digit_file = digit_file[where(strmatch(digit_file, '*os8sf7*',/fold_case) eq 1)]
-	; Other temperary exclusion
-	;
-	; objname = objname[where(strmatch(digit_file, '*HD203024*',/fold_case) ne 1)]
-	; digit_file = digit_file[where(strmatch(digit_file, '*HD203024*',/fold_case) ne 1)]
-	; objname = objname[where(strmatch(digit_file, '*HD245906*',/fold_case) ne 1)]
-	; digit_file = digit_file[where(strmatch(digit_file, '*HD245906*',/fold_case) ne 1)]
-	;
-	; WISH range scan object: Serpens-SMM1, NGC1333 IRAS2A, NGC1333 IRAS4A, and NGC1333 IRAS4B
-	;if proj eq 'wish' then begin
-		; NGC1333 IRAS2
-		;objname = objname[where(strmatch(digit_file, '*1342190686*',/fold_case) ne 1)]
-		;digit_file = digit_file[where(strmatch(digit_file, '*1342190686*',/fold_case) ne 1)]
-		; Ser SMM1
-		;objname = objname[where(strmatch(digit_file, '*1342207781*',/fold_case) ne 1)]
-		;digit_file = digit_file[where(strmatch(digit_file, '*1342207781*',/fold_case) ne 1)]
-	;endif
+  	; Exclude every with 'basic' and not using 'os8sf7' parameters
+  	;
+    ;	objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
+    ;	digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
+    ;	objname = objname[where(strmatch(digit_file, '*os8sf7*',/fold_case) eq 1)]
+    ;	digit_file = digit_file[where(strmatch(digit_file, '*os8sf7*',/fold_case) eq 1)]
+  	; Other temperary exclusion
+  	;
+  	; objname = objname[where(strmatch(digit_file, '*HD203024*',/fold_case) ne 1)]
+  	; digit_file = digit_file[where(strmatch(digit_file, '*HD203024*',/fold_case) ne 1)]
+  	; objname = objname[where(strmatch(digit_file, '*HD245906*',/fold_case) ne 1)]
+  	; digit_file = digit_file[where(strmatch(digit_file, '*HD245906*',/fold_case) ne 1)]
+  	;
+  	; WISH range scan object: Serpens-SMM1, NGC1333 IRAS2A, NGC1333 IRAS4A, and NGC1333 IRAS4B
+  	;if proj eq 'wish' then begin
+  	; NGC1333 IRAS2
+  	;objname = objname[where(strmatch(digit_file, '*1342190686*',/fold_case) ne 1)]
+  	;digit_file = digit_file[where(strmatch(digit_file, '*1342190686*',/fold_case) ne 1)]
+  	; Ser SMM1
+  	;objname = objname[where(strmatch(digit_file, '*1342207781*',/fold_case) ne 1)]
+  	;digit_file = digit_file[where(strmatch(digit_file, '*1342207781*',/fold_case) ne 1)]
+  	;endif
 endif
 if keyword_set(cube) and proj eq 'wish' then begin
-	; objname = objname[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
-	; digit_file = digit_file[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
-;	objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
-;	digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
+  	; objname = objname[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
+  	; digit_file = digit_file[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
+    ;	objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
+    ;	digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 endif
 
 ;objname = objname[where(strmatch(digit_file, '*TMC1_*',/fold_case) eq 1)]
@@ -121,59 +121,59 @@ i = 1
 num_obj = 0
 ; Open a txt file and print everything into it
 if keyword_set(print_all) and not keyword_set(no_fit) and not keyword_set(FWD) then begin
-	global_outname = '_lines_fixwidth'
-	if not keyword_set(cube) or (keyword_set(cube) and keyword_set(co_add)) then begin
-    	openw, gff, outdir+print_all+'_lines_fixwidth.txt',/get_lun
-		printf, gff, format='(19(a16,2x))',$
-        	'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
-		free_lun, gff
-		close, gff
-		
-		openw, gff, outdir+print_all+'_lines_fixwidth_global_noise.txt',/get_lun
-		printf, gff, format='(19(a16,2x))',$
-			'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
-		free_lun, gff
-		close, gff
-	endif
-	if keyword_set(cube) then begin
-		openw, gff, outdir+print_all+'_lines_fixwidth_global_noise.txt',/get_lun
-		printf, gff, format='(20(a16,2x))',$
-		     'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
-		free_lun, gff
-		close, gff																
-		
+  	global_outname = '_lines_fixwidth'
+  	if not keyword_set(cube) or (keyword_set(cube) and keyword_set(co_add)) then begin
+        openw, gff, outdir+print_all+'_lines_fixwidth.txt',/get_lun
+    		printf, gff, format='(19(a16,2x))',$
+            	'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
+    		free_lun, gff
+    		close, gff
+    		
+    		openw, gff, outdir+print_all+'_lines_fixwidth_global_noise.txt',/get_lun
+    		printf, gff, format='(19(a16,2x))',$
+    			'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
+    		free_lun, gff
+    		close, gff
+  	endif
+  	if keyword_set(cube) then begin
+      	openw, gff, outdir+print_all+'_lines_fixwidth_global_noise.txt',/get_lun
+      	printf, gff, format='(20(a16,2x))',$
+      	     'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
+      	free_lun, gff
+      	close, gff																
+      	
         openw, gff, outdir+print_all+'_lines_fixwidth.txt',/get_lun
         printf, gff, format='(20(a16,2x))',$
              'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
         free_lun, gff
         close, gff 	
-	endif
+  	endif
 endif
 
 ; Prevent error only, need to be fixed in the future
 if not keyword_set(print_all) and not keyword_set(FWD) then begin
-	print_all = 'temp'
-	global_outname = 'Unknown'
+  	print_all = 'temp'
+  	global_outname = 'Unknown'
 endif
 
 global_outname = '_lines'
 
 if obj_flag[0] ne '0' then begin
-	if obj_flag[0] eq '1' then begin
-		; Set the source list that we want to report to the archive
-		cdf = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD100546','HD104237','HD135344B','HD139614',$
-			   'HD141569','HD142527','HD142666','HD144432','HD144668','HD150193','HD163296','HD169142','HD179218','HD203024','HD245906','HD35187','HD36112','HD38120','HD50138',$
-			   'HD97048','HD98922','HH46','HH100','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
-			   'L1489','L1527','L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
-			   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
-		; WISH sources
-		; cdf = ['NGC1333-IRAS2A','NGC1333-IRAS4A','NGC1333-IRAS4B','Serpens-SMM1']
-		; Debugging purpose
-		; cdf = ['EC82','NGC1333-IRAS2A','Serpens-SMM1']
-		; cdf = ['L1489']
-	endif else begin
-		cdf = obj_flag
-	endelse
+  	if obj_flag[0] eq '1' then begin
+    		; Set the source list that we want to report to the archive
+    		cdf = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD100546','HD104237','HD135344B','HD139614',$
+    			   'HD141569','HD142527','HD142666','HD144432','HD144668','HD150193','HD163296','HD169142','HD179218','HD203024','HD245906','HD35187','HD36112','HD38120','HD50138',$
+    			   'HD97048','HD98922','HH46','HH100','HTLup','IRAM04191','IRAS03245','IRAS03301','IRAS12496','IRAS15398','IRS46','IRS48','IRS63','L1014','L1157','L1448-MM','L1455-IRS3',$
+    			   'L1489','L1527','L1551-IRS5','L483','L723-MM','RCrA-IRS5A','RCrA-IRS7B','RCrA-IRS7C','RNO90','RNO91','RULup','RYLup','SCra','SR21',$
+    			   'Serpens-SMM3','Serpens-SMM4','TMC1','TMC1A','TMR1','V1057Cyg','V1331Cyg','V1515Cyg','V1735Cyg','VLA1623','WL12']
+    		; WISH sources
+    		; cdf = ['NGC1333-IRAS2A','NGC1333-IRAS4A','NGC1333-IRAS4B','Serpens-SMM1']
+    		; Debugging purpose
+    		; cdf = ['EC82','NGC1333-IRAS2A','Serpens-SMM1']
+    		; cdf = ['L1489']
+  	endif else begin
+        cdf = obj_flag
+  	endelse
 endif
 
 while i eq 1 do begin
@@ -411,7 +411,9 @@ while i eq 1 do begin
 		skip = [];'HBC722_379','HBC722_173','AS205'
 		if (where(skip eq strcompress(current_obj,/remove_all)))[0] ne -1 then continue
 		print, 'Plotting the contour plots...'
-		if keyword_set(jitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs,/brightness;outdir+current_obj+'/cube/plots/contour/'
+		; if keyword_set(jitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs,/brightness
+		; for plot the position of IRS2 in BHR71
+		if keyword_set(jitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs,/brightness, plot_irs2=[180.392041667, -65.1464888889]
 		if keyword_set(nojitter) then plot_contour, noise=3, indir=outdir+current_obj+'/pacs/advanced_products/cube/',plotdir=outdir+'contour/'+current_obj+'/',objname=current_obj,/pacs,/brightness
 	endif
 
