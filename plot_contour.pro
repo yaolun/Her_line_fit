@@ -355,7 +355,7 @@ if not keyword_set(no_plot) then begin
       		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, /onimage, color=0,/nodata,label=0
     		        endelse
     		        if keyword_set(plot_irs2) then begin
-    		            cgplot, (plot_irs2[0]-ra_cen[0])*3600., (plot_irs2[1]-dec_cen[0])*3600., psym=1, color=110, symsize=1.5, position=oposition, /overplot  ; light blue
+    		            cgplot, (plot_irs2[0]-ra_cen[0])*3600.*cos(plot_irs2[1]*!pi/180.), (plot_irs2[1]-dec_cen[0])*3600., psym=1, color=110, symsize=1.5, position=oposition, /overplot  ; light blue
     		        endif
     		        loadct, 0, /silent
     		        ;xyouts, 0, 30, title_name(line_name[i]),color=255
@@ -530,7 +530,7 @@ if not keyword_set(no_plot) then begin
       		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, /onimage, color=0,/nodata,label=0
     		        endelse
     		        if keyword_set(plot_irs2) then begin
-    		            cgplot, (plot_irs2[0]-ra_cen[0])*3600., (plot_irs2[1]-dec_cen[0])*3600., psym=1, color=110, symsize=1.5, position=oposition, /overplot
+    		            cgplot, (plot_irs2[0]-ra_cen[0])*3600.*cos(plot_irs2[1]*!pi/180.), (plot_irs2[1]-dec_cen[0])*3600., psym=1, color=110, symsize=1.5, position=oposition, /overplot
     		        endif
     		        loadct, 0, /silent
     		        ;xyouts, 0, 30, title_name(line_name[i]),color=255
@@ -684,7 +684,7 @@ if not keyword_set(no_plot) then begin
         	        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, /onimage, color=0,/nodata,label=0
       	        endelse
       	        if keyword_set(plot_irs2) then begin
-                    cgplot, (plot_irs2[0]-ra_cen[0])*3600., (plot_irs2[1]-dec_cen[0])*3600., psym=1, color=110, symsize=1.5, position=oposition, /overplot
+                    cgplot, (plot_irs2[0]-ra_cen[0])*3600.*cos(plot_irs2[1]*!pi/180.), (plot_irs2[1]-dec_cen[0])*3600., psym=1, color=110, symsize=1.5, position=oposition, /overplot
       	        endif
       	        loadct, 0, /silent
       	        ;xyouts, 0, 30, title_name(line_name[i]),color=255
