@@ -172,9 +172,9 @@ if not keyword_set(baseline) then begin
         ;parinfo[2].limited = [1,1] & parinfo[2].limits = [dl,10*dl]
         ;Let the width is fixed as the size of the resolution limit
         if keyword_set(fixed_width) then begin
-        	parinfo[2].fixed = 1
+            parinfo[2].fixed = 1
         endif else begin
-        	if dl eq 0 then stop
+          	if dl eq 0 then stop
             if not keyword_set(spire) then begin
                 ; sometime [OI] is wider
                 parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.5*dl]
@@ -186,41 +186,41 @@ if not keyword_set(baseline) then begin
     endif
 
     if keyword_set(double_gauss) then begin
-    	height_lim = max(nflux[where(nwl gt line[1]-median(wl) and nwl lt line[5]-median(wl))])
-		parinfo = replicate({parname:'', value:0.D, fixed:0, limited:[0,0], limits:[0.D,0.D]}, 6)
-		parinfo[*].parname = ['height_1','center_1','width_1','height_2','center_2','width_2']
-		parinfo[*].value = start
-		if height_lim le 0 then begin
-    		parinfo[0].limited = [1,0] & parinfo[0].limits[0] = 0                     ; Constrain the line flux to be positive
-			parinfo[3].limited = [1,0] & parinfo[3].limits[0] = 0
-		endif else begin
-        	; Temperory remove the upper limit of the height to test the sigma evaluation
-			parinfo[0].limited = [1,0] & parinfo[0].limits = [0,height_lim]
-			parinfo[3].limited = [1,0] & parinfo[3].limits = [0,height_lim]
-		endelse
+        height_lim = max(nflux[where(nwl gt line[1]-median(wl) and nwl lt line[5]-median(wl))])
+    		parinfo = replicate({parname:'', value:0.D, fixed:0, limited:[0,0], limits:[0.D,0.D]}, 6)
+    		parinfo[*].parname = ['height_1','center_1','width_1','height_2','center_2','width_2']
+    		parinfo[*].value = start
+    		if height_lim le 0 then begin
+        		parinfo[0].limited = [1,0] & parinfo[0].limits[0] = 0                     ; Constrain the line flux to be positive
+    			parinfo[3].limited = [1,0] & parinfo[3].limits[0] = 0
+    		endif else begin
+            	; Temperory remove the upper limit of the height to test the sigma evaluation
+    			parinfo[0].limited = [1,0] & parinfo[0].limits = [0,height_lim]
+    			parinfo[3].limited = [1,0] & parinfo[3].limits = [0,height_lim]
+    		endelse
         ; Fixed the line centroids or not
-		if not keyword_set(fix_dg) then begin
-        	parinfo[1].limited = [1,1] & parinfo[1].limits = line[1:2]-median(wl)     ; Restrict the range of the line center can be varied
-			parinfo[4].limited = [1,1] & parinfo[4].limits = line[4:5]-median(wl)
-		endif else begin
-            parinfo[1].fixed = 1
-            parinfo[4].fixed = 1
-        ; Fixed the line width
-		endelse
-		if keyword_set(fixed_width) then begin
-			parinfo[2].fixed = 1
-			parinfo[5].fixed = 1
-        endif else begin
-            ; let the line width varied flexible
-            if not keyword_set(spire) then begin
-                parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.3*dl]
-                parinfo[5].limited = [1,1] & parinfo[5].limits = [0.7*dl, 1.3*dl]
-            endif else begin
-                parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.3*dl];[dl/1.5, dl]
-                parinfo[5].limited = [1,1] & parinfo[5].limits = [0.7*dl, 1.3*dl];[dl/1.5, dl]
-            endelse
-        endelse
-		if dl eq 0 then stop
+    		if not keyword_set(fix_dg) then begin
+            	parinfo[1].limited = [1,1] & parinfo[1].limits = line[1:2]-median(wl)     ; Restrict the range of the line center can be varied
+    			parinfo[4].limited = [1,1] & parinfo[4].limits = line[4:5]-median(wl)
+    		endif else begin
+                parinfo[1].fixed = 1
+                parinfo[4].fixed = 1
+            ; Fixed the line width
+    		endelse
+    		if keyword_set(fixed_width) then begin
+    			parinfo[2].fixed = 1
+    			parinfo[5].fixed = 1
+          endif else begin
+              ; let the line width varied flexible
+              if not keyword_set(spire) then begin
+                  parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.3*dl]
+                  parinfo[5].limited = [1,1] & parinfo[5].limits = [0.7*dl, 1.3*dl]
+              endif else begin
+                  parinfo[2].limited = [1,1] & parinfo[2].limits = [0.7*dl, 1.3*dl];[dl/1.5, dl]
+                  parinfo[5].limited = [1,1] & parinfo[5].limits = [0.7*dl, 1.3*dl];[dl/1.5, dl]
+              endelse
+          endelse
+    		if dl eq 0 then stop
     endif
     ;-------------------------------------------
     ;Fit it!
@@ -285,7 +285,7 @@ if not keyword_set(baseline) then begin
             ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
             ; snr = height/noise
             ;
-            ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
+            ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede            
             if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
             if keyword_set(fixed_width) then sig_fwhm = -998
             if not keyword_set(spire) then begin

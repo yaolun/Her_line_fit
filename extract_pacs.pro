@@ -28,7 +28,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     ; Convert the flux to appropriate unit
     c = 2.998d8
     flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26  ;Change F_nu (Jy) -> F_lambda (W cm-2 um-1)
-    std = std*1d-4*c/(wl*1d-6)^2*1d-6*1d-26    
+    std = std*1d-4*c/(wl*1d-6)^2*1d-6*1d-26 + 1 ; weight = 1/0 cause problem...
     ; Information about the line that you want to fit including the range for baseline fitting.
     ; every level is equal to LAMDA level-1
     ; In the later version, the 10 times of resolutions is used for determining the baseline. Thus the baseline number here is less important
@@ -554,7 +554,6 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			; 	fluxl = fluxl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
 			; 	stdl = stdl[where(wll lt range[1,(where((line_center lt max(wll)) and (line_center gt line_center_dg[2*i+1])))[-1]])]
 			; endif 
-
 			; use the plot_base feature to plot the actual spectrum (with line) here
 			plot_base = [[wll],[fluxl]]
 			fit_line, filename, line_name_dg[2*i]+'+'+line_name_dg[2*i+1], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base
@@ -574,7 +573,6 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
 			; Fitting part
 			; Different fitting keyword for fixed width and test arguement
-
 			; Using band 3 resolution for some of WISH sources
 			fit_line,filename,line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,std=stdd,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
 				noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,b3a=b3a,/fix_dg,/fixed_width
@@ -835,6 +833,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, lowest_E_n, /silent
     	endelse
+    	
     	; Line subtraction
     	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
@@ -930,7 +929,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		al_legend,[object],textcolors=[0],/left
 		device, /close_file, decomposed = 1
 		!p.multi = 0
-
+    
 		; Do the same fitting again but using the global noise value
 		; Define the name of the output data of fitting results
 		; name = outdir+filename+'_lines'
