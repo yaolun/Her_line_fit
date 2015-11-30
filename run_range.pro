@@ -335,7 +335,7 @@ while i eq 1 do begin
 					;print, current_obj,'pixel',strtrim(string(pix),1),format='(8x,a'+strtrim(string(strlen(current_obj)),1)+',1x,a6,1x,a2)'
 					extract_pacs, indir=outdir+current_obj+'/pacs/data/cube/', filename=current_obj+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix, outdir=outdir+current_obj+'/pacs/advanced_products/cube/', plotdir=outdir+current_obj+'/pacs/advanced_products/cube/plots/',$
 										      noiselevel=noiselevel,localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,/opt_width,/continuum_sub,/flat,object=current_obj,$
-										      print_all=outdir+print_all+global_outname,current_pix=strtrim(string(pix),1),/glo_print_only,no_plot=no_plot,double_gauss=double_gauss;ra=ra[pix-1],dec=dec[pix-1],
+										      print_all=outdir+print_all+global_outname,current_pix=strtrim(string(pix),1),no_plot=no_plot,double_gauss=double_gauss;ra=ra[pix-1],dec=dec[pix-1],
 				endfor
 			endif
 		endif else begin
@@ -353,7 +353,7 @@ while i eq 1 do begin
 					;print, current_obj,'pixel',strtrim(string(pix),1),format='(8x,a'+strtrim(string(strlen(current_obj)),1)+',1x,a6,1x,a2)'
 					extract_pacs, indir=outdir+current_obj+'/pacs/data/cube/', filename=current_obj+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix, outdir=outdir+current_obj+'/pacs/advanced_products/cube/', plotdir=outdir+current_obj+'/pacs/advanced_products/cube/plots/',$
 										      noiselevel=noiselevel,localbaseline=localbaseline,fixed_width=fixed_width,/opt_width,/continuum_sub,/flat,object=current_obj,$
-										      print_all=outdir+print_all+global_outname,current_pix=strtrim(string(pix),1),/glo_print_only,no_plot=no_plot,double_gauss=double_gauss;,ra=ra[pix-1],dec=dec[pix-1]
+										      print_all=outdir+print_all+global_outname,current_pix=strtrim(string(pix),1),no_plot=no_plot,double_gauss=double_gauss;,ra=ra[pix-1],dec=dec[pix-1]
 				endfor
 			endif
 		endelse
