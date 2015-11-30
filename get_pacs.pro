@@ -467,9 +467,9 @@ endif else begin
 			;print, min(wl_dum), max(wl_dum)
 			case 1 of
 				band eq 'B2A' or band eq 'B3A': begin
-					flux_b2a = flux_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
-					std_b2a = std_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
-					wl_b2a = wl_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
+					flux_b2a = flux_dum[where(wl_dum ge 54.80 and wl_dum lt 72.3)]
+					std_b2a = std_dum[where(wl_dum ge 54.80 and wl_dum lt 72.3)]
+					wl_b2a = wl_dum[where(wl_dum ge 54.80 and wl_dum lt 72.3)]
 					if keyword_set(trim_detail) then begin
 						openw, print_b2a, outdir+objname+name+'_b2a.txt', /get_lun
 						printf, print_b2a, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
@@ -492,9 +492,9 @@ endif else begin
 				end
 				band eq 'R1': begin
 					if min(wl_dum) lt 130 then begin
-						flux_r1s = flux_dum[where(wl_dum ge 103 and wl_dum le 143)]
-						std_r1s = std_dum[where(wl_dum ge 103 and wl_dum le 143)]
-						wl_r1s = wl_dum[where(wl_dum ge 103 and wl_dum le 143)]
+						flux_r1s = flux_dum[where(wl_dum ge 103 and wl_dum lt 143)]
+						std_r1s = std_dum[where(wl_dum ge 103 and wl_dum lt 143)]
+						wl_r1s = wl_dum[where(wl_dum ge 103 and wl_dum lt 143)]
 						if keyword_set(trim_detail) then begin
 							openw, print_r1s, outdir+objname+name+'_r1s.txt', /get_lun
 							printf, print_r1s, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'

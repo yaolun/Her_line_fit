@@ -238,141 +238,141 @@ if not keyword_set(baseline) then begin
     ;Recover everything since they are changed at first.  And calculate the physical quantities
     ;----------------------------------------------------------------
 		if keyword_set(single_gauss) then begin
-			rms2 = total((gauss(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
-            rms = sqrt(rms2)
-            ; Additional procedure for using the actual uncertainty from the data
-            ; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
-            ; if not keyword_set(std) then begin
-            ;     sigma = sigma*rms
-            ; endif
-            if keyword_set(feedback) then sigma = sigma * sqrt(bestnorm/dof)
-            cen_wl = p[1] + median(wl) & sig_cen_wl = sigma[1]
-            height = p[0]/factor & sig_height = sigma[0]/factor
-            fwhm = 2.354*abs(p[2]) & sig_fwhm = 2.354*abs(sigma[2])
-            str = (2*!PI)^0.5*height*abs(p[2]) & sig_str = abs(str)*((sig_height/height)^2+(abs(sigma[2])/abs(p[2]))^2)^0.5
-            gauss = height*exp(-(wl-cen_wl)^2/2/p[2]^2)
-            fine_wl = (findgen(5001)-2500)/5000.*(max(wl)-min(wl))+(max(wl)+min(wl))/2
-            gauss_fine = height*exp(-(fine_wl-cen_wl)^2/2/p[2]^2)
-            base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
-            residual = flux - gauss
-            noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[2]+5*dl)]) * (over_sample)^0.5
-            if keyword_set(global_noise) then begin
-                ; stich the residual and global_noise together
-                ; Take the residual under the line area and use the global_noise at other place
-                ; 1/e^2 full width = 1.699 * fwhm
-                if not keyword_set(spire) then begin
-	                indl = where((wl ge cen_wl-1.699/2*fwhm) and (wl le cen_wl+1.699/2*fwhm))
-	                indb = where((global_noise[*,0] lt cen_wl-1.699/2*fwhm) or (global_noise[*,0] gt cen_wl+1.699/2*fwhm))
-	            endif else begin
-	                indl = where((wl ge cen_wl-1/2*fwhm) and (wl le cen_wl+1/2*fwhm))
-	                indb = where((global_noise[*,0] lt cen_wl-1/2*fwhm) or (global_noise[*,0] gt cen_wl+1/2*fwhm))
-	            endelse
-                comb_noise = [residual[indl], global_noise[indb,1]]
-                comb_noise_wl = [wl[indl], global_noise[indb,0]]
-                comb_noise = comb_noise[sort(comb_noise_wl)]
-                comb_noise_wl = comb_noise_wl[sort(comb_noise_wl)]
-                noise = stddev(comb_noise) * (over_sample)^0.5
-            	; noise = stddev(global_noise[*,1])
-                ; Use Eq. 4.57 from Robinson's note
-                ; if n_elements(global_noise[0,*]) eq 3 then begin
-                ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
-                ;   std_noise = (double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
-                ;   noise = std_noise
-                ; endif
-            endif
-            snr = abs(str/(1.064*noise*fwhm))
-            ; The constraint on fwhm has already considered the boardening caused by the apodization. Therefore, there is no need to address the oversample
-            ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
-            ; snr = height/noise
-            ;
-            ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede            
-            if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
-            if keyword_set(fixed_width) then sig_fwhm = -998
+  			rms2 = total((gauss(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
+        rms = sqrt(rms2)
+        ; Additional procedure for using the actual uncertainty from the data
+        ; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
+        ; if not keyword_set(std) then begin
+        ;     sigma = sigma*rms
+        ; endif
+        if keyword_set(feedback) then sigma = sigma * sqrt(bestnorm/dof)
+        cen_wl = p[1] + median(wl) & sig_cen_wl = sigma[1]
+        height = p[0]/factor & sig_height = sigma[0]/factor
+        fwhm = 2.354*abs(p[2]) & sig_fwhm = 2.354*abs(sigma[2])
+        str = (2*!PI)^0.5*height*abs(p[2]) & sig_str = abs(str)*((sig_height/height)^2+(abs(sigma[2])/abs(p[2]))^2)^0.5
+        gauss = height*exp(-(wl-cen_wl)^2/2/p[2]^2)
+        fine_wl = (findgen(5001)-2500)/5000.*(max(wl)-min(wl))+(max(wl)+min(wl))/2
+        gauss_fine = height*exp(-(fine_wl-cen_wl)^2/2/p[2]^2)
+        base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
+        residual = flux - gauss
+        noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[2]+5*dl)]) * (over_sample)^0.5
+        if keyword_set(global_noise) then begin
+            ; stich the residual and global_noise together
+            ; Take the residual under the line area and use the global_noise at other place
+            ; 1/e^2 full width = 1.699 * fwhm
             if not keyword_set(spire) then begin
-                if (fwhm eq 0.7*dl*2.354 or fwhm eq 1.3*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
-            endif else begin
-                if (fwhm eq 0.7*dl*2.354 or fwhm eq 1.3*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
-            endelse
-            ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
-            if sig_str eq 0 then sig_str = -999
-        endif
-        if keyword_set(double_gauss) then begin
-            ; print, 'Finishing double Gaussian fit for '+linename
-            rms2 = total((gauss_double(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
-            rms = sqrt(rms2)
-            ; Additional procedure for using the actual uncertainty from the data
-            ; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
-            ; if not keyword_set(std) then begin
-            ;     sigma = sigma*rms
+              indl = where((wl ge cen_wl-1.699/2*fwhm) and (wl le cen_wl+1.699/2*fwhm))
+              indb = where((global_noise[*,0] lt cen_wl-1.699/2*fwhm) or (global_noise[*,0] gt cen_wl+1.699/2*fwhm))
+          endif else begin
+              indl = where((wl ge cen_wl-1/2*fwhm) and (wl le cen_wl+1/2*fwhm))
+              indb = where((global_noise[*,0] lt cen_wl-1/2*fwhm) or (global_noise[*,0] gt cen_wl+1/2*fwhm))
+          endelse
+            comb_noise = [residual[indl], global_noise[indb,1]]
+            comb_noise_wl = [wl[indl], global_noise[indb,0]]
+            comb_noise = comb_noise[sort(comb_noise_wl)]
+            comb_noise_wl = comb_noise_wl[sort(comb_noise_wl)]
+            noise = stddev(comb_noise) * (over_sample)^0.5
+        	; noise = stddev(global_noise[*,1])
+            ; Use Eq. 4.57 from Robinson's note
+            ; if n_elements(global_noise[0,*]) eq 3 then begin
+            ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
+            ;   std_noise = (double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2)
+            ;   noise = std_noise
             ; endif
-            if keyword_set(feedback) then sigma = sigma * sqrt(bestnorm/dof)
-            cen_wl = [p[1]+median(wl), p[4]+median(wl)] & sig_cen_wl = [sigma[1],sigma[4]]
-            height = [p[0],p[3]]/factor & sig_height = [sigma[0],sigma[3]]/factor
-            fwhm = 2.354*[abs(p[2]), abs(p[5])] & sig_fwhm = 2.354*[abs(sigma[2]), abs(sigma[5])]
-            str = (2*!PI)^0.5*[height[0]*abs(p[2]), height[1]*abs(p[5])]
-            sig_str = [abs(str[0])*((sig_height[0]/height[0])^2+(abs(sigma[2])/abs(p[2]))^2)^0.5,abs(str[1])*((sig_height[1]/height[1])^2+(abs(sigma[5])/abs(p[5]))^2)^0.5]
-            gauss = height[0]*exp(-(wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(wl-cen_wl[1])^2/2/p[5]^2)
-            fine_wl = (findgen(5001)-2500)/5000.*(max(wl)-min(wl))+(max(wl)+min(wl))/2
-            gauss_fine = height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)
-            base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
-            residual = flux - gauss
-            noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[5]+5*dl)]) * (over_sample)^0.5            ; if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
-            if keyword_set(global_noise) then begin
-                ; stich the residual and global_noise together
-                ; Take the residual under the line area and use the global_noise at other place
-                ; 1/e^2 full width = 1.699 * fwhm
-                ; indl = where((wl ge min(cen_wl)-1.699/2*fwhm[where(cen_wl eq min(cen_wl))]) and (wl le max(cen_wl)+1.699/2*fwhm[where(cen_wl eq max(cen_wl))]))
-                ; indb = where((global_noise[*,0] lt min(cen_wl)-1.699/2*fwhm[where(cen_wl eq min(cen_wl))]) or (global_noise[*,0] gt max(cen_wl)+1.699/2*fwhm[where(cen_wl eq max(cen_wl))]))
-                indl = where(wl ge line[1] and wl le line[5])
-                indb = where(global_noise[*,0] lt line[1] or global_noise[*,0] gt line[5])
-                comb_noise = [residual[indl], global_noise[indb,1]]
-                comb_noise_wl = [wl[indl], global_noise[indb,0]]
-                comb_noise = comb_noise[sort(comb_noise_wl)]
-                comb_noise_wl = comb_noise_wl[sort(comb_noise_wl)]
-                noise = stddev(comb_noise) * (over_sample)^0.5
-                ; noise = stddev(global_noise[*,1])
-                ; Use Eq. 4.57 from Robinson's note
-                ; if n_elements(global_noise[0,*]) eq 3 then begin
-                ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
-                ;   std_noise = (double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2))^0.5
-                ;   noise = std_noise
-                ; endif
+        endif
+        snr = abs(str/(1.064*noise*fwhm))
+        ; The constraint on fwhm has already considered the boardening caused by the apodization. Therefore, there is no need to address the oversample
+        ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
+        ; snr = height/noise
+        ;
+        ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede            
+        if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
+        if keyword_set(fixed_width) then sig_fwhm = -998
+        if not keyword_set(spire) then begin
+            if (fwhm eq 0.7*dl*2.354 or fwhm eq 1.3*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
+        endif else begin
+            if (fwhm eq 0.7*dl*2.354 or fwhm eq 1.3*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
+        endelse
+        ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
+        if sig_str eq 0 then sig_str = -999
+    endif
+    if keyword_set(double_gauss) then begin
+        ; print, 'Finishing double Gaussian fit for '+linename
+        rms2 = total((gauss_double(nwl,p)-nflux)^2)/(n_elements(wl)-2-1)
+        rms = sqrt(rms2)
+        ; Additional procedure for using the actual uncertainty from the data
+        ; The 'rms' approach is inheritated from smart. But may be not the right for using uncertainty from data.
+        ; if not keyword_set(std) then begin
+        ;     sigma = sigma*rms
+        ; endif
+        if keyword_set(feedback) then sigma = sigma * sqrt(bestnorm/dof)
+        cen_wl = [p[1]+median(wl), p[4]+median(wl)] & sig_cen_wl = [sigma[1],sigma[4]]
+        height = [p[0],p[3]]/factor & sig_height = [sigma[0],sigma[3]]/factor
+        fwhm = 2.354*[abs(p[2]), abs(p[5])] & sig_fwhm = 2.354*[abs(sigma[2]), abs(sigma[5])]
+        str = (2*!PI)^0.5*[height[0]*abs(p[2]), height[1]*abs(p[5])]
+        sig_str = [abs(str[0])*((sig_height[0]/height[0])^2+(abs(sigma[2])/abs(p[2]))^2)^0.5,abs(str[1])*((sig_height[1]/height[1])^2+(abs(sigma[5])/abs(p[5]))^2)^0.5]
+        gauss = height[0]*exp(-(wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(wl-cen_wl[1])^2/2/p[5]^2)
+        fine_wl = (findgen(5001)-2500)/5000.*(max(wl)-min(wl))+(max(wl)+min(wl))/2
+        gauss_fine = height[0]*exp(-(fine_wl-cen_wl[0])^2/2/p[2]^2) + height[1]*exp(-(fine_wl-cen_wl[1])^2/2/p[5]^2)
+        base_gauss = base_para[0]*fine_wl^2+base_para[1]*fine_wl+base_para[2]
+        residual = flux - gauss
+        noise = stddev(residual[where(wl gt line[1]-5*dl and wl lt line[5]+5*dl)]) * (over_sample)^0.5            ; if linename eq 'CI3P1-3P0_p-H2O6_24-7_17' then stop
+        if keyword_set(global_noise) then begin
+            ; stich the residual and global_noise together
+            ; Take the residual under the line area and use the global_noise at other place
+            ; 1/e^2 full width = 1.699 * fwhm
+            ; indl = where((wl ge min(cen_wl)-1.699/2*fwhm[where(cen_wl eq min(cen_wl))]) and (wl le max(cen_wl)+1.699/2*fwhm[where(cen_wl eq max(cen_wl))]))
+            ; indb = where((global_noise[*,0] lt min(cen_wl)-1.699/2*fwhm[where(cen_wl eq min(cen_wl))]) or (global_noise[*,0] gt max(cen_wl)+1.699/2*fwhm[where(cen_wl eq max(cen_wl))]))
+            indl = where(wl ge line[1] and wl le line[5])
+            indb = where(global_noise[*,0] lt line[1] or global_noise[*,0] gt line[5])
+            comb_noise = [residual[indl], global_noise[indb,1]]
+            comb_noise_wl = [wl[indl], global_noise[indb,0]]
+            comb_noise = comb_noise[sort(comb_noise_wl)]
+            comb_noise_wl = comb_noise_wl[sort(comb_noise_wl)]
+            noise = stddev(comb_noise) * (over_sample)^0.5
+            ; noise = stddev(global_noise[*,1])
+            ; Use Eq. 4.57 from Robinson's note
+            ; if n_elements(global_noise[0,*]) eq 3 then begin
+            ;   mean_noise = total(1/(global_noise[*,2])^2*global_noise[*,1])/total(1/(global_noise[*,2])^2)
+            ;   std_noise = (double(1./n_elements(global_noise[*,1]))*total(1/(global_noise[*,2])^2*(global_noise[*,1]-mean_noise)^2)/total(1/(global_noise[*,2])^2))^0.5
+            ;   noise = std_noise
+            ; endif
+        endif
+        snr = abs(str/(1.064*noise*fwhm))
+        ; Account for the oversample in spire band
+        ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
+        ;snr = height/noise
+        ; Making sure the line classification is correct
+        if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
+            print, 'Line misplacement found'
+            cen_wl = reverse(cen_wl)
+            sig_cen_wl = reverse(sig_cen_wl)
+            str = reverse(str)
+            sig_str = reverse(sig_str)
+            fwhm = reverse(fwhm)
+            sig_fwhm = reverse(sig_fwhm)
+            snr = reverse(snr)
+        endif
+        ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
+        ; 
+        if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
+        for k = 0, 1 do begin
+            if (parinfo[2].fixed ne 1) and (parinfo[5].fixed ne 1) then begin
+            	if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
+            		sig_fwhm[k] = -999
+            		; if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
+            	endif
             endif
-            snr = abs(str/(1.064*noise*fwhm))
-            ; Account for the oversample in spire band
-            ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
-            ;snr = height/noise
-            ; Making sure the line classification is correct
-            if (abs(line[0]-cen_wl[0]) gt abs(line[0]-cen_wl[1])) and (abs(line[3]-cen_wl[1]) gt abs(line[3]-cen_wl[0])) then begin
-                print, 'Line misplacement found'
-                cen_wl = reverse(cen_wl)
-                sig_cen_wl = reverse(sig_cen_wl)
-                str = reverse(str)
-                sig_str = reverse(sig_str)
-                fwhm = reverse(fwhm)
-                sig_fwhm = reverse(sig_fwhm)
-                snr = reverse(snr)
+            if (parinfo[2].fixed eq 1) and (parinfo[5].fixed eq 1) then sig_fwhm[k] = -998
+  
+        	if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
+        	if (str[k] eq 0) then begin
+                sig_cen_wl[k] = -998
+                sig_str[k] = -998
             endif
-            ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
-            ; 
-            if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
-            for k = 0, 1 do begin
-                if (parinfo[2].fixed ne 1) and (parinfo[5].fixed ne 1) then begin
-                	if (abs(fwhm[k]-double(dl*2.354))/fwhm[k] lt 5e-8) or (abs(fwhm[k]-double(2*dl*2.354))/fwhm[k] lt 5e-8) and sig_fwhm[k] eq 0 then begin
-                		sig_fwhm[k] = -999
-                		; if sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
-                	endif
-                endif
-                if (parinfo[2].fixed eq 1) and (parinfo[5].fixed eq 1) then sig_fwhm[k] = -998
-
-            	if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
-            	if (str[k] eq 0) then begin
-                    sig_cen_wl[k] = -998
-                    sig_str[k] = -998
-                endif
-                ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
-                if sig_str[k] eq 0 then sig_str[k] = -999 
-            endfor
+            ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
+            if sig_str[k] eq 0 then sig_str[k] = -999 
+        endfor
 		endif
 
 		base = base_para[0]*wl^2+base_para[1]*wl+base_para[2]
@@ -384,7 +384,7 @@ if not keyword_set(baseline) then begin
 		;if keyword_set(global_noise) then msg = msg + '_global_noise'
 		;
 	 
-      	;Make a plot
+     ;Make a plot
 		;plot the well-functional fitting result
 		if not keyword_set(no_plot) then begin
           	set_plot, 'ps'

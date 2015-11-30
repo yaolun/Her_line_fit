@@ -74,7 +74,8 @@ endif
 if keyword_set(pacs) then begin
   	;PACS
   	;readcol, '~/bhr71/data/pacs_coord.txt', format='D,D,D', pix_ind, ra, dec  ;read the coordinate
-  	suffix = '_os8_sf7_lines.txt'
+;  	suffix = '_os8_sf7_lines.txt'
+  	suffix = '_mixed_lines.txt'
   	if file_test(indir+objname+'_pacs_pixel13'+suffix) eq 0 then suffix = '_os8_sf7_lines.txt'
   	readcol, indir+objname+'_pacs_pixel13'+suffix, format='A,D,D,D,D, D,D,D,D,D, D,D,D,D,D, D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
   	ra_cen_pacs = ra
@@ -689,8 +690,14 @@ if not keyword_set(no_plot) then begin
       	        loadct, 0, /silent
       	        ;xyouts, 0, 30, title_name(line_name[i]),color=255
       	        ; place it in the upper right
-      	        al_legend,['!n'+title_name(line_name[i])],textcolors=[0], box=0, charsize=1.5,pos=[0.55,0.87],/normal
-      	        al_legend,['!n'+objname],textcolors=[0], box=0, charsize=1.5, pos=[0.3,0.87],/normal
+;      	        al_legend,['!n'+title_name(line_name[i])],textcolors=[0], box=0, charsize=1.5,pos=[0.55,0.87],/normal
+;      	        al_legend,['!n'+objname],textcolors=[0], box=0, charsize=1.5, pos=[0.3,0.87],/normal
+                if strmatch(line_name[i],'OH*',/fold_case) eq 1 then begin 
+                    al_legend,['!n'+title_name(line_name[i])],textcolors=[0], box=0, charsize=1.5,pos=[0.48,0.89],/normal
+                endif else begin
+      	            al_legend,['!n'+title_name(line_name[i])],textcolors=[0], box=0, charsize=1.5,pos=[0.55,0.89],/normal
+      	        endelse
+      	        al_legend,['!n'+objname],textcolors=[0], box=0, charsize=1.5, pos=[0.3,0.89],/normal
       	        exit_pacs: 
       	        device, /close_file, decomposed = 1
       	        !p.multi = 0

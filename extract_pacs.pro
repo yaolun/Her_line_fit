@@ -1,6 +1,6 @@
 pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir, pospath=pospath, noiselevel=noiselevel, test=test, ra=ra, dec=dec,$
 	localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,linescan=linescan,continuum_sub=continuum_sub,opt_width=opt_width,object=object,flat=flat,print_all=print_all,$
-	plot_subtraction=plot_subtraction,current_pix=current_pix,glo_print_only=glo_print_only,no_plot=no_plot,double_gauss=double_gauss
+	plot_subtraction=plot_subtraction,current_pix=current_pix,no_plot=no_plot,double_gauss=double_gauss ;glo_print_only=glo_print_only,
 	; The indir is the path of the spectrum of each pixel, including every letter in the filename except the pixel number.  For example, '/path/to/data/pacs_pixel13.txt', the indir will be '/path/to/data/pacs_pixel'
 	; Same method of the indir apply to the outdir.
 	if file_test(outdir) eq 0 then file_mkdir, outdir

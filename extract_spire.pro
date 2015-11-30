@@ -321,13 +321,13 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
 				if n_elements(right) gt numb then right = right[0:numb-1]
 				if left[0] ne -1 and right[0] ne -1 then begin
-            		wlb = [wl_basepool[left], wl_basepool[right]] & fluxb = [flux_basepool[left], flux_basepool[right]]
+          wlb = [wl_basepool[left], wl_basepool[right]] & fluxb = [flux_basepool[left], flux_basepool[right]]
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
 					indl = where(wl gt base_range[0] and wl lt base_range[3])
 					wll = wl[indl] & fluxl = flux[indl]
-				endif 
+				endif
 				if left[0] eq -1 and right[0] ne -1 then begin
-                	wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
+          wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
 					base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
 					indl = where(wl gt min(wl) and wl lt base_range[2])
 					wll = wl[indl] & fluxl = flux[indl]
@@ -429,14 +429,14 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; Blended lines classification
 			blue_blend = 0 & red_blend = 0
 			if line eq 0 then begin
-            	if abs(cen_wl_n[line+1]-cen_wl_n[line]) lt fwhm_n[line] then red_blend = 1
+          if abs(cen_wl_n[line+1]-cen_wl_n[line]) lt fwhm_n[line] then red_blend = 1
 			endif
 			if line ne 0 and line ne n_elements(line_name_n)-1 then begin
-            	if abs(cen_wl_n[line]-cen_wl_n[line-1]) lt fwhm_n[line] then blue_blend = 2
+          if abs(cen_wl_n[line]-cen_wl_n[line-1]) lt fwhm_n[line] then blue_blend = 2
 				if abs(cen_wl_n[line+1]-cen_wl_n[line]) lt fwhm_n[line] then red_blend  = 1
 			endif
 			if line eq n_elements(line_name_n)-1 then begin
-            	if abs(cen_wl_n[line]-cen_wl_n[line-1]) lt fwhm_n[line] then blue_blend = 2
+          if abs(cen_wl_n[line]-cen_wl_n[line-1]) lt fwhm_n[line] then blue_blend = 2
 			endif
 			blend_flag = red_blend+blue_blend
 			if blend_flag eq 0 then blend_msg = 'x'
