@@ -28,9 +28,11 @@ c = 2.998d10
 ; baseline part
 ; 
 ; weight = 1+0*flux
-flux = flux[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
-if keyword_set(std) then std = std[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
-wl = wl[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
+if not keyword_set(spire) then begin
+    flux = flux[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
+    if keyword_set(std) then std = std[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
+    wl = wl[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
+endif
 wl = double(wl)
 flux = double(flux)
 expo = round(alog10(abs(median(flux))))*(-1)+1
