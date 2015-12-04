@@ -29,7 +29,7 @@ c = 2.998d10
 ; 
 ; weight = 1+0*flux
 flux = flux[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
-std = std[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
+if keyword_set(std) then std = std[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
 wl = wl[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
 wl = double(wl)
 flux = double(flux)
