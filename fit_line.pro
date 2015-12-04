@@ -28,13 +28,16 @@ c = 2.998d10
 ; baseline part
 ; 
 ; weight = 1+0*flux
+flux = flux[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
+std = std[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
+wl = wl[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
 wl = double(wl)
 flux = double(flux)
 expo = round(alog10(abs(median(flux))))*(-1)+1
 factor = 10d^expo
 nwl = wl - median(wl)
 if keyword_set(std) then begin
-  	; Prevent the ncertainty has zero in the array
+  	; Prevent the uncertainty has zero in the array
   	std[where(std eq 0)] = mean(std)
     weight = double(std)*factor
     ; if keyword_set(spire) then weight = 1+0*flux
@@ -339,6 +342,7 @@ if not keyword_set(baseline) then begin
             ; endif
         endif
         snr = abs(str/(1.064*noise*fwhm))
+        
         ; Account for the oversample in spire band
         ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
         ;snr = height/noise

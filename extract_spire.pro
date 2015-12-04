@@ -1066,26 +1066,26 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			flux_sub = flux
 			for line = 0, n_elements(line_name_n)-1 do begin
     			if snr_n[line] ge noiselevel then begin
-    				if blend_flag_n[line] ne 'x' and lowest_E_n[line] ne 1 then continue
-    				ind = where((wl gt cen_wl_n[line]-5*fwhm_n[line]) and (wl lt cen_wl_n[line]+5*fwhm_n[line]))
-					wl_n = wl[ind]
-					line_profile = gauss(wl_n, [2.354*str_n[line]/fwhm_n[line]/(2*!PI)^0.5, cen_wl_n[line], fwhm_n[line]/2.354]);+base_str[line]
-					flux_sub[ind] = flux_sub[ind] - line_profile
-					if keyword_set(plot_subtraction) then begin
-						set_plot,'ps'
-						!p.font=0
-						loadct,12,/silent
-						device, filename=plotdir+object+'_line_subtracted_'+pixelname[j]+'_'+line_name_n[line]+'_global_noise.eps',/helvetica,/portrait,/encapsulated,isolatin=1,font_size=12,decomposed=0,/color
-						!p.thick=3 & !x.thick=3 & !y.thick=3
-						plot, wl_n, flux[ind], psym=10, xtitle = '!3Wavelength (!9m!3m)', ytitle = ylabel, position=[0.15,0.1,0.95,0.95], $
-    						yrange=[0.9*min([flux[ind],line_profile+base_str_n[line],flux_sub[line]]),1.1*max([flux[ind],line_profile+base_str_n[line],flux_sub[line]])]
-						oplot, wl_n, (line_profile+base_str_n[line])/1e-22, color=120, psym=10 ;purple
-						oplot, wl_n, flux_sub[ind]/1e-22, color=200, psym=10 ;red
-						al_legend, ['Data','Line+Baseline Fit','Subtraction'], textcolors=[0,120,200], /right
-						device, /close_file, decomposed=1
-						!p.multi=0
-					endif
-				endif
+    				if lowest_E_n[line] ne 1 then continue
+	      		ind = where((wl gt cen_wl_n[line]-5*fwhm_n[line]) and (wl lt cen_wl_n[line]+5*fwhm_n[line]))
+  					wl_n = wl[ind]
+  					line_profile = gauss(wl_n, [2.354*str_n[line]/fwhm_n[line]/(2*!PI)^0.5, cen_wl_n[line], fwhm_n[line]/2.354]);+base_str[line]
+  					flux_sub[ind] = flux_sub[ind] - line_profile
+  					if keyword_set(plot_subtraction) then begin
+  						set_plot,'ps'
+  						!p.font=0
+  						loadct,12,/silent
+  						device, filename=plotdir+object+'_line_subtracted_'+pixelname[j]+'_'+line_name_n[line]+'_global_noise.eps',/helvetica,/portrait,/encapsulated,isolatin=1,font_size=12,decomposed=0,/color
+  						!p.thick=3 & !x.thick=3 & !y.thick=3
+  						plot, wl_n, flux[ind], psym=10, xtitle = '!3Wavelength (!9m!3m)', ytitle = ylabel, position=[0.15,0.1,0.95,0.95], $
+  							yrange=[0.9*min([flux[ind],line_profile+base_str_n[line],flux_sub[line]]),1.1*max([flux[ind],line_profile+base_str_n[line],flux_sub[line]])]
+  						oplot, wl_n, (line_profile+base_str_n[line])/1e-22, color=120, psym=10 ;purple
+  						oplot, wl_n, flux_sub[ind]/1e-22, color=200, psym=10 ;red
+  						al_legend, ['Data','Line+Baseline Fit','Subtraction'], textcolors=[0,120,200], /right
+  						device, /close_file, decomposed=1
+  						!p.multi=0
+            endif
+          endif
 			endfor
 			; Smooth the line subtracted spectrum
 			sbin=20

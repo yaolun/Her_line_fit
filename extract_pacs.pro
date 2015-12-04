@@ -609,7 +609,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				E_u = [E_u1,E_u2]
 				A = [A1,A2]
 				g = [g1,g2]
-				base_str = [interpol(base, wll, cen_wl[0]), interpol(base, wll, cen_wl[1])]
+				base_str = [interpol(base[where((wl[indl] le median(wl[indl])+10) and (wl[indl] ge median(wl[indl])-10))], wll, cen_wl[0]), $
+				            interpol(base[where((wl[indl] le median(wl[indl])+10) and (wl[indl] ge median(wl[indl])-10))], wll, cen_wl[1])]
 				blend_msg = 'x'
 				if (finite(snr,/nan))[0] eq 1 then continue
 				if not keyword_set(current_pix) then begin
@@ -716,7 +717,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             	line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
             	E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 			if keyword_set(print_all) and not keyword_set(global_noise) then begin
-            	openw, gff, print_all+'.txt',/append,/get_lun
+        		openw, gff, print_all+'.txt',/append,/get_lun
 				printf, gff, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
             		object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
@@ -735,7 +736,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             	line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
             	E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 			if keyword_set(print_all) and not keyword_set(global_noise) then begin
-            	openw, gff, print_all+'.txt',/append,/get_lun
+        		openw, gff, print_all+'.txt',/append,/get_lun
 				printf, gff, format = '((a20,2X),(a20,2x),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),3(a20,2x))',$
             		object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
