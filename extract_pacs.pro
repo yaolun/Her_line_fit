@@ -359,8 +359,9 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		endif
         ; use the plot_base feature to plot the actual spectrum (with line) here
 		plot_base = [[wll],[fluxl]]
-		if line_name[i] eq 'OI3P0-3P1' then stop
-		if (filename eq 'EC82_centralSpaxel_PointSourceCorrected_CorrectedYES_trim') and (line_name[i] eq 'OI3P0-3P1') then stop
+		if n_elements(wlb) lt 3 then continue
+		; if line_name[i] eq 'OI3P0-3P1' then stop
+		; if (filename eq 'EC82_centralSpaxel_PointSourceCorrected_CorrectedYES_trim') and (line_name[i] eq 'OI3P0-3P1') then stop
         ; fit the baseline and return the baseline parameter in 'base_para'
         fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
 
