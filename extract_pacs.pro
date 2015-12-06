@@ -1070,7 +1070,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			endif else begin
             	; The read_line_ref procedure read the g, A, E_u from another file
             	read_line_ref, line_name[i], E_u, A, g
-            	base_str = interpol(base, wll, cen_wl);*fwhm
+				base_str = interpol(base[where((wl[indl] le median(wl[indl])+10) and (wl[indl] ge median(wl[indl])-10))], wll, cen_wl)
+            	; base_str = interpol(base, wll, cen_wl);*fwhm
             	if not keyword_set(ra) then ra = 0
             	if not keyword_set(dec) then dec = 0
 				if keyword_set(current_pix) then begin
@@ -1215,7 +1216,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					E_u = [E_u1,E_u2]
 					A = [A1,A2]
 					g = [g1,g2]
-					base_str = [interpol(base, wll, cen_wl[0]), interpol(base, wll, cen_wl[1])]
+					base_str = [interpol(base[where((wl[indl] le median(wl[indl])+10) and (wl[indl] ge median(wl[indl])-10))], wll, cen_wl[0]), $
+								interpol(base[where((wl[indl] le median(wl[indl])+10) and (wl[indl] ge median(wl[indl])-10))], wll, cen_wl[1])]
 					blend_msg = 'x'
 					; Throw away the bogus results due to the missing segment in the spectrum
 					if (finite(snr,/nan))[0] eq 1 then continue
