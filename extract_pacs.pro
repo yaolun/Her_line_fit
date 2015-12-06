@@ -439,7 +439,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             ; The read_line_ref procedure read the g, A, E_u from another file
             read_line_ref, line_name[i], E_u, A, g
             ; The baseline are in the unit of W/cm2/um
-            base_str = interpol(base, wll, cen_wl);*fwhm
+			base_str = interpol(base[where((wl[indl] le median(wl[indl])+10) and (wl[indl] ge median(wl[indl])-10))], wll, cen_wl)
             if not keyword_set(ra) then ra = 0
             if not keyword_set(dec) then dec = 0
             if keyword_set(current_pix) then begin
