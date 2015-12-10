@@ -26,9 +26,9 @@ c = 2.998d10
 ; nflux = fluxx - median(fluxx)
 
 ; baseline part
-; 
+;
 ; weight = 1+0*flux
-if not keyword_set(spire) then begin
+if (not keyword_set(spire)) and (not keyword_set(baseline)) then begin
     flux = flux[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
     if keyword_set(std) then std = std[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
     wl = wl[where((wl le median(wl)+10) and (wl ge median(wl)-10))]
@@ -51,7 +51,7 @@ endelse
 if keyword_set(feedback) then weight = feedback
 fluxx = flux*factor
 nflux = fluxx - median(fluxx)
-  
+
   ;baseline part
 if keyword_set(baseline) then begin
     ; Fit the baseline with 2nd order polynomial
@@ -75,7 +75,7 @@ if keyword_set(baseline) then begin
     	set_plot, 'ps'
 		!p.font = 0
 		device, filename = outdir+'base/'+pixelname+'_'+linename+'_base.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 14, decomposed = 0, /color
-    
+
     	loadct ,13,/silent
 		!p.thick = 3 & !x.thick = 3 & !y.thick = 3
         ylabel = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)'
@@ -91,7 +91,7 @@ if keyword_set(baseline) then begin
         device, /close_file, decomposed = 1
     endif
 endif
-  
+
 ; Fit the baseline substracted spectrum.
 if not keyword_set(baseline) then begin
     ; Calculate the baseline
@@ -166,7 +166,7 @@ if not keyword_set(baseline) then begin
             start[2] = dl & start[5] = dl
         endelse
     endif
-  
+
     if keyword_set(single_gauss) then begin
         parinfo = replicate({parname:'', value:0.D, fixed:0, limited:[0,0], limits:[0.D,0.D]}, 3)
         parinfo[*].parname = ['height','center','width']
@@ -290,7 +290,7 @@ if not keyword_set(baseline) then begin
         ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
         ; snr = height/noise
         ;
-        ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede            
+        ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
         if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
         if keyword_set(fixed_width) then sig_fwhm = -998
         if not keyword_set(spire) then begin
@@ -344,7 +344,7 @@ if not keyword_set(baseline) then begin
             ; endif
         endif
         snr = abs(str/(1.064*noise*fwhm))
-        
+
         ; Account for the oversample in spire band
         ; if keyword_set(spire) then snr = abs(str/noise/fwhm);/sqrt(4.8312294)
         ;snr = height/noise
@@ -360,7 +360,7 @@ if not keyword_set(baseline) then begin
             snr = reverse(snr)
         endif
         ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
-        ; 
+        ;
         if keyword_set(fix_dg) then sig_cen_wl = [-998,-998]
         for k = 0, 1 do begin
             if (parinfo[2].fixed ne 1) and (parinfo[5].fixed ne 1) then begin
@@ -370,14 +370,14 @@ if not keyword_set(baseline) then begin
             	endif
             endif
             if (parinfo[2].fixed eq 1) and (parinfo[5].fixed eq 1) then sig_fwhm[k] = -998
-  
+
         	if ((where(line[3*k] eq cen_wl[k]))[0] ne -1) and sig_cen_wl[k] eq 0 then sig_cen_wl[k] = -999
         	if (str[k] eq 0) then begin
                 sig_cen_wl[k] = -998
                 sig_str[k] = -998
             endif
             ; extra procedure to exclude the case with 0 in line strength uncertainty.  There are many situations that can lead to this outcome.  Always double-check each line.
-            if sig_str[k] eq 0 then sig_str[k] = -999 
+            if sig_str[k] eq 0 then sig_str[k] = -999
         endfor
 		endif
 
@@ -389,7 +389,7 @@ if not keyword_set(baseline) then begin
 		;if keyword_set(fixed_width) then msg = msg + '_fixwidth'
 		;if keyword_set(global_noise) then msg = msg + '_global_noise'
 		;
-	 
+
      ;Make a plot
 		;plot the well-functional fitting result
 		if not keyword_set(no_plot) then begin
@@ -400,7 +400,7 @@ if not keyword_set(baseline) then begin
 			endif else begin
 	  	  		device, filename = outdir+'double_gauss/'+pixelname+'_'+linename+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			endelse
-      
+
         	loadct ,13,/silent
 			!p.thick = 3 & !x.thick = 3 & !y.thick = 3
 			maxx = max([max(flux), height])
@@ -462,8 +462,8 @@ if not keyword_set(baseline) then begin
 			;xyouts, 0.7, 0.85, title_name(linename), /normal
 			device, /close_file, decomposed = 1
 			!p.multi = 0
-		endif    
-	endif else begin 
+		endif
+	endif else begin
         if keyword_set(single_gauss) then begin
             ind = where(wl gt line[1] and wl lt line[2])
             fluxx = flux-min(flux)
@@ -491,7 +491,7 @@ if not keyword_set(baseline) then begin
           	set_plot, 'ps'
     		!p.font = 0
     		device, filename = outdir+'cannot_fit/'+pixelname+'_'+linename+'cannot_fit'+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 14, decomposed = 0, /color
-          
+
           	loadct ,13,/silent
     		!p.thick = 3 & !x.thick = 3 & !y.thick = 3
     		plot, wl, (flux+base)/1d-22, psym = 10, xtitle = '!3!9m!3m', ytitle = '!3Flux Density(10!u-22!n W/cm!u2!n/!9m!3m)',position=[0.15,0.1,0.95,0.95]  ;plot the baseline substracted spectrum
