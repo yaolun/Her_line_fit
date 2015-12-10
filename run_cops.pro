@@ -13,7 +13,7 @@ if not keyword_set(print_all) then print_all = 0
 
 objname = []
 case 1 of
-	keyword_set(corrected): search_word = '*_spire_corrected.fits'
+	keyword_set(corrected): search_word = '*_spire_corrected_apod.fits'
 	keyword_set(cube): search_word = '*spectrum_extended_HR_aNB_15.fits'
 endcase
 ; Get the data listing
@@ -65,13 +65,13 @@ if keyword_set(print_all) and not keyword_set(no_fit) and not keyword_set(FWD) t
         	'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
 		free_lun, gff
 		close, gff
-		
+
 		openw, gff, outdir+print_all+global_outname+'_global_noise.txt',/get_lun
 		printf, gff, format='(19(a18,2x))',$
 			'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
 		free_lun, gff
 		close, gff
-		
+
 	endif
 	if keyword_set(cube) and not keyword_set(coadd) then begin
 		openw, gff, outdir+print_all+global_outname+'.txt',/get_lun
@@ -106,7 +106,7 @@ if obj_flag[0] ne '0' then begin
 	endelse
 endif
 
-; ignore object for 1d fitting which is done separately 
+; ignore object for 1d fitting which is done separately
 ;ignore_obj = ['B335','RCrA-IRS7B','BHR71']
 ignore_obj = ['BHR71']
 exception_obj = []
@@ -120,7 +120,7 @@ while i eq 1 do begin
 	if array_equal(objname,objname[where(objname ne objname[0])]) then i = 0
 	proj_file = proj_file[where(objname ne objname[0])]
 	objname = objname[where(objname ne objname[0])]
-	
+
 	if keyword_set(FWD) then begin
 		if file_test(outdir+'full_source_list.txt') eq 0 then begin
 			openw, tot_list, outdir+'full_source_list.txt',/get_lun
@@ -149,14 +149,14 @@ while i eq 1 do begin
 		endif
 
 	endif
-	
-	if keyword_set(single) then if current_obj ne single then continue  
+
+	if keyword_set(single) then if current_obj ne single then continue
 
 	if file_test(outdir+current_obj+'/spire/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/spire/data'
-	
+
 	if (where(ignore_obj eq current_obj))[0] ne -1 and not keyword_set(cube) then continue
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
-	
+
 	; design for cpoying FITS files
 	; if keyword_set(no_fit) then continue
 	; "filename" contains the all of the filepath of the object in each iteration
@@ -183,7 +183,7 @@ while i eq 1 do begin
 ;		skip_obj = []
 ;		if (where(skip_obj eq current_obj))[0] ne -1 then continue
 		; In case some spectra are complete enough to perform the smooth interpolation
-		
+
 		; special treatment for L1455-IRS3 since the corrected spectrum is not exist.
 ;		if current_obj ne 'L1455-IRS3' then begin
 		if (where(exception_obj eq current_obj))[0] eq -1 then begin
@@ -239,7 +239,7 @@ while i eq 1 do begin
 						   global_noise=global_noise,ra=ra_ssw,dec=dec_ssw,coordpix=pix_ssw,/ssw,noiselevel=noiselevel,/brightness,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,$
 						   /current_pix,double_gauss=double_gauss,no_plot=no_plot
 			endif
-			
+
 		endif else begin
 			noisetype='Local'
 			msg = ''
@@ -259,7 +259,7 @@ while i eq 1 do begin
 		endelse
 	endif
 	; For cube, but co-add the SLW and SSW spaxels into 1d spectrum at first, but still fit them separately
-	; 
+	;
 	if keyword_set(cube) and keyword_set(co_add) and not keyword_set(no_fit) then begin
 		ra = ra[where(pix_slw eq 'SLWC3')]
 		dec = dec[where(pix_slw eq 'SLWC3')]
@@ -284,7 +284,7 @@ while i eq 1 do begin
 	endif
 	; Write the information of different species into different files
 	;
-	
+
 	if keyword_set(refine) and not keyword_set(cube) then begin
 ;		refine_list = file_search(outdir+current_obj+'/spire/advanced_products/species_separated/', current_obj+name+'*')
 ;		if n_elements(refine_list) eq 1 then begin
@@ -293,7 +293,7 @@ while i eq 1 do begin
 		;print,'-----> Clean up (species_separated) folder for updating the results.'
 		refine_fitting, indir=outdir+current_obj+'/spire/advanced_products/',filename=current_obj+'_spire_corrected'+outname,outdir=outdir+current_obj+'/spire/advanced_products/species_separated/',/all,/spire
 	endif
-	
+
 	if keyword_set(refine) and keyword_set(cube) and keyword_set(co_add) then begin
 ;		refine_list = file_search(outdir+current_obj+'/spire/advanced_products/cube/species_separated/', current_obj+'_summed_*')
 ;		if n_elements(refine_list) eq 1 then begin
@@ -302,7 +302,7 @@ while i eq 1 do begin
 		;print,'-----> Clean up (species_separated) folder for updating the results.'
 		refine_fitting, indir=outdir+current_obj+'/spire/advanced_products/cube/',filename=current_obj+'_summed_'+outname,outdir=outdir+current_obj+'/spire/advanced_products/cube/species_separated/',/all,/spire,/cube
 	endif
-	
+
 	if keyword_set(refine) and keyword_set(cube) and not keyword_set(co_add) then begin
 		name_slw = ['SLWA1','SLWA2','SLWA3','SLWB1','SLWB2','SLWB3','SLWB4','SLWC1','SLWC2','SLWC3','SLWC4','SLWC5','SLWD1','SLWD2','SLWD3','SLWD4','SLWE1','SLWE2','SLWE3']
 		name_ssw = ['SSWA1','SSWA2','SSWA3','SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3','SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
@@ -316,7 +316,7 @@ while i eq 1 do begin
 			refine_fitting, indir=outdir+current_obj+'/spire/advanced_products/cube/',filename=current_obj+'_'+pix_name[pix]+outname,outdir=outdir+current_obj+'/spire/advanced_products/cube/species_separated/',/all,/spire,/cube
 		endfor
 	endif
-	
+
 	; Plot the contour
 	if keyword_set(contour) and keyword_set(cube) then begin
 		skip = ['GSS30-IRS1','IRAS15398','IRAS03301','L723-MM','TMC1','VLA1623']
