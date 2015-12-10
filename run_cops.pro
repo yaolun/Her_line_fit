@@ -156,7 +156,7 @@ while i eq 1 do begin
 	
 	if (where(ignore_obj eq current_obj))[0] ne -1 and not keyword_set(cube) then continue
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
-	
+	if current_obj eq 'BHR71' and keyword_set(corrected) then stop
 	; design for cpoying FITS files
 	; if keyword_set(no_fit) then continue
 	; "filename" contains the all of the filepath of the object in each iteration
