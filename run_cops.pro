@@ -13,7 +13,7 @@ if not keyword_set(print_all) then print_all = 0
 
 objname = []
 case 1 of
-	keyword_set(corrected): search_word = '*_spire_corrected_apod.fits'
+	keyword_set(corrected): search_word = '*_spire_corrected.fits'
 	keyword_set(cube): search_word = '*spectrum_extended_HR_aNB_15.fits'
 endcase
 ; Get the data listing
