@@ -535,7 +535,7 @@ endif else begin
 		if n_elements(wl_b2b) gt 1 then oplot, wl_b2b, flux_b2b, color=160, thick=2   ;green
 		if n_elements(wl_r1s) gt 1 then oplot, wl_r1s, flux_r1s, color=237, thick=2   ;orange
 		if n_elements(wl_r1l) gt 1 then oplot, wl_r1l, flux_r1l, color=250, thick=2   ;red
-		al_legend, ['B2A','B2B','R1A','R1B'],textcolors = [60, 160, 237, 250],/left
+		al_legend, ['B2A','B2B','R1A','R1B'],textcolors = [60, 160, 237, 250],/right
 		device, /close_file,decomposed=1
 		!p.multi = 0
 		openw, lun, outdir+objname+name+'_trim.txt',/get_lun
