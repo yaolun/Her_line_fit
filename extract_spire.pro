@@ -55,27 +55,27 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
     				  'o-H2O3_12-3_03','o-H2O5_32-4_41','o-H2O1_10-1_01'];,'o-H2O4_23-3_30'
     line_center_oh2o = [212.5309344,226.7664669,229.2112944,231.2537873,234.5364534,256.5992833,257.8011350,258.8222114,259.9887495,261.4637873,$
     					273.1998800,483.0021428,538.3023584];,669.1946510
-	
+
 	line_name_ph2o = ['p-H2O7_26-6_33','p-H2O9_46-10_19','p-H2O7_44-8_17','p-H2O2_20-2_11','p-H2O4_22-4_13','p-H2O8_53-7_62','p-H2O7_44-6_51','p-H2O1_11-0_00','p-H2O2_02-1_11','p-H2O5_24-4_31',$
 					  'p-H2O4_22-3_31','p-H2O9_28-8_35','p-H2O2_11-2_02','p-H2O6_24-7_17','p-H2O5_33-4_40','p-H2O6_42-5_51']
 	line_center_ph2o = [208.0814648,208.9186114,222.9532762,243.9800446,248.2530166,251.7573722,255.6872873,269.2790845,303.4638096,308.9717523,$
 						327.2312598,330.8298372,398.6525967,613.7265992,631.5709820,636.6680083]
-	
+
 	line_name_co = ['CO13-12','CO12-11','CO11-10','CO10-9','CO9-8','CO8-7','CO7-6','CO6-5','CO5-4','CO4-3']
 	line_center_co = [200.27751475,216.93275100,236.61923625,260.24634206,289.12760810,325.23334516,371.65973939,433.56713410,520.24411585,650.26787364]
-	
+
 	line_name_13co = ['13CO13-12','13CO12-11','13CO11-10','13CO10-9','13CO9-8','13CO8-7','13CO7-6','13CO6-5','13CO5-4']
 	line_center_13co = [209.481440501,226.903680083,247.496622503,272.21147644,302.422210195,340.18977646,388.752815449,453.509061166,544.174435197]
-	
+
 	line_name_hco = ['HCO+16-15','HCO+15-14','HCO+14-13','HCO+13-12','HCO+12-11','HCO+11-10','HCO+10-9','HCO+9-8','HCO+8-7','HCO+7-6','HCO+6-5']
 	line_center_hco = [210.28816791,224.28135601,240.27541266,258.73206751,280.26711943,305.71952487,336.26530802,373.60195435,420.27521465,480.28810368,560.30913387]
-	
+
 	line_name_other = ['NII_205','CI3P2-3P0','CI3P2-3P1','CI3P1-3P0','CH+1-0'];,'Unknown_221.3','Unknown_225.2']
 	line_center_other = [205.178,230.349132,370.424383,609.150689,358.99894016];,221.3,225.2]
-	
+
 	line_name = [line_name_oh2o, line_name_ph2o, line_name_co, line_name_13co, line_name_hco, line_name_other]
 	line_center = [line_center_oh2o, line_center_ph2o, line_center_co, line_center_13co, line_center_hco, line_center_other]
-	
+
 	; Define the range of line center by setting the range within 2 times of the resolution elements of the line center
 	range = []
 	range_factor=2
@@ -148,7 +148,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
     	if keyword_set(filename) then readcol, indir+filename+'.txt', format='D,D', wl, flux, /silent
 		flux = flux[sort(wl)] & wl = wl[sort(wl)]
     	; Convert the flux to appropriate unit (W/cm2/um)
-		flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26	
+		flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26
 		if keyword_set(slw) then begin
 			flux = flux[where(wl ge 314)]
 			wl = wl[where(wl ge 314)]
@@ -165,7 +165,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		endfor
 
 		wl_basepool = wl[where(base_mask ne 0)] & flux_basepool = flux[where(base_mask ne 0)]
-	
+
 		if keyword_set(ssw) then begin
 			line_name = line_name[where(line_center ge 195.013 and line_center le 303.959)]
 			range = range[*,where(line_center ge 195.013 and line_center le 303.959)]
@@ -210,7 +210,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
                 base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
                 indl = where(wl gt base_range[0] and wl lt base_range[3])
                 wll = wl[indl] & fluxl = flux[indl]
-            endif 
+            endif
             if left[0] eq -1 and right[0] ne -1 then begin
                 wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
                 base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
@@ -229,7 +229,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; use the plot_base feature to plot the actual spectrum (with line) here
 			plot_base = [[wll],[fluxl]]
 			fit_line, object+'_'+pixelname[j], line_name[i], wlb, fluxb, std=abs(fluxb)*0.07, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir,no_plot=no_plot, plot_base=plot_base,/spire,brightness=brightness
-			
+
 			; extract the wave and flux for plottng that is for better visualization of the fitting results.
 			ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
 			plot_wl = wl[ind_plot] & plot_flux = flux[ind_plot]
@@ -307,7 +307,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					printf, firstfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
 						line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra[j], dec[j], pixelname[j], blend_msg
 				endelse
-			endelse 
+			endelse
 		endfor
 		; Double Gaussian fit
 		if keyword_set(double_gauss) then begin
@@ -449,7 +449,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
             	blend_msg = 'Red/Blue'
 				blend_flag = 2
 			endif
-			blend_msg_all = [blend_msg_all,blend_msg]			
+			blend_msg_all = [blend_msg_all,blend_msg]
 			if n_elements(blend_subgroup) eq 0 then group_flag = 0
 			if blend_flag ge group_flag then begin
 				if blend_flag eq 0 then continue
@@ -467,12 +467,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					blend_subgroup = [[blend_subgroup],[line_name_n[line],string(E_u_n[line])]]
 					group_flag = blend_flag
 				endif
-			endelse	
+			endelse
 		endfor
 		; Artificially remove CI3P2-3P1 from possible line and add CO7-6
 		; if (where(possible_all eq 'CO7-6'))[0] eq -1 then possible_all = [possible_all,'CO7-6']
 		; if (where(possible_all eq 'CI3P2-3P1'))[0] ne -1 then possible_all = possible_all[where(possible_all ne 'CI3P2-3P1')]
-		; 
+		;
 		openw, firstfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
 			printf, firstfit, format='((a20,2x),17(a20,2x))', $
@@ -591,7 +591,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			device, /close_file, decomposed = 1
 			!p.multi = 0
 		endif
-		
+
 		; Construct the smooth/featureless spectrum to calculate the noise properly
 		if keyword_set(global_noise) then begin
 			print, '---> Re-calculating the noise level...'
@@ -626,7 +626,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						al_legend, ['Data','Line+Baseline Fit','Subtraction'], textcolors=[0,120,200], /right
 						device, /close_file, decomposed=1
 						!p.multi=0
-					endif					
+					endif
 				endif
 			endfor
 
@@ -640,8 +640,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			if keyword_set(filename) then name_dum = outdir + filename
 			if keyword_set(continuum_sub) then begin
     			openw, sed, name_dum+'_continuum.txt', /get_lun
-    			if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-    			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+    			if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)'
+    			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wavelength(um)','I_nu(Jy/as2)'
 				print_continuum_sub = continuum_sub*1d26*1d6*(wl*1d-6)^2/c*1d4
 				for k =0, n_elements(wl)-1 do printf, sed, format='(2(g16.6,2x))', wl[k],print_continuum_sub[k]
 				free_lun, sed
@@ -649,16 +649,16 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endif
 			if keyword_set(flat) then begin
     			openw, flat_sed, name_dum+'_flat_spectrum.txt',/get_lun
-				if keyword_set(fx) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-    			if keyword_set(brightness) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+				if keyword_set(fx) then printf, flat_sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)'
+    			if keyword_set(brightness) then printf, flat_sed, format='(2(a16,2x))','Wavelength(um)','I_nu(Jy/as2)'
 				flat = (flux - continuum_sub) *1d26*1d6*(wl*1d-6)^2/c*1d4
 				for k =0, n_elements(wl)-1 do printf, flat_sed, format='(2(g16.6,2x))',wl[k],flat[k]
 				free_lun, flat_sed
 				close,flat_sed
 			endif
 			openw, noise_sed, name_dum+'_residual_spectrum.txt',/get_lun
-			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)'
+			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wavelength(um)','I_nu(Jy/as2)'
 			print_flatnoise = flat_noise *1d26*1d6*(wl*1d-6)^2/c*1d4
 			for k =0, n_elements(wl)-1 do printf, noise_sed, format='(2(g16.6,2x))',wl[k],print_flatnoise[k]
 			free_lun, noise_sed
@@ -698,7 +698,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				printf, secondfit, format='((a20,2x),17(a20,2x))',$
     				'Line','LabWL (um)','ObsWL (um)','Sig_Cen (um)','Str(W/cm2'+unit+')','Sig_str(W/cm2'+unit+')','FWHM (um)','Sig_FWHM (um)','Base(W/cm2/um'+unit+')','Noise(W/cm2/um'+unit+')','SNR','E_u (K)','A (s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend'
 			endelse
-    		
+
 			for i = 0, n_elements(line_name)-1 do begin
 				if (keyword_set(double_gauss)) and ((where(excluded_line eq line_name[i]))[0] ne -1) then continue
         		; select the baseline
@@ -706,7 +706,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				dlb = localbaseline*dl
 				wl_diff = wl[1:-1]-wl[0:-2]
 				numb = ceil(dlb/(wl_diff[where(wl ge line_center[i])])[0])
-			
+
 				left = where(wl_basepool lt range[0,i] and wl_basepool ge min(wl)) & right = where(wl_basepool gt range[1,i] and wl_basepool le max(wl))
 				if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
 				if n_elements(right) gt numb then right = right[0:numb-1]
@@ -715,7 +715,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
 					indl = where(wl gt base_range[0] and wl lt base_range[3])
 					wll = wl[indl] & fluxl = flux[indl]
-				endif 
+				endif
 				if left[0] eq -1 and right[0] ne -1 then begin
                 	wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
 					base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
@@ -762,7 +762,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					if not keyword_set(test) then fit_line, object+'_'+pixelname[j], line_name[i], wll, fluxx, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 										  /single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, brightness=brightness,no_plot=no_plot,/spire
 				endelse
-				
+
 				; A third fitting right after the noise being well-estimated.
 				; Use the feedback keyword to feed in the noise level at certain wavelength and treat it as the local noise level.
 				feedback = noise + fluxx*0
@@ -819,8 +819,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						printf, secondfit, format = '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
 						line_name[i], line_center[i], cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra[j], dec[j], pixelname[j], blend_msg
 					endelse
-					
-				endelse 
+
+				endelse
 			endfor
 			; Double Gaussian fit
 			if keyword_set(double_gauss) then begin
@@ -838,7 +838,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
 						indl = where(wl gt base_range[0] and wl lt base_range[3])
 						wll = wl[indl] & fluxl = flux[indl]
-					endif 
+					endif
 					if left[0] eq -1 and right[0] ne -1 then begin
                 		wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
 						base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
@@ -876,7 +876,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					; Different fitting keyword for fixed width and test arguement
 					fit_line,object+'_'+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
 					 	noiselevel=noiselevel,base_range=base_range,plot_base=plot_base,global_noise=flat_noise_smooth,/fix_dg,/spire,/fixed_width,brightness=brightness
-		
+
 					; A third fitting to take the well-estimated noise as the error of the data into the fitting routine to get the best estimation of the unceratinty of the fitted parameters
 					feedback = noise + fluxx*0
 					fit_line,object+'_'+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
@@ -920,7 +920,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endif
 			free_lun, secondfit
 			close, secondfit
-			
+
 			; Identify the blended lines
 			; print, '----> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
 			; name = filename+'_lines'
@@ -936,7 +936,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A', $
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, /silent, skipline=1
 			endelse
-			
+
 			blend_subgroup = []
 			blend_msg_all = []
 			possible_all = []
@@ -969,7 +969,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
             		blend_msg = 'Red/Blue'
 					blend_flag = 2
 				endif
-				blend_msg_all = [blend_msg_all,blend_msg]			
+				blend_msg_all = [blend_msg_all,blend_msg]
 				if n_elements(blend_subgroup) eq 0 then group_flag = 0
 				if blend_flag ge group_flag then begin
 					if blend_flag eq 0 then continue
@@ -987,12 +987,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						blend_subgroup = [[blend_subgroup],[line_name_n[line],string(E_u_n[line])]]
 						group_flag = blend_flag
 					endif
-				endelse	
+				endelse
 			endfor
 			; Artificially remove CI3P2-3P1 from possible line and add CO7-6
 			; if (where(possible_all eq 'CO7-6'))[0] eq -1 then possible_all = [possible_all,'CO7-6']
 			; if (where(possible_all eq 'CI3P2-3P1'))[0] ne -1 then possible_all = possible_all[where(possible_all ne 'CI3P2-3P1')]
-			; 
+			;
 			; openw, secondfit, name+'_global_noise.txt', /get_lun
 			openw, secondfit, name+'.txt', /get_lun
 			if not keyword_set(current_pix) then begin
@@ -1062,7 +1062,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,A,I',$
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, pix_n, blend_flag_n, lowest_E_n, /silent
 			endelse
-			
+
 			flux_sub = flux
 			for line = 0, n_elements(line_name_n)-1 do begin
     			if snr_n[line] ge noiselevel then begin
@@ -1095,8 +1095,8 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			if keyword_set(filename) then name_dum = outdir + filename
 			if keyword_set(continuum_sub) then begin
     			openw, sed, name_dum+'_continuum.txt', /get_lun
-    			if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-    			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+    			if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)'
+    			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wavelength(um)','I_nu(Jy/as2)'
 				print_continuum_sub = continuum_sub*1d26*1d6*(wl*1d-6)^2/c*1d4
 				for k =0, n_elements(wl)-1 do printf, sed, format='(2(g16.6,2x))', wl[k],print_continuum_sub[k]
 				free_lun, sed
@@ -1104,16 +1104,16 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endif
 			if keyword_set(flat) then begin
     			openw, flat_sed, name_dum+'_flat_spectrum.txt',/get_lun
-				if keyword_set(fx) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-    			if keyword_set(brightness) then printf, flat_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+				if keyword_set(fx) then printf, flat_sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)'
+    			if keyword_set(brightness) then printf, flat_sed, format='(2(a16,2x))','Wavelength(um)','I_nu(Jy/as2)'
 				flat = (flux - continuum_sub) *1d26*1d6*(wl*1d-6)^2/c*1d4
 				for k =0, n_elements(wl)-1 do printf, flat_sed, format='(2(g16.6,2x))',wl[k],flat[k]
 				free_lun, flat_sed
 				close,flat_sed
 			endif
 			openw, noise_sed, name_dum+'_residual_spectrum.txt',/get_lun
-			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)'
-			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wave (um)','I_nu (Jy/as2)'
+			if keyword_set(fx) then printf, noise_sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)'
+			if keyword_set(brightness) then printf, noise_sed, format='(2(a16,2x))','Wavelength(um)','I_nu(Jy/as2)'
 			print_flatnoise = flat_noise *1d26*1d6*(wl*1d-6)^2/c*1d4
 			for k =0, n_elements(wl)-1 do printf, noise_sed, format='(2(g16.6,2x))',wl[k],print_flatnoise[k]
 			free_lun, noise_sed
@@ -1145,7 +1145,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			al_legend,[object+' '+plot_pixelname[j]],textcolors= [0],/left
 			device, /close_file, decomposed = 1
 			!p.multi = 0
-			
+
 		endif
 	endfor
 end

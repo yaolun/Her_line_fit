@@ -100,25 +100,25 @@ if keyword_set(general) then begin
 	for x = 0, 4 do begin
 		for y = 0, 4 do begin
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.txt',/get_lun
-			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)' 
+			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'; , 'Error(Jy)'
 			for dum = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.10,2x))',wl[dum],flux[x,y,dum];,std[x,y,dum]
 			free_lun, lun
 			close, lun
-			
+
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_coord.txt',/get_lun
-			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)' 
+			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)'
 			for dum = 0, n_elements(wl)-1 do printf, lun, format='(3(g16.12,2x))', wl[dum], ra[x,y,dum], dec[x,y,dum]
 			free_lun, lun
 			close, lun
-			
+
 			; Make a plot
-		
+
 			set_plot, 'ps'
 			!p.font=0
 			loadct,13,/silent
 			!p.thick=3 & !x.thick=3 & !y.thick=3
 			device, filename = plotdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
-			plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)', thick=2;,/nodata
+			plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux Density (Jy)', thick=2;,/nodata
 			al_legend, [objname], textcolors=[0], /left
 			device, /close_file,decomposed=1
 			!p.multi = 0
@@ -136,7 +136,7 @@ endif else begin
 		band = strtrim(sxpar(hdr,'BAND'),1)
 		band = strcompress(band,/remove_all)
 		; Save all the information of this object into arrays
-	
+
 		case 1 of
 			band eq 'B2A': begin
 				wl_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
@@ -170,7 +170,7 @@ endif else begin
 				endelse
 			end
 		endcase
-	
+
 		for x = 0, 4 do begin
 			for y = 0, 4 do begin
 				flux_dum[x,y,*] = flux_dum[x,y,sort(wl_dum)]
@@ -234,7 +234,7 @@ endif else begin
 			dec = []
 			; Write into ACSII file
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.txt',/get_lun
-			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'
+			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'
 			if n_elements(wl_b2a) ne 0 then begin
 				for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(2(g16.10,2x))',wl_b2a[x,y,dum],flux_b2a[x,y,dum]; ,std_b2a[x,y,dum]
 				wl = [wl,reform(wl_b2a[x,y,*])] & flux = [flux,reform(flux_b2a[x,y,*])] & std = [std,reform(std_b2a[x,y,*])]
@@ -253,9 +253,9 @@ endif else begin
 			endif
 			free_lun, lun
 			close, lun
-		
+
 			; Write the RA & Dec coordinate into ASCII file
-			
+
 
 
 			;openw, lun, outdir+objname+'_pacs_coord.txt',/append
@@ -287,9 +287,9 @@ endif else begin
 			;printf, lun, format='((a4,2x),2(g16.8,2x))', strtrim(string(pix),1), mean(ra_dum[x,y,*]), mean(dec_dum[x,y,*])
 			;free_lun, lun
 			;close, lun
-		
+
 			; Make a plot
-		
+
 			;wl = [reform(wl_b2a[x,y,*]), reform(wl_b2b[x,y,*]), reform(wl_r1s[x,y,*]), reform(wl_r1l[x,y,*])]
 			;flux = [reform(flux_b2a[x,y,*]), reform(flux_b2b[x,y,*]), reform(flux_r1s[x,y,*]), reform(flux_r1l[x,y,*])]
 			set_plot, 'ps'
@@ -297,7 +297,7 @@ endif else begin
 			loadct,13,/silent
 			!p.thick=3 & !x.thick=3 & !y.thick=3
 			device, filename = plotdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
-			plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)',/nodata
+			plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux Density (Jy)',/nodata
 			if n_elements(wl_b2a) ne 0 then oplot, reform(wl_b2a[x,y,*]), reform(flux_b2a[x,y,*]), color=60    , thick=2  ;blue
 			if n_elements(wl_b2b) ne 0 then oplot, reform(wl_b2b[x,y,*]), reform(flux_b2b[x,y,*]), color=160   , thick=2  ;green
 			if n_elements(wl_r1s) ne 0 then oplot, reform(wl_r1s[x,y,*]), reform(flux_r1s[x,y,*]), color=237   , thick=2  ;orange
@@ -323,7 +323,7 @@ if keyword_set(centralyes) then name = '_centralSpaxel_PointSourceCorrected_Corr
 if keyword_set(centralno) then name = '_centralSpaxel_PointSourceCorrected_CorrectedNO'
 
 if (where(special_list eq objname))[0] eq -1 then begin
-	
+
 
 if file_test(coorddir+objname+'_pacs_pixel13_os8_sf7_coord.txt') eq 1 then begin
 	readcol, coorddir+objname+'_pacs_pixel13_os8_sf7_coord.txt', format='D,D,D', wl_coord, ra, dec, /silent
@@ -347,7 +347,7 @@ endif else begin
 endelse
 if keyword_set(general) then begin
 	hdr = headfits(filename[0],/silent)
-		
+
 ;	ra = double(sxpar(hdr,'RA'))
 ;	dec = double(sxpar(hdr,'Dec'))
 	wl = []
@@ -433,11 +433,11 @@ if keyword_set(general) then begin
 	loadct,13,/silent
 	!p.thick=3 & !x.thick=3 & !y.thick=3
 	device, filename = outdir+objname+name+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
-	plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)', thick=2;,/nodata
+	plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux Density (Jy)', thick=2;,/nodata
 	device, /close_file,decomposed=1
 	!p.multi = 0
 	openw, lun, outdir+objname+name+'_trim.txt',/get_lun
-	printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+	printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'; , 'Error(Jy)'
 	for i = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2X))',wl[i],flux[i]; ,std[i]
 	free_lun, lun
 	close, lun
@@ -445,7 +445,7 @@ endif else begin
 	hdr = headfits(filename[0],/silent)
 ;	ra = double(sxpar(hdr,'RA'))
 ;	dec = double(sxpar(hdr,'Dec'))
-	
+
 	objname = strcompress(objname,/remove_all)
 	wl_b2a = [] & flux_b2a = [] & std_b2a = []
 	wl_b2b = [] & flux_b2b = [] & std_b2b = []
@@ -472,7 +472,7 @@ endif else begin
 					wl_b2a = wl_dum[where(wl_dum ge 54.80 and wl_dum lt 72.3)]
 					if keyword_set(trim_detail) then begin
 						openw, print_b2a, outdir+objname+name+'_b2a.txt', /get_lun
-						printf, print_b2a, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+						printf, print_b2a, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'; , 'Error(Jy)'
 						for j = 0, n_elements(wl_dum)-1 do printf, print_b2a, format='(2(g16.6,2X))',wl_dum[j],flux_dum[j];,std_dum[j]
 						free_lun, print_b2a
 						close, print_b2a
@@ -484,7 +484,7 @@ endif else begin
 					wl_b2b = wl_dum[where(wl_dum ge 72.3 and wl_dum le 95.05)]
 					if keyword_set(trim_detail) then begin
 						openw, print_b2b, outdir+objname+name+'_b2b.txt', /get_lun
-						printf, print_b2b, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+						printf, print_b2b, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'; , 'Error(Jy)'
 						for j = 0, n_elements(wl_dum)-1 do printf, print_b2b, format='(2(g16.6,2X))',wl_dum[j],flux_dum[j];,std_dum[j]
 						free_lun, print_b2b
 						close, print_b2b
@@ -497,7 +497,7 @@ endif else begin
 						wl_r1s = wl_dum[where(wl_dum ge 103 and wl_dum lt 143)]
 						if keyword_set(trim_detail) then begin
 							openw, print_r1s, outdir+objname+name+'_r1s.txt', /get_lun
-							printf, print_r1s, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+							printf, print_r1s, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'; , 'Error(Jy)'
 							for j = 0, n_elements(wl_dum)-1 do printf, print_r1s, format='(2(g16.6,2X))',wl_dum[j],flux_dum[j];,std_dum[j]
 							free_lun, print_r1s
 							close, print_r1s
@@ -508,7 +508,7 @@ endif else begin
 						wl_r1l = wl_dum[where(wl_dum ge 143 and wl_dum le 190.31)]
 						if keyword_set(trim_detail) then begin
 							openw, print_r1l, outdir+objname+name+'_r1l.txt', /get_lun
-							printf, print_r1l, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+							printf, print_r1l, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'; , 'Error(Jy)'
 							for j = 0, n_elements(wl_dum)-1 do printf, print_r1l, format='(2(g16.6,2X))',wl_dum[j],flux_dum[j];,std_dum[j]
 							free_lun, print_r1l
 							close, print_r1l
@@ -529,7 +529,7 @@ endif else begin
 		loadct,13,/silent
 		!p.thick=3 & !x.thick=3 & !y.thick=3
 		device, filename = outdir+objname+name+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
-		plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = '!3Flux (Jy)!3',/nodata
+		plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = '!3Flux Density(Jy)!3',/nodata
 		;if objname eq 'EC82' then stop
 		if n_elements(wl_b2a) gt 1 then oplot, wl_b2a, flux_b2a, color=60 , thick=2   ;blue
 		if n_elements(wl_b2b) gt 1 then oplot, wl_b2b, flux_b2b, color=160, thick=2   ;green
@@ -539,7 +539,7 @@ endif else begin
 		device, /close_file,decomposed=1
 		!p.multi = 0
 		openw, lun, outdir+objname+name+'_trim.txt',/get_lun
-		printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)';, 'Error(Jy)'
+		printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)';, 'Error(Jy)'
 		for i = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2X))',wl[i],flux[i];,std[i]
 		free_lun, lun
 		close, lun
@@ -552,7 +552,7 @@ if (where(special_list eq objname))[0] ne -1 then begin
 ;	ra = double(sxpar(hdr,'RA'))
 ;	dec = double(sxpar(hdr,'Dec'))
 	objname = strcompress(objname,/remove_all)
-	
+
 	if not keyword_set(datadir) then begin
 		;datadir = '~/HSA_archive_data/'
 		datadir = '~/foryaolun/'
@@ -585,7 +585,7 @@ if (where(special_list eq objname))[0] ne -1 then begin
 								  'OBSID_1342209401_DR21(OH)_red'+name+'_slice_03_os8sf7.fits','OBSID_1342209400_DR21(OH)_red'+name+'_slice_00_os8sf7.fits']
 		end
 		objname eq 'NGC7538-IRS1':begin
-			
+
 			filename = datadir + ['OBSID_1342258102_NGC7538-IRS1_blue'+name+'_slice_00_os8sf7.fits','OBSID_1342258102_NGC7538-IRS1_red'+name+'_slice_00_os8sf7.fits',$
 								  'OBSID_1342258102_NGC7538-IRS1_red'+name+'_slice_01_os8sf7.fits','OBSID_1342258102_NGC7538-IRS1_red'+name+'_slice_02_os8sf7.fits']
 		end
@@ -602,9 +602,9 @@ if (where(special_list eq objname))[0] ne -1 then begin
 								  'OBSID_1342217941_W28A_blue'+name+'_slice_00_os8sf7.fits','OBSID_1342217941_W28A_red'+name+'_slice_00_os8sf7.fits']
 		end
 	endcase
-	
+
 	wl = [] & flux = [] & std = []
-	
+
 	wl_b3a = [] & flux_b3a = [] & std_b3a = []
 	wl_b2b_1 = [] & flux_b2b_1 = [] & std_b2b_1 = []
 	wl_b2b_2 = [] & flux_b2b_2 = [] & std_b2b_2 = []
@@ -634,7 +634,7 @@ if (where(special_list eq objname))[0] ne -1 then begin
 				flux = [flux[where(wl lt min(wl_dum))], flux_dum]
 				std = [std[where(wl lt min(wl_dum))], std_dum]
 			endelse
-			
+
 		endfor
 		wl = wl[where(flux gt 0)]
 		std = std[where(flux gt 0)]
@@ -648,16 +648,16 @@ if (where(special_list eq objname))[0] ne -1 then begin
 		loadct,13,/silent
 		!p.thick=3 & !x.thick=3 & !y.thick=3
 		device, filename = outdir+objname+name+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 10, decomposed = 0, /color
-		plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux (Jy)', thick=2;,/nodata
+		plot, wl, flux, xtitle = 'Wavelength (!9m!3m)', ytitle = 'Flux Density (Jy)', thick=2;,/nodata
 		device, /close_file,decomposed=1
 		!p.multi = 0
-		
+
 		if keyword_set(central9) then name = '_central9Spaxels_PointSourceCorrected'
 		if keyword_set(centralyes) then name = '_centralSpaxel_PointSourceCorrected_CorrectedYES'
 		if keyword_set(centralno) then name = '_centralSpaxel_PointSourceCorrected_CorrectedNO'
-		
+
 		openw, lun, outdir+objname+name+'_trim.txt',/get_lun
-		printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux(Jy)'; , 'Error(Jy)'
+		printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'; , 'Error(Jy)'
 		for i = 0, n_elements(wl)-1 do printf, lun, format='(2(g16.6,2X))',wl[i],flux[i]; ,std[i]
 		free_lun, lun
 		close, lun
@@ -700,5 +700,3 @@ for rec = 0, n_elements(reduction)-1 do begin
 	endfor
 endfor
 end
-
-

@@ -847,7 +847,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	; Do I want to output the unceratinty with the continuum and flat spectrum?
     	if keyword_set(continuum_sub) then begin
     		openw, sed, outdir+filename+'_continuum.txt', /get_lun
-    		printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)';,'Uncertainty (Jy)'
+    		printf, sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)';,'Uncertainty (Jy)'
     		print_continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		; stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		for k =0, n_elements(wl)-1 do printf, sed, format='(3(g16.6,2x))', wl[k],print_continuum_sub[k];,stdd[k]
@@ -856,7 +856,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	endif
     	if keyword_set(flat) then begin
     		openw, flat_sed, outdir+filename+'_flat_spectrum.txt',/get_lun
-    		printf, flat_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)';,'Uncertainty (Jy)'
+    		printf, flat_sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)';,'Uncertainty (Jy)'
     		flat = (flux-continuum_sub)*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		; stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		for k =0, n_elements(wl)-1 do printf, flat_sed, format='(3(g16.6,2x))',wl[k],flat[k];,stdd[k]
@@ -864,7 +864,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		close,flat_sed
     	endif
 	    openw, noise_sed, outdir+filename+'_residual_spectrum.txt',/get_lun
-		printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)';,'Uncertainty (Jy)'
+		printf, noise_sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)';,'Uncertainty (Jy)'
 		print_flatnoise = flat_noise*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
 		; stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
 		for k =0, n_elements(wl)-1 do printf, noise_sed, format='(3(g16.6,2x))',wl[k],print_flatnoise[k];,stdd[k]
@@ -1414,7 +1414,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 
 		if keyword_set(continuum_sub) then begin
     		openw, sed, outdir+filename+'_continuum.txt', /get_lun
-    		printf, sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)';,'Uncertainty (Jy)'
+    		printf, sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)';,'Uncertainty (Jy)'
     		print_continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		; stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		for k =0, n_elements(wl)-1 do printf, sed, format='(3(g16.6,2x))', wl[k],print_continuum_sub[k];,stdd[k]
@@ -1423,7 +1423,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	endif
     	if keyword_set(flat) then begin
     		openw, flat_sed, outdir+filename+'_flat_spectrum.txt',/get_lun
-    		printf, flat_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)';,'Uncertainty (Jy)'
+    		printf, flat_sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)';,'Uncertainty (Jy)'
     		flat = (flux-continuum_sub) *1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		; stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
     		for k =0, n_elements(wl)-1 do printf, flat_sed, format='(3(g16.6,2x))',wl[k],flat[k];,stdd[k]
@@ -1431,7 +1431,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     		close,flat_sed
     	endif
 		openw, noise_sed, outdir+filename+'_residual_spectrum.txt',/get_lun
-		printf, noise_sed, format='(2(a16,2x))','Wave (um)','Flux (Jy)';,'Uncertainty (Jy)'
+		printf, noise_sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)';,'Uncertainty (Jy)'
 		print_flatnoise = flat_noise *1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
 		; stdd = std*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
 		for k =0, n_elements(wl)-1 do printf, noise_sed, format='(3(g16.6,2x))',wl[k],print_flatnoise[k];,stdd[k]
