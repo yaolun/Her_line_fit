@@ -488,13 +488,13 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			if finite(snr_n[line],/nan) eq 1 then lowest = '0'
 			if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) then lowest = '0'
 			if not keyword_set(current_pix) then begin
-				printf, firstfit, format = '( (a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),2(a20,2x) )',$
+				printf, firstfit, format = '( (a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),2(a20,2x) )',$
 				; '((a20,2X),10(g20.10,2X),2(g20.10,2X),(i20,2x),2(g20.10,2X),2(a20,2x))',$
             		line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 				if keyword_set(print_all) and not keyword_set(global_noise) then begin
 					openw, gff, print_all+'.txt',/append,/get_lun
-					printf, gff, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),2(a20,2x) )',$
+					printf, gff, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),2(a20,2x) )',$
             			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 					free_lun, gff
@@ -502,12 +502,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					; ASCII file that has everything
 					openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
 					if keyword_set(slw) then begin
-						printf, all, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+						printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
 	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_slw, sig_str_n[line]*pix_slw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_slw,noise_n[line]*pix_slw, snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
 					endif
 					if keyword_set(ssw) then begin
-						printf, all, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+						printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
 	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_ssw, sig_str_n[line]*pix_ssw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_ssw,noise_n[line]*pix_ssw, snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
 					endif
@@ -515,12 +515,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					close, all
 				endif
 			endif else begin
-				printf, firstfit, format = '( (a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+				printf, firstfit, format = '( (a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
             		line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 					E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 				if keyword_set(print_all) and not keyword_set(global_noise) then begin
 					openw, gff, print_all+'.txt',/append,/get_lun
-					printf, gff, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+					printf, gff, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
             			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 					free_lun, gff
@@ -528,12 +528,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					; ASCII file that has everything
 					openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
 					if keyword_set(slw) then begin
-						printf, all, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+						printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
 	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_slw, sig_str_n[line]*pix_slw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_slw,noise_n[line]*pix_slw, snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 					endif
 					if keyword_set(ssw) then begin
-						printf, all, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+						printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
 	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_ssw, sig_str_n[line]*pix_ssw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_ssw,noise_n[line]*pix_ssw, snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 					endif
@@ -1020,13 +1020,13 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				if finite(snr_n[line],/nan) eq 1 then lowest = '0'
 				if (sig_cen_wl_n[line] eq -999) or (sig_fwhm_n[line] eq -999) then lowest = '0'
 				if not keyword_set(current_pix) then begin
-					printf, secondfit, format = '( (a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),2(a20,2x) )',$
+					printf, secondfit, format = '( (a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),2(a20,2x) )',$
             			line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 					if keyword_set(print_all) then begin
 						;openw, gff, print_all+'_global_noise.txt',/append,/get_lun
 						openw, gff, print_all+'.txt',/append,/get_lun
-						printf, gff, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),2(a20,2x) )',$
+						printf, gff, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),2(a20,2x) )',$
             				object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], blend_msg_all[line], lowest
 						free_lun, gff
@@ -1034,12 +1034,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						; ASCII file that has everything
 						openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
 						if keyword_set(slw) then begin
-							printf, all, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+							printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
 	            				object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_slw, sig_str_n[line]*pix_slw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_slw,noise_n[line]*pix_slw, snr_n[line],$
 								E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
 						endif
 						if keyword_set(ssw) then begin
-							printf, all, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+							printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
 	            				object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_ssw, sig_str_n[line]*pix_ssw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_ssw,noise_n[line]*pix_ssw, snr_n[line],$
 								E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
 						endif
@@ -1047,13 +1047,13 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						close, all
 					endif
 				endif else begin
-					printf, secondfit, format = '( (a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+					printf, secondfit, format = '( (a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
             			line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 						E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 					if keyword_set(print_all) then begin
 						;openw, gff, print_all+'_global_noise.txt',/append,/get_lun
 						openw, gff, print_all+'.txt',/append,/get_lun
-						printf, gff, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+						printf, gff, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
             				object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line], sig_str_n[line], fwhm_n[line], sig_fwhm_n[line], base_str_n[line],noise_n[line], snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 						free_lun, gff
@@ -1061,12 +1061,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						; ASCII file that has everything
 						openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
 						if keyword_set(slw) then begin
-							printf, all, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+							printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
 		            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_slw, sig_str_n[line]*pix_slw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_slw,noise_n[line]*pix_slw, snr_n[line],$
 								E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 						endif
 						if keyword_set(ssw) then begin
-							printf, all, format = '( 2(a18,2x),2(F18.8,2x),(f18.5,2x),2(g18.6,2x),(F18.8,2x),(F18.5,2x),2(g18.6,2x),(F18.8,2x),2(g20.10,2x),(i20,2x),2(g20.10,2x),3(a20,2x) )',$
+							printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
 		            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_ssw, sig_str_n[line]*pix_ssw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_ssw,noise_n[line]*pix_ssw, snr_n[line],$
 								E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 						endif
