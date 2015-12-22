@@ -472,7 +472,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			; For grand fitting result table
 			; avoid multiply pixel size to -999 and -998
 			if (str_n[line] eq -998) or (str_n[line] eq -999) then pix_factor[0] = 1
-			if (str_n[line] eq -998) or (str_n[line] eq -999) then pix_factor[1] = 1
+			if (sig_str_n[line] eq -998) or (sig+str_n[line] eq -999) then pix_factor[1] = 1
 			if (base_str_n[line] eq -998) or (base_str_n[line] eq -999) then pix_factor[2] = 1
 			if (noise_n[line] eq -998) or (noise_n[line] eq -999) then pix_factor[3] = 1
 			;
@@ -995,7 +995,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				; For grand fitting result table
 				; avoid multiply pixel size to -999 and -998
 				if (str_n[line] eq -998) or (str_n[line] eq -999) then pix_factor[0] = 1
-				if (str_n[line] eq -998) or (str_n[line] eq -999) then pix_factor[1] = 1
+				if (sig_str_n[line] eq -998) or (sig_str_n[line] eq -999) then pix_factor[1] = 1
 				if (base_str_n[line] eq -998) or (base_str_n[line] eq -999) then pix_factor[2] = 1
 				if (noise_n[line] eq -998) or (noise_n[line] eq -999) then pix_factor[3] = 1
 				;
