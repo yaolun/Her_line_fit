@@ -14,12 +14,10 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	endelse
 	; The indir should include every letter except for the pixel name.
 	if keyword_set(brightness) then begin
-		; suffix = '_b'
 		ylabel = '!3Intensity (10!u-22!n W/cm!u2!n/!9m!3m/arcsec!u2!n)'
 		unit = '/as2'
 	endif
 	if keyword_set(fx) then begin
-		; suffix = '_f'
 		ylabel = '!3Flux Density (10!u-22!n W/cm!u2!n/!9m!3m)'
 		unit = ''
 		brightness=0
@@ -33,7 +31,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				dec_dum = [dec_dum, dec[where(coordpix eq pixelname[ipix])]]
 			endfor
 			ra = ra_dum & dec = dec_dum
-			; get_radec_slw, coord, plot_coord & ra = coord[0,*] & dec = coord[1,*]
 		endif
 		if keyword_set(ssw) then begin
 			pixelname = ['SSWA1','SSWA2','SSWA3','SSWA4','SSWB1','SSWB2','SSWB3','SSWB4','SSWB5','SSWC1','SSWC2','SSWC3','SSWC4','SSWC5','SSWC6','SSWD1','SSWD2','SSWD3','SSWD4','SSWD6','SSWD7','SSWE1','SSWE2','SSWE3','SSWE4','SSWE5','SSWE6','SSWF1','SSWF2','SSWF3','SSWF5','SSWG1','SSWG2','SSWG3','SSWG4']
@@ -43,7 +40,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				dec_dum = [dec_dum, dec[where(coordpix eq pixelname[ipix])]]
 			endfor
 			ra = ra_dum & dec = dec_dum
-			; get_radec_ssw, coord, plot_coord & ra = coord[0,*] & dec = coord[1,*]
 		endif
 	endif else begin
 		pixelname = ['spire_corrected']
@@ -84,7 +80,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	range_factor=2
 	line_name = line_name[sort(line_center)]
 	line_center = line_center[sort(line_center)]
-	; cont = cont[*,sort(line_center)]
 	for i = 0, n_elements(line_center)-1 do begin
 		; resolution intead of fwhm here
 		dl = 1.5*1.207*(1.2*1e9*(line_center[i]*1e-4)^2/2.998d10*1e4)/2.354d
@@ -141,11 +136,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	; After defining the proper line information for each module then go into the part that run the fitting routine at every pixel.
 	for j = 0, n_elements(pixelname)-1 do begin
 		if j ne 0 then filename = 0
-;		if keyword_set(ssw) or keyword_set(slw) then begin
-;			print, 'Fitting',pixelname[j],'...',format='(a7,x,a7,x,a3)'
-;		endif else begin
-;			print, 'Fitting 1D spectrum...'
-;		endelse
     	; The path to the data that you want to fit.  wavelength in um and flux in Jy.
     	if not keyword_set(filename) then readcol, indir+object+'_'+pixelname[j]+'.txt', format='D,D', wl, flux,/silent
     	if keyword_set(filename) then readcol, indir+filename+'.txt', format='D,D', wl, flux, /silent
@@ -186,9 +176,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		; The path to the output file for print out the fitting result.
 		if not keyword_set(filename) then name = outdir+object+'_'+pixelname[j]+'_lines'
 		if keyword_set(filename) then name = outdir + filename +'_lines'
-		; if keyword_set(linescan) then name = name+'_LS'
-		; if keyword_set(localbaseline) then name = name+''
-		; if keyword_set(fixed_width) then name = name+'_fixwidth'
 		openw, firstfit, name+'.txt', /get_lun
 		if not keyword_set(current_pix) then begin
     		printf, firstfit, format='((a20,2x),16(a20,2x))',$
@@ -324,13 +311,13 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
 				if n_elements(right) gt numb then right = right[0:numb-1]
 				if left[0] ne -1 and right[0] ne -1 then begin
-          wlb = [wl_basepool[left], wl_basepool[right]] & fluxb = [flux_basepool[left], flux_basepool[right]]
+          			wlb = [wl_basepool[left], wl_basepool[right]] & fluxb = [flux_basepool[left], flux_basepool[right]]
 					base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
 					indl = where(wl gt base_range[0] and wl lt base_range[3])
 					wll = wl[indl] & fluxl = flux[indl]
 				endif
 				if left[0] eq -1 and right[0] ne -1 then begin
-          wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
+          			wlb = [wl_basepool[right]] & fluxb = [flux_basepool[right]]
 					base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
 					indl = where(wl gt min(wl) and wl lt base_range[2])
 					wll = wl[indl] & fluxl = flux[indl]
@@ -355,7 +342,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 				; Subtract
 				fluxx = fluxl - base
 				line = [line_dg[*,2*i],line_dg[*,2*i+1]]
-				; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
 				; Fitting part
 				; Different fitting keyword for fixed width and test arguement
 				fit_line,object+'_'+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
@@ -406,12 +392,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		free_lun, firstfit
 		close, firstfit
 		; Blended lines labeling and pick out the most possible line
-		; print, '--> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
-		; if not keyword_set(filename) then filename = object+'_'+pixelname[j]
-		; name = filename+'_lines'
-		; if keyword_set(linescan) then name = name+'_LS'
-		; if keyword_set(localbaseline) then name = name+''
-		; if keyword_set(fixed_width) then name = name+'_fixwidth'
 		if not keyword_set(current_pix) then begin
     		readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
     			line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, /silent, skipline=1
@@ -483,6 +463,19 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
     	endelse
 		for line = 0, n_elements(line_name_n)-1 do begin
     		lowest = '0'
+			if keyword_set(slw) then begin
+				pix_factor = [pix_slw, pix_slw, pix_slw, pix_slw]
+			endif
+			if keyword_set(ssw) then begin
+				pix_factor = [pix_ssw, pix_ssw, pix_ssw, pix_ssw]
+			endif
+			; For grand fitting result table
+			; avoid multiply pixel size to -999 and -998
+			if (str_n[line] eq -998) or (str_n[line] eq -999) then pix_factor[0] = 1
+			if (str_n[line] eq -998) or (str_n[line] eq -999) then pix_factor[1] = 1
+			if (base_str_n[line] eq -998) or (base_str_n[line] eq -999) then pix_factor[2] = 1
+			if (noise_n[line] eq -998) or (noise_n[line] eq -999) then pix_factor[3] = 1
+			;
 			if (where(possible_all eq line_name_n[line]))[0] ne -1 then lowest = '1'
 			if (blend_msg_all[line] eq 'x') or (blend_msg_all[line] eq 'DoubleGaussian') then lowest = '1'
 			if finite(snr_n[line],/nan) eq 1 then lowest = '0'
@@ -503,12 +496,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
 					if keyword_set(slw) then begin
 						printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
-	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_slw, sig_str_n[line]*pix_slw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_slw,noise_n[line]*pix_slw, snr_n[line],$
+	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_factor[0], sig_str_n[line]*pix_factor[1], fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_factor[2],noise_n[line]*pix_factor[3], snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
 					endif
 					if keyword_set(ssw) then begin
 						printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
-	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_ssw, sig_str_n[line]*pix_ssw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_ssw,noise_n[line]*pix_ssw, snr_n[line],$
+	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_factor[0], sig_str_n[line]*pix_factor[1], fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_factor[2],noise_n[line]*pix_factor[3], snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
 					endif
 					free_lun, all
@@ -529,12 +522,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
 					if keyword_set(slw) then begin
 						printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
-	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_slw, sig_str_n[line]*pix_slw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_slw,noise_n[line]*pix_slw, snr_n[line],$
+	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_factor[0], sig_str_n[line]*pix_factor[1], fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_factor[2],noise_n[line]*pix_factor[3], snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 					endif
 					if keyword_set(ssw) then begin
 						printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
-	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_ssw, sig_str_n[line]*pix_ssw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_ssw,noise_n[line]*pix_ssw, snr_n[line],$
+	            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_factor[0], sig_str_n[line]*pix_factor[1], fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_factor[2],noise_n[line]*pix_factor[3], snr_n[line],$
 							E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 					endif
 					free_lun, all
@@ -580,8 +573,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			set_plot, 'ps'
 			!p.font = 0
 			loadct,12,/silent
-			; if keyword_set(fixed_width) then msg = '_fixed_width'
-			; if not keyword_set(fixed_width) then msg =''
 			msg = ''
 			device, filename = plotdir+object+'_spectrum_line_subtracted_'+pixelname[j]+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			!p.thick=2 & !x.thick=3 & !y.thick=3
@@ -606,8 +597,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 		; Construct the smooth/featureless spectrum to calculate the noise properly
 		if keyword_set(global_noise) then begin
 			print, '---> Re-calculating the noise level...'
-			; name = outdir+object+'_'+pixelname[j]+'_lines'
-			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
 				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I',$
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
@@ -680,8 +669,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			set_plot, 'ps'
 			!p.font = 0
 			loadct,12,/silent
-			; if keyword_set(fixed_width) then msg = '_fixed_width'
-			; if not keyword_set(fixed_width) then msg =''
 			msg = ''
 			device, filename = plotdir+object+'_spectrum_line_subtracted_'+pixelname[j]+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			!p.thick=2 & !x.thick=3 & !y.thick=3
@@ -696,11 +683,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			cleanplot,/silent
 			!p.multi = 0
 			; The path to the output file for print out the fitting result.
-			; name = outdir+object+'_'+pixelname[j]+'_lines'
-			; if keyword_set(linescan) then name = name+'_LS'
-			; if keyword_set(localbaseline) then name = name+''
-			; if keyword_set(fixed_width) then name = name+'_fixwidth'
-			; openw, secondfit, name+'_global_noise.txt', /get_lun
 			openw, secondfit, name+'.txt', /get_lun
 			if not keyword_set(current_pix) then begin
 				printf, secondfit, format='((a20,2x),16(a20,2x))',$
@@ -882,7 +864,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					; Subtract
 					fluxx = fluxl - base
 					line = [line_dg[*,2*i],line_dg[*,2*i+1]]
-					; line = [line_center_dg[0,i],range_dg_4[0,i],range]                      ;[line_center, line profile lower limit, line profile upper limit]
 					; Fitting part
 					; Different fitting keyword for fixed width and test arguement
 					fit_line,object+'_'+pixelname[j],line_name_dg[2*i]+'+'+line_name_dg[2*i+1],wll,fluxx,status,errmsg,cen_wl,sig_cen_wl,str,sig_str,fwhm,sig_fwhm,base_para,snr,line,noise,/double_gauss,outdir=plotdir,$
@@ -933,11 +914,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			close, secondfit
 
 			; Identify the blended lines
-			; print, '----> Start identifying the blended region by standard criterion and make suggestions if there is only one line present'
-			; name = filename+'_lines'
-			; if keyword_set(linescan) then name = name+'_LS'
-			; if keyword_set(localbaseline) then name = name+''
-			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
 				; readcol, name+'_global_noise.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,D,D,A', $
 				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A', $
@@ -1000,11 +976,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 					endif
 				endelse
 			endfor
-			; Artificially remove CI3P2-3P1 from possible line and add CO7-6
-			; if (where(possible_all eq 'CO7-6'))[0] eq -1 then possible_all = [possible_all,'CO7-6']
-			; if (where(possible_all eq 'CI3P2-3P1'))[0] ne -1 then possible_all = possible_all[where(possible_all ne 'CI3P2-3P1')]
-			;
-			; openw, secondfit, name+'_global_noise.txt', /get_lun
 			openw, secondfit, name+'.txt', /get_lun
 			if not keyword_set(current_pix) then begin
 				printf, secondfit, format='((a20,2x),17(a20,2x))', $
@@ -1015,6 +986,19 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			endelse
 			for line = 0, n_elements(line_name_n)-1 do begin
     			lowest = '0'
+				if keyword_set(slw) then begin
+					pix_factor = [pix_slw, pix_slw, pix_slw, pix_slw]
+				endif
+				if keyword_set(ssw) then begin
+					pix_factor = [pix_ssw, pix_ssw, pix_ssw, pix_ssw]
+				endif
+				; For grand fitting result table
+				; avoid multiply pixel size to -999 and -998
+				if (str_n[line] eq -998) or (str_n[line] eq -999) then pix_factor[0] = 1
+				if (str_n[line] eq -998) or (str_n[line] eq -999) then pix_factor[1] = 1
+				if (base_str_n[line] eq -998) or (base_str_n[line] eq -999) then pix_factor[2] = 1
+				if (noise_n[line] eq -998) or (noise_n[line] eq -999) then pix_factor[3] = 1
+				;
 				if (where(possible_all eq line_name_n[line]))[0] ne -1 then lowest = '1'
 				if (blend_msg_all[line] eq 'x') or (blend_msg_all[line] eq 'DoubleGaussian') then lowest = '1'
 				if finite(snr_n[line],/nan) eq 1 then lowest = '0'
@@ -1035,12 +1019,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
 						if keyword_set(slw) then begin
 							printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
-	            				object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_slw, sig_str_n[line]*pix_slw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_slw,noise_n[line]*pix_slw, snr_n[line],$
+	            				object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_factor[0], sig_str_n[line]*pix_factor[1], fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_factor[2],noise_n[line]*pix_factor[3], snr_n[line],$
 								E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
 						endif
 						if keyword_set(ssw) then begin
 							printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
-	            				object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_ssw, sig_str_n[line]*pix_ssw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_ssw,noise_n[line]*pix_ssw, snr_n[line],$
+	            				object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_factor[0], sig_str_n[line]*pix_factor[1], fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_factor[2],noise_n[line]*pix_factor[3], snr_n[line],$
 								E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], 'c', blend_msg_all[line], lowest
 						endif
 						free_lun, all
@@ -1062,12 +1046,12 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 						openw, all, file_dirname(print_all+'.txt')+'/CDF_archive_lines.txt', /append, /get_lun
 						if keyword_set(slw) then begin
 							printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
-		            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_slw, sig_str_n[line]*pix_slw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_slw,noise_n[line]*pix_slw, snr_n[line],$
+		            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_factor[0], sig_str_n[line]*pix_factor[1], fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_factor[2],noise_n[line]*pix_factor[3], snr_n[line],$
 								E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 						endif
 						if keyword_set(ssw) then begin
 							printf, all, format = '( 2(a18,2x),2(f18.5,2x),(f18.5,2x),2(e18.6,2x),2(f18.5,2x),2(e18.6,2x),2(f18.6,2x),(e18.10,2x),(i18,2x),2(f18.7,2x),3(a20,2x) )',$
-		            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_ssw, sig_str_n[line]*pix_ssw, fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_ssw,noise_n[line]*pix_ssw, snr_n[line],$
+		            			object, line_name_n[line], lab_wl_n[line], cen_wl_n[line], sig_cen_wl_n[line], str_n[line]*pix_factor[0], sig_str_n[line]*pix_factor[1], fwhm_n[line], sig_fwhm_n[line], base_str_n[line]*pix_factor[2],noise_n[line]*pix_factor[3], snr_n[line],$
 								E_u_n[line], A_n[line], g_n[line], ra_n[line], dec_n[line], pix_n[line], blend_msg_all[line], lowest
 						endif
 						free_lun, all
@@ -1078,8 +1062,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			free_lun, secondfit
 			close, secondfit
 			; Calculate the line subtracted spectrum again
-			; name = outdir+object+'_'+pixelname[j]+'_lines'
-			; if keyword_set(fixed_width) then name = name+'_fixwidth'
 			if not keyword_set(current_pix) then begin
 				readcol, name+'.txt', format='A,D,D,D,D,D,D,D,D,D,D,D,D,I,D,D,A,I',$
 					line_name_n, lab_wl_n, cen_wl_n, sig_cen_wl_n, str_n, sig_str_n, fwhm_n, sig_fwhm_n, base_str_n, noise_n, snr_n, E_u_n, A_n, g_n, ra_n, dec_n, blend_flag_n, lowest_E_n, /silent
@@ -1148,8 +1130,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			set_plot, 'ps'
 			!p.font = 0
 			loadct,12,/silent
-			; if keyword_set(fixed_width) then msg = '_fixed_width'
-			; if not keyword_set(fixed_width) then msg =''
 			msg = ''
 			device, filename = plotdir+object+'_spectrum_line_subtracted_'+pixelname[j]+msg+'.eps', /helvetica, /portrait, /encapsulated, isolatin = 1, font_size = 12, decomposed = 0, /color
 			!p.thick=2 & !x.thick=3 & !y.thick=3
