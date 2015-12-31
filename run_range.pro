@@ -128,7 +128,7 @@ if keyword_set(print_all) and not keyword_set(no_fit) and not keyword_set(FWD) t
             	'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
     		free_lun, gff
     		close, gff
-    		
+
     		openw, gff, outdir+print_all+'_lines_fixwidth_global_noise.txt',/get_lun
     		printf, gff, format='(19(a16,2x))',$
     			'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Blend','Validity'
@@ -140,13 +140,13 @@ if keyword_set(print_all) and not keyword_set(no_fit) and not keyword_set(FWD) t
       	printf, gff, format='(20(a16,2x))',$
       	     'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
       	free_lun, gff
-      	close, gff																
-      	
+      	close, gff
+
         openw, gff, outdir+print_all+'_lines_fixwidth.txt',/get_lun
         printf, gff, format='(20(a16,2x))',$
              'Object','Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
         free_lun, gff
-        close, gff 	
+        close, gff
   	endif
 endif
 
@@ -175,7 +175,7 @@ if obj_flag[0] ne '0' then begin
         cdf = obj_flag
   	endelse
 endif
-
+stop
 while i eq 1 do begin
 	obj = where(objname eq objname[0])
 	current_obj = strcompress(objname[0],/remove_all)
@@ -204,7 +204,7 @@ while i eq 1 do begin
 		if file_test(outdir+current_obj+'/pacs/data/fits/') eq 0 then file_mkdir, outdir+current_obj+'/pacs/data/fits'
 		; Copy either 1-D Corrected3x3YES or finalcubes FITS file.
 		file_copy, filename, outdir+current_obj+'/pacs/data/fits/',/overwrite
-		; If 1-D, looking for centralSpaxel_PointSourceCorrected_Corrected3x3NO_slice... and 
+		; If 1-D, looking for centralSpaxel_PointSourceCorrected_Corrected3x3NO_slice... and
 		; 					  central9Spaxels_PointSourceCorrected_slice
 		if not keyword_set(cube) then begin
 			for ifoo = 0, n_elements(filename)-1 do begin
@@ -239,14 +239,14 @@ while i eq 1 do begin
 		; Skip the nojitter run if the jitter reduction are found
 		if not keyword_set(cube) then begin
 			if (file_test(outdir+current_obj+'/pacs/data/'+current_obj+'_centralSpaxel_PointSourceCorrected_CorrectedYES_trim.txt') ne 0) and keyword_set(nojitter) then begin
-				printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype	
+				printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype
 				free_lun, tot_list
 				close, tot_list
 				continue
 			endif
 		endif else begin
 			if (file_test(outdir+current_obj+'/pacs/data/cube/'+current_obj+'_pacs_pixel1_os8_sf7.txt') ne 0) and keyword_set(nojitter) then begin
-				printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype	
+				printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype
 				free_lun, tot_list
 				close, tot_list
 				continue
@@ -259,11 +259,11 @@ while i eq 1 do begin
 
 	if file_test(outdir+current_obj+'/pacs/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/pacs/data'
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
-	
-	; design for copying the FITS 
+
+	; design for copying the FITS
 	if (keyword_set(no_fit)) and (not keyword_set(contour)) then begin
 		if keyword_set(jitter) then begin
-			printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype	
+			printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype
 			free_lun, tot_list
 			close, tot_list
 		endif
@@ -288,7 +288,7 @@ while i eq 1 do begin
 	if keyword_set(cube) then name = suffix
 	exception_obj = []
 	; The exclusion list in jitter verion for running global noise re-evaluation
-	if keyword_set(jitter) then exception_obj = ['HD50138','IRAM04191','IRS46','L1014','L1455-IRS3','RCrA-IRS5A','RCrA-IRS7C','Serpens-SMM4'] 
+	if keyword_set(jitter) then exception_obj = ['HD50138','IRAM04191','IRS46','L1014','L1455-IRS3','RCrA-IRS5A','RCrA-IRS7C','Serpens-SMM4']
 	if keyword_set(nojitter) then exception_obj = ['HD203024','RCrA-IRS5A','RCrA-IRS5A','RCrA-IRS7C','Serpens-SMM4']
 	; force to use Local noise for all sources
 	if keyword_set(localnoise) then exception_obj = ['ABAur','AS205','B1-a','B1-c','B335','BHR71','Ced110-IRS4','DGTau','EC82','Elias29','FUOri','GSS30-IRS1','HD100453','HD100546','HD104237','HD135344B','HD139614',$
@@ -359,7 +359,7 @@ while i eq 1 do begin
 		endelse
 	endif
 	; For cube, but co-add the 5x5 spaxels into 1d spectrum at first
-	; 
+	;
 	if keyword_set(cube) and keyword_set(co_add) and not keyword_set(no_fit) then begin
 		readcol, outdir+current_obj+'/pacs/data/cube/'+current_obj+'pixel_13_'+suffix+'_coord.txt', format='D,D,D', pix_ind, ra, dec,/silent
 		ra = mean(ra) & dec = mean(dec)
@@ -378,7 +378,7 @@ while i eq 1 do begin
 	endif
 	; Write the information of different species into different files
 	;
-	
+
 	if keyword_set(refine) and not keyword_set(cube) then begin
 ;		refine_list = file_search(outdir+current_obj+'/pacs/advanced_products/species_separated/', current_obj+name+'_trim*')
 ;		if n_elements(refine_list) eq 1 then begin
@@ -387,7 +387,7 @@ while i eq 1 do begin
 		;print,'-----> Clean up (species_separated) folder for updating the results.'
 		refine_fitting, indir=outdir+current_obj+'/pacs/advanced_products/',filename=current_obj+name+'_trim_lines',outdir=outdir+current_obj+'/pacs/advanced_products/species_separated/',/all,/pacs
 	endif
-	
+
 	if keyword_set(refine) and keyword_set(cube) and keyword_set(co_add) then begin
 ;		refine_list = file_search(outdir+current_obj+'/pacs/advanced_products/cube/species_separated/', current_obj+'_pacs_summed_5x5_'+suffix+'*')
 ;		if n_elements(refine_list) eq 1 then begin
@@ -396,7 +396,7 @@ while i eq 1 do begin
 		;print,'-----> Clean up (species_separated) folder for updating the results.'
 		refine_fitting, indir=outdir+current_obj+'/pacs/advanced_products/cube/',filename=current_obj+'_pacs_summed_5x5_'+suffix+outname,outdir=outdir+current_obj+'/pacs/advanced_products/cube/species_separated/',/all,/pacs
 	endif
-	
+
 	if keyword_set(refine) and keyword_set(cube) and not keyword_set(co_add) then begin
 		for pix = 1, 25 do begin
 ;			refine_list = file_search(outdir+current_obj+'/pacs/advanced_products/cube/species_separated/', current_obj+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'*')
@@ -418,13 +418,13 @@ while i eq 1 do begin
 	endif
 
 	if not keyword_set(no_fit) then begin
-		printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype	
+		printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype
 		free_lun, tot_list
 		close, tot_list
 	endif else begin
 		free_lun, tot_list
 		close, tot_list
-	endelse	
+	endelse
 	num_obj = num_obj+1
 endwhile
 print, 'Finish fitting', strtrim(string(num_obj),1),'objects (PACS)',format='(a14,x,a3,x,a7)'
