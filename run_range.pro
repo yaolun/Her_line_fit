@@ -175,7 +175,6 @@ if obj_flag[0] ne '0' then begin
         cdf = obj_flag
   	endelse
 endif
-stop
 while i eq 1 do begin
 	obj = where(objname eq objname[0])
 	current_obj = strcompress(objname[0],/remove_all)
