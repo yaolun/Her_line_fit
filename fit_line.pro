@@ -292,6 +292,8 @@ if not keyword_set(baseline) then begin
         ;
         ; extra procedure to make sure that not report the zero value for sig_cen_wl and sig_fwhm when the fitting is properly procede
         if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl eq 0 then sig_cen_wl = -999
+        ; for one line in EC82
+        if ((where(line eq cen_wl))[0] ne -1) and sig_cen_wl gt 1e20 then sig_cen_wl = -999
         if keyword_set(fixed_width) then sig_fwhm = -998
         if not keyword_set(spire) then begin
             if (fwhm eq 0.7*dl*2.354 or fwhm eq 1.3*dl*2.354) and sig_fwhm eq 0 then sig_fwhm = -999
