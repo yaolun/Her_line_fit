@@ -58,7 +58,7 @@ endif
 ; Option for dedugging and testing the pacs or spire individually
 if keyword_set(pacs_test) then begin
 	; run DIGIT 1-D + cube jittered
-	proj = 'wish'
+	proj = 'digit'
 	run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
 	; run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
 	goto, bottom
