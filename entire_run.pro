@@ -58,9 +58,9 @@ endif
 ; Option for dedugging and testing the pacs or spire individually
 if keyword_set(pacs_test) then begin
 	; run DIGIT 1-D + cube jittered
-	proj = 'digit'
+	proj = 'wish'
 	run_digit,indir=digit_dir,outdir=outdir,/centralyes,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_1d',no_plot=no_plot,proj=proj,/double_gauss,/FWD,obj_flag=obj_flag
-	run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
+	; run_digit,indir=digit_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag
 	goto, bottom
 endif
 if keyword_set(spire_test) then begin
@@ -124,7 +124,7 @@ run_digit,indir=digit_dir_nojitter,outdir=outdir,/centralyes,/fixed_width,localb
 
 
 ;FOOSH
-proj = 'foosh'	
+proj = 'foosh'
 
 run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/jitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
 run_digit,indir=foosh_dir,outdir=outdir,/cube,/fixed_width,localbaseline=10,noiselevel=3,global_noise=20,/nojitter,/refine,print_all=outname+'_pacs_cube',no_plot=no_plot,proj=proj,/double_gauss,/contour,/FWD,obj_flag=obj_flag,localnoise=localnoise
@@ -163,17 +163,17 @@ for i = 2, 2 do begin
 		free_lun, tot_list
 		close, tot_list
 	endif
-		
+
 	openw, tot_list, outdir+'full_source_list.txt',/get_lun, /append
 	printf, tot_list, format='(4(a16,2x))', obj[i],'SPIRE','Standard','Global'
 	free_lun, tot_list
 	close, tot_list
-	
+
 	if file_test(outdir+obj[i]+'/spire/data/',/directory) eq 0 then file_mkdir, outdir+obj[i]+'/spire/data/'
 	file_copy, cops_dir+obj[i]+'_spire_corrected.txt', outdir+obj[i]+'/spire/data/',/overwrite
-	
+
 	readcol, cops_dir+obj[i]+'_spire_corrected.txt', format='D,D', wl, flux,/silent
-	
+
 	set_plot, 'ps'
 	!p.font=0
 	loadct,13,/silent
@@ -185,7 +185,7 @@ for i = 2, 2 do begin
 	al_legend, [obj[i]],textcolor=[0],/left
 	al_legend, ['SPIRE-SSW','SPIRE-SLW'],textcolors=[60,250],/right
 	device, /close_file,decomposed=1
-	!p.multi = 0 
+	!p.multi = 0
 	if not keyword_set(local) then begin
 		extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,global_noise=20,$
 		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
@@ -219,57 +219,57 @@ while i eq 1 do begin
 	obj_dum = obj[0]
 	ind_dum = where(obj eq obj_dum)
 	num = n_elements(ind_dum)
-	
+
 	printobj = [printobj,obj_dum]
-	
+
 	if (where(inst[ind_dum] eq 'PACS'))[0] ne -1 then begin
 		pacs = [pacs,'x']
 	endif else begin
 		pacs = [pacs,'']
 	endelse
-	
+
 	if (where(ver[ind_dum] eq 'jitter'))[0] ne -1 then begin
 		jitter = [jitter,'x']
 	endif else begin
 		jitter = [jitter,'']
 	endelse
-	
+
 	if (where(ver[ind_dum] eq 'nojitter'))[0] ne -1 then begin
 		nojitter = [nojitter,'x']
 	endif else begin
 		nojitter = [nojitter,'']
 	endelse
-	
+
 	if (where(ver[ind_dum] eq 'cube-jitter'))[0] ne -1 then begin
 		cubejitter = [cubejitter,'x']
 	endif else begin
 		cubejitter = [cubejitter,'']
 	endelse
-	
+
 	if (where(ver[ind_dum] eq 'cube-nojitter'))[0] ne -1 then begin
 		cubenojitter = [cubenojitter,'x']
 	endif else begin
 		cubenojitter = [cubenojitter,'']
 	endelse
-	
+
 	if (where(inst[ind_dum] eq 'SPIRE'))[0] ne -1 then begin
 		spire = [spire,'x']
 	endif else begin
 		spire = [spire,'']
 	endelse
-	
+
 	if (where(ver[ind_dum] eq 'Standard'))[0] ne -1 then begin
 		spire1d = [spire1d,'x']
 	endif else begin
 		spire1d = [spire1d,'']
 	endelse
-	
+
 	if (where(ver[ind_dum] eq 'spirecube'))[0] ne -1 then begin
 		spirecube = [spirecube,'x']
 	endif else begin
 		spirecube = [spirecube,'']
 	endelse
-	
+
 	if array_equal(obj,obj[where(obj ne obj[0])]) then i = 0
 	inst = inst[where(obj ne obj[0])]
 	ver = ver[where(obj ne obj[0])]

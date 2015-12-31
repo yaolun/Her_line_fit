@@ -1195,6 +1195,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			printf, secondfit, format='((a20,2x),18(a20,2x))', $
     			'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)','Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)','SNR','E_u(K)','A(s-1)','g','RA(deg)','Dec(deg)','Pixel_No.','Blend','Validity'
 		endelse
+		stop
 		for line = 0, n_elements(line_name_n)-1 do begin
     		lowest = '0'
 			if (where(possible_all eq line_name_n[line]))[0] ne -1 then lowest = '1'
