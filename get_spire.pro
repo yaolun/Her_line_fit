@@ -15,8 +15,10 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
 	pix_ssw = !PI/4*19^2
 	; The extended corrected data cube still has slices for each spaxel, but only take the central one and reduce them into 1D spectrum
 	; 12/19/14  It seems that 1-D spectrum is already in Jy unit.  No longer need to do the unit conversion
-  data_slw = readfits(filename, hdr_slw, exten=5,/silent)
-	data_ssw = readfits(filename, hdr_ssw, exten=18,/silent)
+ ;  	data_slw = readfits(filename, hdr_slw, exten=5,/silent)
+	; data_ssw = readfits(filename, hdr_ssw, exten=18,/silent)
+	data_slw = readfits(filename, hdr_slw, exten=2,/silent)
+	data_ssw = readfits(filename, hdr_ssw, exten=3,/silent)
 	if data_slw[0] ne -1 and data_ssw[0] ne -1 then begin
 		wl_slw = 2.998e10/tbget(hdr_slw, data_slw, 1)*1e-5
 		wl_ssw = 2.998e10/tbget(hdr_ssw, data_ssw, 1)*1e-5
