@@ -156,7 +156,11 @@ ra = [294.2700500,285.4640808,180.40109,-65.147993,239.1745453,67.89822744]
 dec = [7.548758507,-36.93764496,-65.147993,-42.32313156,-77.6548556,18.12826098]
 ; for i = 0, n_elements(obj)-1 do begin
   ; only do BHR71, the rest of coordinates seems bogus
+
 for i = 2, 2 do begin
+	if obj_flag[0] ne 0 then begin
+		if where(obj_flag eq obj[i]) eq -1 then continue
+	endif
 	if file_test(outdir+'full_source_list.txt') eq 0 then begin
 		openw, tot_list, outdir+'full_source_list.txt',/get_lun
 		printf, tot_list, format='(4(a16,2x))', 'Object','PACS/SPIRE','Reduction','Noise'
