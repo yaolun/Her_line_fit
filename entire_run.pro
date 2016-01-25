@@ -158,7 +158,7 @@ dec = [7.548758507,-36.93764496,-65.147993,-42.32313156,-77.6548556,18.12826098]
   ; only do BHR71, the rest of coordinates seems bogus
 
 for i = 2, 2 do begin
-	if obj_flag[0] ne 0 then begin
+	if obj_flag[0] ne '0' then begin
 		if where(obj_flag eq obj[i]) eq -1 then continue
 	endif
 	if file_test(outdir+'full_source_list.txt') eq 0 then begin
