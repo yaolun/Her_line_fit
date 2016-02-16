@@ -1,19 +1,3 @@
-pro run_range, indir=indir, objname=objname, pospath=pospath, ra=ra, dec=dec, fixed_width=fixed_width, localbaseline=localbaseline, global_noise=global_noise,noiselevel=noiselevel,test=test
-if keyword_set(pospath) then readcol,pospath,format='A,D,D',name_ref, ra_ref, dec_ref
-for obj =0, n_elements(objname)-1 do begin
-	file_mkdir, indir+'/'+objname[obj]+'/data'
-	file_mkdir, indir+'/'+objname[obj]+'/plots'
-	get_pacs_1d, indir=indir, filename=filename, central9=central9, center=center, corrected=corrected, linescan=linescan
-	if keyword_set(pospath) then ra = ra_ref[where(name_ref eq objname[obj])] & dec = dec_ref[where(name_ref eq objname[obj])]
-	extract_pacs, indir=indir, filename=objname[obj]+'_pacs_v65_trim', outdir=indir+'/'+objname[obj]+'/data/', plotdir=indir+'/'+objname[obj]+'/plots/', noiselevel=noiselevel,test=test,$
-	ra=ra,dec=dec,localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,/continuum_sub
-endfor
-end
-
-
-
-
-
 pro run_digit, indir=indir,outdir=outdir,fixed_width=fixed_width,localbaseline=localbaseline,global_noise=global_noise,noiselevel=noiselevel,test=test,central9=central9,centralyes=centralyes,centralno=centralno,cube=cube,$
 	jitter=jitter,nojitter=nojitter,refine=refine,no_fit=no_fit,print_all=print_all,co_add=co_add,no_plot=no_plot,proj=proj,double_gauss=double_gauss,contour=contour,FWD=FWD,single=single,obj_flag=obj_flag,localnoise=localnoise
 ; don’t use the jitter-corrected version for L1455-IRS3, L1014, Serpens-SMM4, RCrA-IRS5A, RCrA-IRS7C, or IRAM 04191.
