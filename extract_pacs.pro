@@ -1288,7 +1288,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	flat_noise[edge_low] = flat_noise[edge_low-n_elements(edge_low)]
     	flat_noise[edge_hi] = flat_noise[edge_hi+n_elements(edge_hi)]
 
-		if keyword_set(continuum_sub) then begin
+		if keyword_set(continuum) then begin
     		openw, sed, outdir+filename+'_continuum.txt', /get_lun
     		printf, sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)';,'Uncertainty (Jy)'
     		print_continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23

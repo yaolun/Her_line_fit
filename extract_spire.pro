@@ -139,7 +139,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
   	; The path to the data that you want to fit.  wavelength in um and flux in Jy.
   	if not keyword_set(filename) then readcol, indir+object+'_'+pixelname[j]+'.txt', format='D,D', wl, flux,/silent
   	if keyword_set(filename) then readcol, indir+filename+'.txt', format='D,D', wl, flux, /silent
-    
+
 		flux = flux[sort(wl)] & wl = wl[sort(wl)]
     	; Convert the flux to appropriate unit (W/cm2/um)
 		flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26
@@ -174,7 +174,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			flux_basepool = flux_basepool[where(wl_basepool ge 314.078 and wl_basepool le 670.708)]
 			wl_basepool = wl_basepool[where(wl_basepool ge 314.078 and wl_basepool le 670.708)]
 		endif
-		
+
 		; Auto adjust the line list and etc
 		if (not keyword_set(slw)) and (not keyword_set(ssw)) then begin
   		line_name = line_name[where(line_center ge min(wl) and line_center le max(wl))]
@@ -183,7 +183,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
   		flux_basepool = flux_basepool[where(wl_basepool ge min(wl) and wl_basepool le max(wl))]
   		wl_basepool = wl_basepool[where(wl_basepool ge min(wl) and wl_basepool le max(wl))]
 		endif
-		
+
 		; The path to the output file for print out the fitting result.
 		if not keyword_set(filename) then name = outdir+object+'_'+pixelname[j]+'_lines'
 		if keyword_set(filename) then name = outdir + filename +'_lines'
@@ -1113,7 +1113,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			flat_noise = flux_sub - continuum_sub
 			if not keyword_set(filename) then name_dum = outdir+object+'_'+pixelname[j]
 			if keyword_set(filename) then name_dum = outdir + filename
-			if keyword_set(continuum_sub) then begin
+			if keyword_set(continuum) then begin
     			openw, sed, name_dum+'_continuum.txt', /get_lun
     			if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)'
     			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wavelength(um)','I_nu(Jy/as2)'
