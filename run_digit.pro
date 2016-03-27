@@ -289,13 +289,13 @@ while i eq 1 do begin
 			noisetype='Global'
 			outname = '_lines_fixwidth_global_noise'
 			extract_pacs, indir=outdir+current_obj+'/pacs/data/', filename=current_obj+name+'_trim', outdir=outdir+current_obj+'/pacs/advanced_products/', plotdir=outdir+current_obj+'/pacs/advanced_products/plots/', noiselevel=noiselevel,$
-						  ra=ra,dec=dec,localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,/opt_width,/continuum_sub,/flat,object=current_obj,print_all=outdir+print_all+global_outname,$
+						  ra=ra,dec=dec,localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,/opt_width,/continuum,/flat,object=current_obj,print_all=outdir+print_all+global_outname,$
 						  no_plot=no_plot,double_gauss=double_gauss
 		endif else begin
 			noisetype='Local'
 			outname = '_lines_fixwidth'
 			extract_pacs, indir=outdir+current_obj+'/pacs/data/', filename=current_obj+name+'_trim', outdir=outdir+current_obj+'/pacs/advanced_products/', plotdir=outdir+current_obj+'/pacs/advanced_products/plots/', noiselevel=noiselevel,$
-						  ra=ra,dec=dec,localbaseline=localbaseline,fixed_width=fixed_width,/opt_width,/continuum_sub,/flat,object=current_obj,print_all=outdir+print_all+global_outname,$
+						  ra=ra,dec=dec,localbaseline=localbaseline,fixed_width=fixed_width,/opt_width,/continuum,/flat,object=current_obj,print_all=outdir+print_all+global_outname,$
 						  no_plot=no_plot,double_gauss=double_gauss
 		endelse
 	endif
@@ -317,7 +317,7 @@ while i eq 1 do begin
 				for pix=1,25 do begin
 					;print, current_obj,'pixel',strtrim(string(pix),1),format='(8x,a'+strtrim(string(strlen(current_obj)),1)+',1x,a6,1x,a2)'
 					extract_pacs, indir=outdir+current_obj+'/pacs/data/cube/', filename=current_obj+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix, outdir=outdir+current_obj+'/pacs/advanced_products/cube/', plotdir=outdir+current_obj+'/pacs/advanced_products/cube/plots/',$
-										      noiselevel=noiselevel,localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,/opt_width,/continuum_sub,/flat,object=current_obj,$
+										      noiselevel=noiselevel,localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,/opt_width,/continuum,/flat,object=current_obj,$
 										      print_all=outdir+print_all+global_outname,current_pix=strtrim(string(pix),1),no_plot=no_plot,double_gauss=double_gauss;ra=ra[pix-1],dec=dec[pix-1],
 				endfor
 			endif
@@ -335,7 +335,7 @@ while i eq 1 do begin
 				for pix=1,25 do begin
 					;print, current_obj,'pixel',strtrim(string(pix),1),format='(8x,a'+strtrim(string(strlen(current_obj)),1)+',1x,a6,1x,a2)'
 					extract_pacs, indir=outdir+current_obj+'/pacs/data/cube/', filename=current_obj+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix, outdir=outdir+current_obj+'/pacs/advanced_products/cube/', plotdir=outdir+current_obj+'/pacs/advanced_products/cube/plots/',$
-										      noiselevel=noiselevel,localbaseline=localbaseline,fixed_width=fixed_width,/opt_width,/continuum_sub,/flat,object=current_obj,$
+										      noiselevel=noiselevel,localbaseline=localbaseline,fixed_width=fixed_width,/opt_width,/continuum,/flat,object=current_obj,$
 										      print_all=outdir+print_all+global_outname,current_pix=strtrim(string(pix),1),no_plot=no_plot,double_gauss=double_gauss;,ra=ra[pix-1],dec=dec[pix-1]
 				endfor
 			endif
@@ -350,12 +350,12 @@ while i eq 1 do begin
 		if (n_elements(filename) eq 4 and (where(exception_obj eq current_obj))[0] eq -1) then begin
 			noisetype='Global'
 			extract_pacs, indir=outdir+current_obj+'/pacs/data/cube/', filename=current_obj+'_pacs_summed_5x5_'+suffix, outdir=outdir+current_obj+'/pacs/advanced_products/cube/', plotdir=outdir+current_obj+'/pacs/advanced_products/cube/plots/', noiselevel=noiselevel,$
-						  ra=ra,dec=dec,localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,/opt_width,/continuum_sub,/flat,object=current_obj,print_all=outdir+print_all+global_outname,no_plot=no_plot,double_gauss=double_gauss
+						  ra=ra,dec=dec,localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,/opt_width,/continuum,/flat,object=current_obj,print_all=outdir+print_all+global_outname,no_plot=no_plot,double_gauss=double_gauss
 			outname = '_lines_fixwidth_global_noise'
 		endif else begin
 			noisetype='Local'
 			extract_pacs, indir=outdir+current_obj+'/pacs/data/cube/', filename=current_obj+'_pacs_summed_5x5_'+suffix, outdir=outdir+current_obj+'/pacs/advanced_products/cube/', plotdir=outdir+current_obj+'/pacs/advanced_products/cube/plots/', noiselevel=noiselevel,$
-						  ra=ra,dec=dec,localbaseline=localbaseline,fixed_width=fixed_width,/opt_width,/continuum_sub,/flat,object=current_obj,print_all=outdir+print_all+global_outname,no_plot=no_plot,double_gauss=double_gauss
+						  ra=ra,dec=dec,localbaseline=localbaseline,fixed_width=fixed_width,/opt_width,/continuum,/flat,object=current_obj,print_all=outdir+print_all+global_outname,no_plot=no_plot,double_gauss=double_gauss
 			outname = '_lines_fixwidth'
 		endelse
 	endif

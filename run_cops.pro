@@ -188,14 +188,14 @@ while i eq 1 do begin
 		if (where(exception_obj eq current_obj))[0] eq -1 then begin
 			noisetype='Global'
 			extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire_corrected',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+						   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,double_gauss=double_gauss,no_plot=no_plot
 			msg = ''
 			if keyword_set(fixed_width) then msg = '_fixwidth'
 			outname = '_lines';+msg+'_global_noise'
 		endif else begin
 			noisetype='Local'
 			extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire_corrected',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+						   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,double_gauss=double_gauss,no_plot=no_plot
 			msg = ''
 			if keyword_set(fixed_width) then msg = '_fixwidth'
 			outname = '_lines';+msg
@@ -204,14 +204,14 @@ while i eq 1 do begin
 ;			if (where(exception_obj eq current_obj))[0] eq -1 then begin
 ;				noisetype='Global'
 ;				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-;							   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+;							   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,double_gauss=double_gauss,no_plot=no_plot
 ;				msg = ''
 ;				if keyword_set(fixed_width) then msg = '_fixwidth'
 ;				outname = '_lines';+msg+'_global_noise'
 ;			endif else begin
 ;				noisetype='Local'
 ;				extract_spire, indir=outdir+current_obj+'/spire/data/',filename=current_obj+'_spire',outdir=outdir+current_obj+'/spire/advanced_products/',plotdir=outdir+current_obj+'/spire/advanced_products/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-;							   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+;							   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,double_gauss=double_gauss,no_plot=no_plot
 ;				msg = ''
 ;				if keyword_set(fixed_width) then msg = '_fixwidth'
 ;				outname = '_lines';+msg
@@ -231,11 +231,11 @@ while i eq 1 do begin
 				if file_test(outdir+current_obj+'/spire/data/cube/') eq 0 then file_mkdir, outdir+current_obj+'/spire/data/cube/'
 				; SLW
 				extract_spire, indir=outdir+current_obj+'/spire/data/cube/',outdir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+current_obj+'/spire/advanced_products/cube/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   global_noise=global_noise,ra=ra_slw,dec=dec_slw,coordpix=pix_slw,/slw,noiselevel=noiselevel,/brightness,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,$
+						   global_noise=global_noise,ra=ra_slw,dec=dec_slw,coordpix=pix_slw,/slw,noiselevel=noiselevel,/brightness,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,$
 						   /current_pix,double_gauss=double_gauss,no_plot=no_plot
 				; SSW
 				extract_spire, indir=outdir+current_obj+'/spire/data/cube/',outdir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+current_obj+'/spire/advanced_products/cube/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   global_noise=global_noise,ra=ra_ssw,dec=dec_ssw,coordpix=pix_ssw,/ssw,noiselevel=noiselevel,/brightness,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,$
+						   global_noise=global_noise,ra=ra_ssw,dec=dec_ssw,coordpix=pix_ssw,/ssw,noiselevel=noiselevel,/brightness,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,$
 						   /current_pix,double_gauss=double_gauss,no_plot=no_plot
 			endif
 
@@ -250,10 +250,10 @@ while i eq 1 do begin
 				;openw, gff, outdir+current_obj+'/cube/data/'+current_obj+outname+'.txt',/get_lun
 				; SLW
 				extract_spire, indir=outdir+current_obj+'/spire/data/cube/',outdir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+current_obj+'/spire/advanced_products/cube/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   ra=ra_slw,dec=dec_slw,coordpix=pix_slw,/slw,noiselevel=noiselevel,/brightness,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,/current_pix,double_gauss=double_gauss,no_plot=no_plot
+						   ra=ra_slw,dec=dec_slw,coordpix=pix_slw,/slw,noiselevel=noiselevel,/brightness,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,/current_pix,double_gauss=double_gauss,no_plot=no_plot
 				; SSW
 				extract_spire, indir=outdir+current_obj+'/spire/data/cube/',outdir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+current_obj+'/spire/advanced_products/cube/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   ra=ra_ssw,dec=dec_ssw,coordpix=pix_ssw,/ssw,noiselevel=noiselevel,/brightness,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,/current_pix,double_gauss=double_gauss,no_plot=no_plot
+						   ra=ra_ssw,dec=dec_ssw,coordpix=pix_ssw,/ssw,noiselevel=noiselevel,/brightness,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,/current_pix,double_gauss=double_gauss,no_plot=no_plot
 			endif
 		endelse
 	endif
@@ -268,14 +268,14 @@ while i eq 1 do begin
 		if (where(exception_obj eq current_obj))[0] eq -1 then begin
 			noisetype='Global'
 			extract_spire, indir=outdir+current_obj+'/spire/data/cube/',filename=current_obj+'_spire_cube_coadd',outdir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+current_obj+'/spire/advanced_products/cube/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+						   global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,double_gauss=double_gauss,no_plot=no_plot
 			msg = ''
 			if keyword_set(fixed_width) then msg = '_fixwidth'
 			outname = '_lines'
 		endif else begin
 			noisetype='Local'
 			extract_spire, indir=outdir+current_obj+'/spire/data/cube/',filename=current_obj+'_spire_cube_coadd',outdir=outdir+current_obj+'/spire/advanced_products/cube/',plotdir=outdir+current_obj+'/spire/advanced_products/cube/plots/',fixed_width=fixed_width,localbaseline=localbaseline,$
-						   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum_sub,double_gauss=double_gauss,no_plot=no_plot
+						   ra=ra,dec=dec,noiselevel=noiselevel,/fx,object=current_obj,print_all=outdir+print_all+global_outname,/flat,/continuum,double_gauss=double_gauss,no_plot=no_plot
 			msg = ''
 			if keyword_set(fixed_width) then msg = '_fixwidth'
 			outname = '_lines'
