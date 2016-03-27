@@ -160,7 +160,7 @@ if keyword_set(plot) then begin
 	!p.multi = 0
 endif
 end
-pro summed_three, indir, outdir, suffix, objname, wl, flux,nojitter=nojitter
+pro summed_three, indir, outdir, suffix, objname, wl, flux, nojitter=nojitter
 msg = ''
 if keyword_set(nojitter) then  msg = 'nojitter/'
 readcol, indir+objname+msg+'_pacs_pixel13_'+suffix+'.txt',format='D,D',wl, flux,/silent
@@ -180,7 +180,7 @@ for i = 0, n_elements(pixel)-1 do begin
 	endfor
 	print, line, ' lines matched in pixel'+strtrim(string(pixel[i]),1)+'!'
 endfor
-openw, lun, outdir+objname+msg+'_pacs_summed_3x3.txt',/get_lun
+openw, lun, outdir+objname+msg+'_pacs_summed_3x3_'+suffix+'.txt',/get_lun
 for i =0, n_elements(wl)-1 do printf,lun, format='(2(g16.6,2x))',wl[i],flux[i]
 free_lun, lun
 close, lun

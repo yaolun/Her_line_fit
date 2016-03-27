@@ -131,9 +131,9 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 	cont = [[cont_oh2o], [cont_ph2o], [cont_co], [cont_oh], [cont_ch], [cont_other]]
 
 	; Read the instrument resolutions
-  	readcol, '~/bhr71/data/spectralresolution_order1.txt', format='D,D', wl1, res1,/silent
-	readcol, '~/bhr71/data/spectralresolution_order2.txt', format='D,D', wl2, res2,/silent
-	readcol, '~/bhr71/data/spectralresolution_order3.txt', format='D,D', wl3, res3,/silent
+  readcol, '~/programs/line_fitting/spectralresolution_order1.txt', format='D,D', wl1, res1,/silent
+	readcol, '~/programs/line_fitting/spectralresolution_order2.txt', format='D,D', wl2, res2,/silent
+	readcol, '~/programs/line_fitting/spectralresolution_order3.txt', format='D,D', wl3, res3,/silent
 	fwhm1 = wl1/res1 & fwhm2 = wl2/res2 & fwhm3 = wl3/res3
 	wl_ins = [wl2[where(wl2 lt min(wl1))], wl1]
 	dl_ins = [fwhm2[where(wl2 lt min(wl1))], fwhm1]/2.354
@@ -791,7 +791,6 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		printf, noise_sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)';,'Uncertainty (Jy)'
 		print_flatnoise = flat_noise*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23
 		for k =0, n_elements(wl)-1 do printf, noise_sed, format='(3(g16.6,2x))',wl[k],print_flatnoise[k];,stdd[k]
-		free_lun, noise_sed
 		close,noise_sed
 
     	set_plot, 'ps'
