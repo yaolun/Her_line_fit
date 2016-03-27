@@ -49,16 +49,16 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	pix_slw = !PI/4*34^2
 	pix_ssw = !PI/4*19^2
 
-    ; Information about the line that you want to fit including the range for baseline fitting.  SLW and SSW included
-    line_name_oh2o = ['o-H2O5_23-5_14','o-H2O6_25-5_32','o-H2O8_45-9_18','o-H2O8_27-7_34','o-H2O7_43-6_52','o-H2O8_54-7_61','o-H2O3_21-3_12','o-H2O6_34-5_41','o-H2O3_12-2_21','o-H2O7_25-8_18',$
-    				  'o-H2O3_12-3_03','o-H2O5_32-4_41','o-H2O1_10-1_01'];,'o-H2O4_23-3_30'
-    line_center_oh2o = [212.5309344,226.7664669,229.2112944,231.2537873,234.5364534,256.5992833,257.8011350,258.8222114,259.9887495,261.4637873,$
-    					273.1998800,483.0021428,538.3023584];,669.1946510
+  ; Information about the line that you want to fit including the range for baseline fitting.  SLW and SSW included
+  line_name_oh2o = ['o-H2O5_23-5_14','o-H2O6_25-5_32','o-H2O8_45-9_18','o-H2O8_27-7_34','o-H2O7_43-6_52','o-H2O8_54-7_61','o-H2O3_21-3_12','o-H2O6_34-5_41','o-H2O3_12-2_21','o-H2O7_25-8_18',$
+          				  'o-H2O3_12-3_03','o-H2O5_32-4_41','o-H2O1_10-1_01'];,'o-H2O4_23-3_30'
+  line_center_oh2o = [212.5309344,226.7664669,229.2112944,231.2537873,234.5364534,256.5992833,257.8011350,258.8222114,259.9887495,261.4637873,$
+            					273.1998800,483.0021428,538.3023584];,669.1946510
 
 	line_name_ph2o = ['p-H2O7_26-6_33','p-H2O9_46-10_19','p-H2O7_44-8_17','p-H2O2_20-2_11','p-H2O4_22-4_13','p-H2O8_53-7_62','p-H2O7_44-6_51','p-H2O1_11-0_00','p-H2O2_02-1_11','p-H2O5_24-4_31',$
-					  'p-H2O4_22-3_31','p-H2O9_28-8_35','p-H2O2_11-2_02','p-H2O6_24-7_17','p-H2O5_33-4_40','p-H2O6_42-5_51']
+					          'p-H2O4_22-3_31','p-H2O9_28-8_35','p-H2O2_11-2_02','p-H2O6_24-7_17','p-H2O5_33-4_40','p-H2O6_42-5_51']
 	line_center_ph2o = [208.0814648,208.9186114,222.9532762,243.9800446,248.2530166,251.7573722,255.6872873,269.2790845,303.4638096,308.9717523,$
-						327.2312598,330.8298372,398.6525967,613.7265992,631.5709820,636.6680083]
+						          327.2312598,330.8298372,398.6525967,613.7265992,631.5709820,636.6680083]
 
 	line_name_co = ['CO13-12','CO12-11','CO11-10','CO10-9','CO9-8','CO8-7','CO7-6','CO6-5','CO5-4','CO4-3']
 	line_center_co = [200.27751475,216.93275100,236.61923625,260.24634206,289.12760810,325.23334516,371.65973939,433.56713410,520.24411585,650.26787364]
@@ -136,9 +136,10 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	; After defining the proper line information for each module then go into the part that run the fitting routine at every pixel.
 	for j = 0, n_elements(pixelname)-1 do begin
 		if j ne 0 then filename = 0
-    	; The path to the data that you want to fit.  wavelength in um and flux in Jy.
-    	if not keyword_set(filename) then readcol, indir+object+'_'+pixelname[j]+'.txt', format='D,D', wl, flux,/silent
-    	if keyword_set(filename) then readcol, indir+filename+'.txt', format='D,D', wl, flux, /silent
+  	; The path to the data that you want to fit.  wavelength in um and flux in Jy.
+  	if not keyword_set(filename) then readcol, indir+object+'_'+pixelname[j]+'.txt', format='D,D', wl, flux,/silent
+  	if keyword_set(filename) then readcol, indir+filename+'.txt', format='D,D', wl, flux, /silent
+    
 		flux = flux[sort(wl)] & wl = wl[sort(wl)]
     	; Convert the flux to appropriate unit (W/cm2/um)
 		flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26
@@ -173,6 +174,16 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			flux_basepool = flux_basepool[where(wl_basepool ge 314.078 and wl_basepool le 670.708)]
 			wl_basepool = wl_basepool[where(wl_basepool ge 314.078 and wl_basepool le 670.708)]
 		endif
+		
+		; Auto adjust the line list and etc
+		if (not keyword_set(slw)) and (not keyword_set(ssw)) then begin
+  		line_name = line_name[where(line_center ge min(wl) and line_center le max(wl))]
+  		range = range[*,where(line_center ge min(wl) and line_center le max(wl))]
+  		line_center = line_center[where(line_center ge min(wl) and line_center le max(wl))]
+  		flux_basepool = flux_basepool[where(wl_basepool ge min(wl) and wl_basepool le max(wl))]
+  		wl_basepool = wl_basepool[where(wl_basepool ge min(wl) and wl_basepool le max(wl))]
+		endif
+		
 		; The path to the output file for print out the fitting result.
 		if not keyword_set(filename) then name = outdir+object+'_'+pixelname[j]+'_lines'
 		if keyword_set(filename) then name = outdir + filename +'_lines'
