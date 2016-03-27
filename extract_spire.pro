@@ -1,6 +1,6 @@
 pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filename, test=test,fixed_width=fixed_width,slw=slw,ssw=ssw,$
 				   localbaseline=localbaseline,global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,brightness=brightness,fx=fx,object=object,current_pix=current_pix,$
-				   print_all=print_all,flat=flat,continuum_sub=continuum_sub,plot_subtraction=plot_subtraction,no_plot=no_plot,coordpix=coordpix,double_gauss=double_gauss
+				   print_all=print_all,flat=flat,continuum=continuum,plot_subtraction=plot_subtraction,no_plot=no_plot,coordpix=coordpix,double_gauss=double_gauss
 	; Test if the target path is valid. If not, create them.
 	if file_test(outdir,/directory) eq 0 then file_mkdir, outdir
 	if not keyword_set(no_plot) then begin
@@ -639,7 +639,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 
 			if not keyword_set(filename) then name_dum = outdir+object+'_'+pixelname[j]
 			if keyword_set(filename) then name_dum = outdir + filename
-			if keyword_set(continuum_sub) then begin
+			if keyword_set(continuum) then begin
     			openw, sed, name_dum+'_continuum.txt', /get_lun
     			if keyword_set(fx) then printf, sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)'
     			if keyword_set(brightness) then printf, sed, format='(2(a16,2x))','Wavelength(um)','I_nu(Jy/as2)'

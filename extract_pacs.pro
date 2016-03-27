@@ -1,5 +1,5 @@
 pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir, pospath=pospath, noiselevel=noiselevel, test=test, ra=ra, dec=dec,$
-	localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,linescan=linescan,continuum_sub=continuum_sub,opt_width=opt_width,object=object,flat=flat,print_all=print_all,$
+	localbaseline=localbaseline,global_noise=global_noise,fixed_width=fixed_width,linescan=linescan,continuum=continuum,opt_width=opt_width,object=object,flat=flat,print_all=print_all,$
 	plot_subtraction=plot_subtraction,current_pix=current_pix,no_plot=no_plot,double_gauss=double_gauss ;glo_print_only=glo_print_only,
 	; The indir is the path of the spectrum of each pixel, including every letter in the filename except the pixel number.  For example, '/path/to/data/pacs_pixel13.txt', the indir will be '/path/to/data/pacs_pixel'
 	; Same method of the indir apply to the outdir.
@@ -770,7 +770,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	flat_noise[edge_hi] = flat_noise[edge_hi+n_elements(edge_hi)]
 
     	; Do I want to output the unceratinty with the continuum and flat spectrum?
-    	if keyword_set(continuum_sub) then begin
+    	if keyword_set(continuum) then begin
     		openw, sed, outdir+filename+'_continuum.txt', /get_lun
     		printf, sed, format='(2(a16,2x))','Wavelength(um)','Flux_Density(Jy)';,'Uncertainty (Jy)'
     		print_continuum_sub = continuum_sub*1e4*(wl*1e-4)^2/c/1e2*1e7/1e-23

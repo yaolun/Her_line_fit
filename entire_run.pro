@@ -192,10 +192,10 @@ for i = 2, 2 do begin
 	!p.multi = 0
 	if not keyword_set(local) then begin
 		extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,global_noise=20,$
-		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
+		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum,/double_gauss,no_plot=no_plot
 	endif else begin
 		extract_spire,indir=cops_dir,filename=obj[i]+'_spire_corrected',outdir=outdir+obj[i]+'/spire/advanced_products/',plotdir=outdir+obj[i]+'/spire/advanced_products/plots/',localbaseline=10,$
-		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum_sub,/double_gauss,no_plot=no_plot
+		ra=ra[i],dec=dec[i],noiselevel=3,/fx,object=obj[i],print_all=outdir+outname+'_spire_1d_lines',/flat,/continuum,/double_gauss,no_plot=no_plot
 	endelse
 endfor
 
