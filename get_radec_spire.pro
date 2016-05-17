@@ -1,10 +1,19 @@
-pro get_radec_spire, filename=filename, pix, ra, dec, slw=slw, ssw=ssw, central=central
+pro get_radec_spire, filename=filename, pix, ra, dec, slw=slw, ssw=ssw, central=central, hsa=hsa
+
+; the extension index for CDF product: SLW-11, SSW-39
+; the extension index for HSA product: point--SLW-5, SSW-18; ext--SLW-11, SSW-39
+slw_ext = 11
+ssw_ext = 39
+if keyword_set(hsa) then begin
+  slw_ext = 5
+  ssw_ext = 18
+endif
 if not keyword_set(central) then begin
 	if keyword_set(slw) then begin
 		pix_name = strarr(19)
 		coord = dblarr(2,19)
 		plot_coord = dblarr(2,19)
-		hdr = headfits(filename, exten=11,/silent)
+		hdr = headfits(filename, exten=slw_ext,/silent)
 		cen_dec = sxpar(hdr, 'DEC') & cen_ra = sxpar(hdr, 'RA')
 		for i = 2, 20 do begin
 			hdr = headfits(filename, exten=i,/silent)
@@ -21,7 +30,7 @@ if not keyword_set(central) then begin
 		pix_name = strarr(35)
 		coord = dblarr(2,35)
 		plot_coord = dblarr(2,35)
-		hdr = headfits(filename, exten=39,/silent)
+		hdr = headfits(filename, exten=ssw_ext,/silent)
 		cen_dec = sxpar(hdr, 'DEC') & cen_ra = sxpar(hdr, 'RA')
 		for i = 21, 55 do begin
 			hdr = headfits(filename, exten=i,/silent)

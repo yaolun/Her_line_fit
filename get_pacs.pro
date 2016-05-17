@@ -1,10 +1,14 @@
-pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix,general=general
+pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix, general=general, hsa=hsa
 ; if not keyword_set(outdir) then outdir = indir
 outdir = outdir+'cube/'
 plotdir = outdir+'plots/spectrum/'
 if file_test(outdir) eq 0 then file_mkdir, outdir
 if file_test(plotdir) eq 0 then file_mkdir, plotdir
-;if not ((objname eq 'NGC1333-IRAS2A') or (objname eq 'Serpens-SMM1') or (objname eq 'G327-06')) then begin
+
+; For some reasons, HSA products stop at different wavelength than CDF for B2A
+b2a_break = 72.3
+if keyword_set(hsa) then b2a_break = 71.8
+
 if keyword_set(general) then begin
 	for i = 0, n_elements(filename)-1 do begin
 		wl = []
@@ -139,10 +143,10 @@ endif else begin
 
 		case 1 of
 			band eq 'B2A': begin
-				wl_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
-				flux_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
-				std_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
-				ra_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3))) & dec_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 72.3)))
+				wl_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le b2a_break)))
+				flux_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le b2a_break)))
+				std_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le b2a_break)))
+				ra_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le b2a_break))) & dec_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le b2a_break)))
 				if objname eq 'HD150193' then begin
 					wl_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 71.75)))
 					flux_b2a = fltarr(5,5,n_elements(where(wl_dum ge 54.80 and wl_dum le 71.75)))
@@ -151,10 +155,10 @@ endif else begin
 				endif
 			end
 			band eq 'B2B': begin
-				wl_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05)))
-				flux_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05)))
-				std_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05)))
-			    ra_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05))) & dec_b2b = fltarr(5,5,n_elements(where(wl_dum ge 72.3 and wl_dum le 95.05)))
+				wl_b2b = fltarr(5,5,n_elements(where(wl_dum ge b2a_break and wl_dum le 95.05)))
+				flux_b2b = fltarr(5,5,n_elements(where(wl_dum ge b2a_break and wl_dum le 95.05)))
+				std_b2b = fltarr(5,5,n_elements(where(wl_dum ge b2a_break and wl_dum le 95.05)))
+			    ra_b2b = fltarr(5,5,n_elements(where(wl_dum ge b2a_break and wl_dum le 95.05))) & dec_b2b = fltarr(5,5,n_elements(where(wl_dum ge b2a_break and wl_dum le 95.05)))
 			end
 			band eq 'R1': begin
 				if min(wl_dum) lt 130 then begin
@@ -181,11 +185,11 @@ endif else begin
 				case 1 of
 					band eq 'B2A': begin
 						if objname ne 'HD150193' then begin
-							flux_b2a[x,y,*] = flux_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 72.3)]
-							std_b2a[x,y,*] = std_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 72.3)]
-							wl_b2a[x,y,*] = wl_dum[where(wl_dum ge 54.80 and wl_dum le 72.3)]
-							ra_b2a[x,y,*] = ra_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 72.3)]
-							dec_b2a[x,y,*] = dec_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 72.3)]
+							flux_b2a[x,y,*] = flux_dum[x,y,where(wl_dum ge 54.80 and wl_dum le b2a_break)]
+							std_b2a[x,y,*] = std_dum[x,y,where(wl_dum ge 54.80 and wl_dum le b2a_break)]
+							wl_b2a[x,y,*] = wl_dum[where(wl_dum ge 54.80 and wl_dum le b2a_break)]
+							ra_b2a[x,y,*] = ra_dum[x,y,where(wl_dum ge 54.80 and wl_dum le b2a_break)]
+							dec_b2a[x,y,*] = dec_dum[x,y,where(wl_dum ge 54.80 and wl_dum le b2a_break)]
 						endif else begin
 							flux_b2a[x,y,*] = flux_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 71.75)]
 							std_b2a[x,y,*] = std_dum[x,y,where(wl_dum ge 54.80 and wl_dum le 71.75)]
@@ -195,11 +199,11 @@ endif else begin
 						endelse
 					end
 					band eq 'B2B': begin
-						flux_b2b[x,y,*] = flux_dum[x,y,where(wl_dum gt 72.3 and wl_dum le 95.05)]
-						std_b2b[x,y,*] = std_dum[x,y,where(wl_dum gt 72.3 and wl_dum le 95.05)]
-						wl_b2b[x,y,*] = wl_dum[where(wl_dum gt 72.3 and wl_dum le 95.05)]
-						ra_b2b[x,y,*] = ra_dum[x,y,where(wl_dum gt 72.3 and wl_dum le 95.05)]
-						dec_b2b[x,y,*] = dec_dum[x,y,where(wl_dum gt 72.3 and wl_dum le 95.05)]
+						flux_b2b[x,y,*] = flux_dum[x,y,where(wl_dum gt b2a_break and wl_dum le 95.05)]
+						std_b2b[x,y,*] = std_dum[x,y,where(wl_dum gt b2a_break and wl_dum le 95.05)]
+						wl_b2b[x,y,*] = wl_dum[where(wl_dum gt b2a_break and wl_dum le 95.05)]
+						ra_b2b[x,y,*] = ra_dum[x,y,where(wl_dum gt b2a_break and wl_dum le 95.05)]
+						dec_b2b[x,y,*] = dec_dum[x,y,where(wl_dum gt b2a_break and wl_dum le 95.05)]
 					end
 					band eq 'R1': begin
 						if min(wl_dum) lt 130 then begin

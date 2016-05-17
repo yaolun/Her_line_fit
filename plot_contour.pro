@@ -73,6 +73,7 @@ if keyword_set(pacs) then begin
   	;PACS
   	suffix = '_mixed_lines.txt'
   	if file_test(indir+objname+'_pacs_pixel13'+suffix) eq 0 then suffix = '_os8_sf7_lines.txt'
+  	if file_test(indir+objname+'_pacs_pixel13'+suffix) eq 0 then suffix = '_hsa_lines.txt'
   	readcol, indir+objname+'_pacs_pixel13'+suffix, format='A,D,D,D,D, D,D,D,D,D, D,D,D,D,D, D,A,A,D', name, lab_wl, wl, sig_wl, str, sig_str, fwhm, sig_fwhm, base_str, noise, snr, E_u, A, g, ra, dec, pixel, blend, validity,/silent,skipline=1
   	ra_cen_pacs = ra
   	dec_cen_pacs = dec
@@ -241,7 +242,7 @@ if not keyword_set(no_plot) then begin
   		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, /onimage, color=0,/nodata,label=0
 		        endelse
 		        if keyword_set(plot_irs2) then begin
-		            cgplot, (plot_irs2[0]-ra_cen[0])*3600.*cos(plot_irs2[1]*!pi/180.), (plot_irs2[1]-dec_cen[0])*3600., psym=1, color=110, symsize=1.5, position=oposition, /overplot  ; light blue
+		            cgplot, (plot_irs2[0]-ra_cen[0])*3600.*cos(plot_irs2[1]*!pi/180.), (plot_irs2[1]-dec_cen[0])*3600., psym=7, color=110, symsize=1.5, position=oposition, /overplot  ; light blue
 		        endif
 		        loadct, 0, /silent
 		        ; place it in the upper right
@@ -364,7 +365,7 @@ if not keyword_set(no_plot) then begin
   		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, /onimage, color=0,/nodata,label=0
 		        endelse
 		        if keyword_set(plot_irs2) then begin
-		            cgplot, (plot_irs2[0]-ra_cen[0])*3600.*cos(plot_irs2[1]*!pi/180.), (plot_irs2[1]-dec_cen[0])*3600., psym=1, color=110, symsize=1.5, position=oposition, /overplot
+		            cgplot, (plot_irs2[0]-ra_cen[0])*3600.*cos(plot_irs2[1]*!pi/180.), (plot_irs2[1]-dec_cen[0])*3600., psym=7, color=110, symsize=1.5, position=oposition, /overplot
 		        endif
 		        loadct, 0, /silent
 		        ; place it in the upper right
@@ -511,7 +512,7 @@ if not keyword_set(no_plot) then begin
     	        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /noerase, /onimage, color=0,/nodata,label=0
       	        endelse
       	        if keyword_set(plot_irs2) then begin
-                    cgplot, (plot_irs2[0]-ra_cen[0])*3600.*cos(plot_irs2[1]*!pi/180.), (plot_irs2[1]-dec_cen[0])*3600., psym=1, color=110, symsize=1.5, position=oposition, /overplot
+                    cgplot, (plot_irs2[0]-ra_cen[0])*3600.*cos(plot_irs2[1]*!pi/180.), (plot_irs2[1]-dec_cen[0])*3600., psym=7, color=110, symsize=1.5, position=oposition, /overplot
       	        endif
       	        loadct, 0, /silent
       	        ; place it in the upper right

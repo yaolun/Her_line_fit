@@ -122,7 +122,9 @@ pro plot_spire_1d, wl, flux, object=object, pixname=pixname, outdir=outdir, fx=f
     !p.multi = 0
 end
 
-pro get_spire, object=object,indir=indir, filename=filename, outdir=outdir, brightness=brightness,fx=fx
+pro get_spire, object=object,indir=indir, filename=filename, outdir=outdir, brightness=brightness,fx=fx;, hsa=hsa
+
+; extension range for CDF products: SLW-[2, 20], SSW-[21,55]
 
 if file_test(outdir) eq 0 then file_mkdir, outdir
 plotdir = outdir
