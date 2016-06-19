@@ -1,4 +1,4 @@
-pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix,general=general, separate=saparate
+pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix,general=general, separate=separate
 ; if not keyword_set(outdir) then outdir = indir
 outdir = outdir+'cube/'
 plotdir = outdir+'plots/spectrum/'
