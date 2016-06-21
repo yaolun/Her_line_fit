@@ -1,10 +1,16 @@
-pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix,general=general, separate=separate
-; if not keyword_set(outdir) then outdir = indir
+pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix,general=general, separate=separate, hsa=hsa
+
 outdir = outdir+'cube/'
 plotdir = outdir+'plots/spectrum/'
 if file_test(outdir) eq 0 then file_mkdir, outdir
 if file_test(plotdir) eq 0 then file_mkdir, plotdir
-;if not ((objname eq 'NGC1333-IRAS2A') or (objname eq 'Serpens-SMM1') or (objname eq 'G327-06')) then begin
+
+; if KEYWORD_SET(hsa) then begin
+;     ext_index = []
+; endif else begin
+;     ext_index = [8, 1, 5, 2, 3]
+; endelse
+
 if keyword_set(general) then begin
 	for i = 0, n_elements(filename)-1 do begin
 		wl = []

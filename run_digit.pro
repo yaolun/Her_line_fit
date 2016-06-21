@@ -1,5 +1,6 @@
-pro run_digit, indir=indir,outdir=outdir,fixed_width=fixed_width,localbaseline=localbaseline,global_noise=global_noise,noiselevel=noiselevel,test=test,central9=central9,centralyes=centralyes,centralno=centralno,cube=cube,$
-	jitter=jitter,nojitter=nojitter,refine=refine,no_fit=no_fit,print_all=print_all,co_add=co_add,no_plot=no_plot,proj=proj,double_gauss=double_gauss,contour=contour,FWD=FWD,single=single,obj_flag=obj_flag,localnoise=localnoise
+pro run_digit, indir=indir,outdir=outdir,fixed_width=fixed_width,localbaseline=localbaseline,global_noise=global_noise,noiselevel=noiselevel,test=test,$
+    central9=central9,centralyes=centralyes,centralno=centralno,cube=cube,hsa_cube=hsa_cube,jitter=jitter,nojitter=nojitter,refine=refine,no_fit=no_fit,print_all=print_all,$
+    co_add=co_add,no_plot=no_plot,proj=proj,double_gauss=double_gauss,contour=contour,FWD=FWD,single=single,obj_flag=obj_flag,localnoise=localnoise
 ; don’t use the jitter-corrected version for L1455-IRS3, L1014, Serpens-SMM4, RCrA-IRS5A, RCrA-IRS7C, or IRAM 04191.
 if not keyword_set(FWD) then tic
 if not keyword_set(outdir) then outdir = indir
@@ -20,11 +21,13 @@ case 1 of
   	keyword_set(centralyes): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3YES_slice_00*'+word2
   	keyword_set(centralno): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3NO_slice_00*'+word2
   	keyword_set(cube): search_word = 'OBSID*finalcubes_slice00*'+word2
+    keyword_set(hsa_cube): search_word = 'hpacs*_20hps3dr*s_00*'
 endcase
 
 ; Get the data listing
 ;
 filelist = file_search(indir, search_word)
+stop
 if n_elements(filelist) eq 0 then begin
   	return
   	end
@@ -47,6 +50,8 @@ for file = 0, n_elements(filelist)-1 do begin
 endfor
 digit_file = digit_file[sort(objname)]
 objname = objname[sort(objname)]
+
+stop
 
 for obj = 0, n_elements(objname)-1 do begin
   	if strmatch(objname[obj],'*-1') eq 1 then objname[obj] = strmid(objname[obj],0,strlen(objname[obj])-2)
