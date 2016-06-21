@@ -31,7 +31,7 @@ if not keyword_set(hsa_cube) then begin
 endif else begin
     filelist = [file_search(indir, search_word[0]), file_search(indir, search_word[1])]
     cube = 1
-    suffix = '_hsa'
+    suffix = 'hsa'
 endelse
 if n_elements(filelist) eq 0 then begin
   	return
@@ -236,7 +236,7 @@ while i eq 1 do begin
 				continue
 			endif
 		endif else begin
-			if (file_test(outdir+current_obj+'/pacs/data/cube/'+current_obj+'_pacs_pixel1_os8_sf7.txt') ne 0) and keyword_set(nojitter) then begin
+			if (file_test(outdir+current_obj+'/pacs/data/cube/'+current_obj+'_pacs_pixel1_'+suffix+'.txt') ne 0) and keyword_set(nojitter) then begin
 				printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype
 				free_lun, tot_list
 				close, tot_list
@@ -268,8 +268,8 @@ while i eq 1 do begin
 	if keyword_set(central9) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/central9,ra=ra,dec=dec,general=general,datadir=indir,coorddir=outdir+current_obj+'/pacs/data/cube/'
 	if keyword_set(centralyes) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralyes,ra=ra,dec=dec,general=general,datadir=indir,coorddir=outdir+current_obj+'/pacs/data/cube/'
 	if keyword_set(centralno) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralno,ra=ra,dec=dec,general=general,datadir=indir,coorddir=outdir+current_obj+'/pacs/data/cube/'
-	if keyword_set(cube) then get_pacs, outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename, suffix='os8_sf7',general=general;,datadir=indir
-	suffix='os8_sf7'
+	if keyword_set(cube) then get_pacs, outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename, suffix=suffix,general=general;,datadir=indir
+	; suffix='os8_sf7'
 
 	; Set the name of the ascii file containing the spectrum
 	;
