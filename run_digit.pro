@@ -22,7 +22,6 @@ case 1 of
   	keyword_set(centralyes): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3YES_slice_00*'+word2
   	keyword_set(centralno): search_word = '*centralSpaxel_PointSourceCorrected_Corrected3x3NO_slice_00*'+word2
   	keyword_set(cube): search_word = 'OBSID*finalcubes_slice00*'+word2
-    keyword_set(hsa_cube): search_word = ['hpacs*_20hps3drbs_00*', 'hpacs*_20hps3drrs_00*']
 endcase
 
 ; Get the data listing
@@ -30,6 +29,7 @@ endcase
 if not keyword_set(hsa_cube) then begin
     filelist = file_search(indir, search_word)
 endif else begin
+    search_word = ['hpacs*_20hps3drbs_00*', 'hpacs*_20hps3drrs_00*']
     filelist = [file_search(indir, search_word[0]), file_search(indir, search_word[1])]
     suffix = 'hsa'
 endelse
