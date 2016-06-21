@@ -30,7 +30,6 @@ if not keyword_set(hsa_cube) then begin
     filelist = file_search(indir, search_word)
 endif else begin
     filelist = [file_search(indir, search_word[0]), file_search(indir, search_word[1])]
-    cube = 1
     suffix = 'hsa'
 endelse
 if n_elements(filelist) eq 0 then begin
