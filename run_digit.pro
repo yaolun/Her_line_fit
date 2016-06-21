@@ -30,8 +30,9 @@ if not keyword_set(hsa_cube) then begin
     filelist = file_search(indir, search_word)
 endif else begin
     filelist = [file_search(indir, search_word[0]), file_search(indir, search_word[1])]
+    cube = 1
+    suffix = '_hsa'
 endelse
-stop
 if n_elements(filelist) eq 0 then begin
   	return
   	end
@@ -54,8 +55,6 @@ for file = 0, n_elements(filelist)-1 do begin
 endfor
 digit_file = digit_file[sort(objname)]
 objname = objname[sort(objname)]
-
-stop
 
 for obj = 0, n_elements(objname)-1 do begin
   	if strmatch(objname[obj],'*-1') eq 1 then objname[obj] = strmid(objname[obj],0,strlen(objname[obj])-2)
