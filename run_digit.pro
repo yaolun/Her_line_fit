@@ -13,6 +13,7 @@ endelse
 
 objname = []
 suffix = ''
+word2 = ''
 if keyword_set(cube) then suffix = 'os8_sf7'
 if keyword_set(jitter) then word2 = suffix+'.fits'
 if keyword_set(nojitter) then word2 = suffix+'_nojitter.fits'
