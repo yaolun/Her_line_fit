@@ -12,7 +12,7 @@ endif else begin
 endelse
 
 objname = []
-suffix = 'os8sf7'
+suffix = ''
 if keyword_set(cube) then suffix = 'os8_sf7'
 if keyword_set(jitter) then word2 = suffix+'.fits'
 if keyword_set(nojitter) then word2 = suffix+'_nojitter.fits'
@@ -75,7 +75,7 @@ endfor
 objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 
-if not keyword_set(cube) then begin
+; if not keyword_set(cube) then begin
   	; Exclude every with 'basic' and not using 'os8sf7' parameters
   	;
     ;	objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
@@ -98,13 +98,13 @@ if not keyword_set(cube) then begin
   	;objname = objname[where(strmatch(digit_file, '*1342207781*',/fold_case) ne 1)]
   	;digit_file = digit_file[where(strmatch(digit_file, '*1342207781*',/fold_case) ne 1)]
   	;endif
-endif
-if keyword_set(cube) and proj eq 'wish' then begin
+; endif
+; if keyword_set(cube) and proj eq 'wish' then begin
   	; objname = objname[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
   	; digit_file = digit_file[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
     ;	objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
     ;	digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
-endif
+; endif
 
 ;objname = objname[where(strmatch(digit_file, '*TMC1_*',/fold_case) eq 1)]
 ;digit_file = digit_file[where(strmatch(digit_file, '*TMC1_*',/fold_case) eq 1)]
