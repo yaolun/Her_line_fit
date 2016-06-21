@@ -250,7 +250,7 @@ while i eq 1 do begin
 
 	if file_test(outdir+current_obj+'/pacs/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/pacs/data'
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
-
+    stop
 	; design for copying the FITS
 	if (keyword_set(no_fit)) and (not keyword_set(contour)) then begin
 		if keyword_set(jitter) then begin
@@ -258,7 +258,7 @@ while i eq 1 do begin
 			free_lun, tot_list
 			close, tot_list
 		endif
-		continue
+		; continue
 	endif
 	; "filename" contains the all of the filepath of the object in each iteration
 	; Extract the fits files of each object now.  Output a two-column spectrum in ascii file and a whole spectrum plot.
