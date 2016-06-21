@@ -244,13 +244,16 @@ while i eq 1 do begin
 			endif
 		endelse
 
-	endif
+	endif else begin
+        ; prevent the end-of-code-write-out failed
+        openw, tot_list, outdir+'full_source_list.txt',/get_lun, /append
+    endelse
 
 	if keyword_set(single) then if current_obj ne single then continue ; Uncomment this line for all objects fitting
 
 	if file_test(outdir+current_obj+'/pacs/data',/directory) eq 0 then file_mkdir, outdir+current_obj+'/pacs/data'
 	print, 'Fitting', current_obj, '...',format='(a7,x,a'+strtrim(string(strlen(current_obj)),1)+',a3)'
-    stop
+
 	; design for copying the FITS
 	if (keyword_set(no_fit)) and (not keyword_set(contour)) then begin
 		if keyword_set(jitter) then begin
