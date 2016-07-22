@@ -1,11 +1,19 @@
-def PreFittingModify(indir, outdir, objanme):
+def PreFittingModify(indir, outdir, obs):
     from astropy.io import ascii
     import matplotlib.pyplot as plt
     import numpy as np
     import os
 
+    # modify outdir
+    outdir = outdir+obs[0]+'/spire/data/'
+    if not os.path.isfile(outdir):
+        os.mkdir(outdir)
+
+    if not os.path.isfile(indir+obs[3]+'_spire_sect.txt')
+        print obs[0]+' is not found.'
+        return None
     # read in the spectrum
-    spire_spec = ascii.read(indir+'spire_sect.txt', data_start=4)
+    spire_spec = ascii.read(indir+obs[3]+'spire_sect.txt', data_start=4)
     # convert it to the usual format
     spire_wl = np.hstack((spire_spec['wave_segm1_0'][spire_spec['wave_segm1_0'] >= 310].data,
                 spire_spec['wave_segm2_0'][(spire_spec['wave_segm2_0'] < 310) & (spire_spec['wave_segm2_0'] > 195)].data))
@@ -17,8 +25,7 @@ def PreFittingModify(indir, outdir, objanme):
     spire_flux = spire_flux[sorter].data
 
     # Write to file
-    if not os.path.isfile(outdir):
-        os.mkdir(outdir)
+
     foo = open(outdir+objanme+'_spire_corrected.txt','w')
     foo.write('%s \t %s \n' % ('Wavelength(um)', 'Flux_Density(Jy)'))
     for i in range(len(spire_wl)):
@@ -26,14 +33,14 @@ def PreFittingModify(indir, outdir, objanme):
     foo.close()
 
     # read in the photometry
-    spire_phot = ascii.read(outdir+objanme+'phot_sect.txt', data_start=4)
+    # spire_phot = ascii.read(outdir+objanme+'phot_sect.txt', data_start=4)
 
     fig.figure(figsize=(8,6))
     ax = add_subplot(111)
 
     ax.plot(spire_wl, spire_flux)
-    ax.errorbar(spire_phot['wavelength(um)'], spire_phot['flux(Jy)'], yerr=spire_phot['uncertainty(Jy)'],
-                 fmt='s', color='m', linestyle='None')
+    # ax.errorbar(spire_phot['wavelength(um)'], spire_phot['flux(Jy)'], yerr=spire_phot['uncertainty(Jy)'],
+    #              fmt='s', color='m', linestyle='None')
     ax.set_xlabel(r'$\rm{Wavelength\,[\mu m]}$',fontsize=20)
     ax.set_ylabel(r'$\rm{Flux\,Density\,[Jy}$',fontsize=20)
     [ax.spines[axis].set_linewidth(1.5) for axis in ['top','bottom','left','right']]
@@ -137,4 +144,4 @@ outdir = '/home/bettyjo/yaolun/CDF_archive/'
 for obs in obsid:
     if obs[3] == '0':
         continue
-    PreFittingModify(indir, outdir+obs[0]+'/spire/data/', obs[0])
+    PreFittingModify(indir, outdir, obs)
