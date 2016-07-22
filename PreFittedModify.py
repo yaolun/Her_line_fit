@@ -9,7 +9,7 @@ def PreFittingModify(indir, outdir, obs):
     if not os.path.isfile(outdir):
         os.makedirs(outdir)
 
-    if not os.path.isfile(indir+obs[3]+'_spire_sect.txt'):
+    if not os.path.isdir(indir+obs[3]+'_spire_sect.txt'):
         print obs[0]+' is not found.'
         return None
     # read in the spectrum
