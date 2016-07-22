@@ -65,7 +65,7 @@ def SPIRE1d_fit(indir, objname):
     idl = pidly.IDL('/opt/local/exelis/idl83/bin/idl')
     idl('.r /home/bettyjo/yaolun/programs/line_fitting/gauss.pro')
     idl('.r /home/bettyjo/yaolun/programs/line_fitting/extract_spire.pro')
-    idl.pro('extract_spire', indir=indir+'data/', filename=objname'_spire_corrected',
+    idl.pro('extract_spire', indir=indir+'data/', filename=objname+'_spire_corrected',
             outdir=indir+'advanced_products/',
             plotdir=indir+'advanced_products/plots/', noiselevel=3, ra=0, dec=0, global_noise=20,
             localbaseline=10, continuum=1, flat=1, object=objname, double_gauss=1, fx=1)
