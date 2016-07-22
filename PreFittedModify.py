@@ -35,8 +35,8 @@ def PreFittingModify(indir, outdir, obs):
     # read in the photometry
     # spire_phot = ascii.read(outdir+obs[0]+'phot_sect.txt', data_start=4)
 
-    fig.figure(figsize=(8,6))
-    ax = add_subplot(111)
+    fig = plt.figure(figsize=(8,6))
+    ax = fig.add_subplot(111)
 
     ax.plot(spire_wl, spire_flux)
     # ax.errorbar(spire_phot['wavelength(um)'], spire_phot['flux(Jy)'], yerr=spire_phot['uncertainty(Jy)'],
