@@ -26,14 +26,14 @@ def PreFittingModify(indir, outdir, obs):
 
     # Write to file
 
-    foo = open(outdir+objanme+'_spire_corrected.txt','w')
+    foo = open(outdir+obs[0]+'_spire_corrected.txt','w')
     foo.write('%s \t %s \n' % ('Wavelength(um)', 'Flux_Density(Jy)'))
     for i in range(len(spire_wl)):
         foo.write('%f \t %f \n' % (spire_wl[i], spire_flux[i]))
     foo.close()
 
     # read in the photometry
-    # spire_phot = ascii.read(outdir+objanme+'phot_sect.txt', data_start=4)
+    # spire_phot = ascii.read(outdir+obs[0]+'phot_sect.txt', data_start=4)
 
     fig.figure(figsize=(8,6))
     ax = add_subplot(111)
@@ -48,7 +48,7 @@ def PreFittingModify(indir, outdir, obs):
     ax.tick_params('both',labelsize=18,width=1.5,which='major',pad=15,length=5)
     ax.tick_params('both',labelsize=18,width=1.5,which='minor',pad=15,length=2.5)
 
-    fig.savefig(outdir+objname+'spire_corrected.pdf', format='pdf', dpi=300, bbox_inches='tight')
+    fig.savefig(outdir+obs[0]+'_spire_corrected.pdf', format='pdf', dpi=300, bbox_inches='tight')
     fig.clf()
 
 # observation info
