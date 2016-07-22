@@ -13,7 +13,7 @@ def PreFittingModify(indir, outdir, obs):
         print obs[0]+' is not found.'
         return None
     # read in the spectrum
-    spire_spec = ascii.read(indir+obs[3]+'spire_sect.txt', data_start=4)
+    spire_spec = ascii.read(indir+obs[3]+'_spire_sect.txt', data_start=4)
     # convert it to the usual format
     spire_wl = np.hstack((spire_spec['wave_segm1_0'][spire_spec['wave_segm1_0'] >= 310].data,
                 spire_spec['wave_segm2_0'][(spire_spec['wave_segm2_0'] < 310) & (spire_spec['wave_segm2_0'] > 195)].data))
