@@ -7,7 +7,7 @@ def PreFittingModify(indir, outdir, obs):
     # modify outdir
     outdir = outdir+obs[0]+'/spire/data/'
     if not os.path.isfile(outdir):
-        os.mkdir(outdir)
+        os.makedirs(outdir)
 
     if not os.path.isfile(indir+obs[3]+'_spire_sect.txt'):
         print obs[0]+' is not found.'
