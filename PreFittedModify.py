@@ -1,4 +1,7 @@
 def PreFittingModify(indir, outdir, obs):
+    # to avoid X server error
+    import matplotlib as mpl
+    mpl.use('Agg')
     from astropy.io import ascii
     import matplotlib.pyplot as plt
     import numpy as np
