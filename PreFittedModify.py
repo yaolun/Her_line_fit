@@ -28,7 +28,6 @@ def PreFittingModify(indir, outdir, obs):
     spire_flux = spire_flux[sorter].data
 
     # Write to file
-
     foo = open(outdir+obs[0]+'_spire_corrected.txt','w')
     foo.write('%s \t %s \n' % ('Wavelength(um)', 'Flux_Density(Jy)'))
     for i in range(len(spire_wl)):
@@ -45,11 +44,18 @@ def PreFittingModify(indir, outdir, obs):
     # ax.errorbar(spire_phot['wavelength(um)'], spire_phot['flux(Jy)'], yerr=spire_phot['uncertainty(Jy)'],
     #              fmt='s', color='m', linestyle='None')
     ax.set_xlabel(r'$\rm{Wavelength\,[\mu m]}$',fontsize=20)
-    ax.set_ylabel(r'$\rm{Flux\,Density\,[Jy}$',fontsize=20)
+    ax.set_ylabel(r'$\rm{Flux\,Density\,[Jy]}$',fontsize=20)
     [ax.spines[axis].set_linewidth(1.5) for axis in ['top','bottom','left','right']]
     ax.minorticks_on()
     ax.tick_params('both',labelsize=18,width=1.5,which='major',pad=15,length=5)
     ax.tick_params('both',labelsize=18,width=1.5,which='minor',pad=15,length=2.5)
+
+    # fix the tick label font
+    ticks_font = mpl.font_manager.FontProperties(family='STIXGeneral',size=18)
+    for label in ax.get_xticklabels():
+        label.set_fontproperties(ticks_font)
+    for label in ax.get_yticklabels():
+        label.set_fontproperties(ticks_font)
 
     fig.savefig(outdir+obs[0]+'_spire_corrected.pdf', format='pdf', dpi=300, bbox_inches='tight')
     fig.clf()
