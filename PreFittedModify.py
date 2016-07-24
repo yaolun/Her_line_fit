@@ -64,7 +64,7 @@ def SPIRE1d_fit(indir, objname):
     import os
     if not os.isfile(indir+'data/'+objname+'_spire_corrected.txt'):
         print objname+' is not found.'
-        continue
+        return None
         
     import pidly
     idl = pidly.IDL('/opt/local/exelis/idl83/bin/idl')
