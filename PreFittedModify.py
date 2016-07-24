@@ -62,12 +62,7 @@ def PreFittingModify(indir, outdir, obs):
 
 def SPIRE1d_fit(indir, objname):
     import os
-<<<<<<< HEAD
-    
-    if not os.isfile(indir+'data/'+objname+'_spire_corrected.txt'):
-=======
     if not os.path.isfile(indir+'data/'+objname+'_spire_corrected.txt'):
->>>>>>> b94ad68250fbaf1874c38334faacae4012d821bb
         print objname+' is not found.'
         return None
 
