@@ -72,7 +72,8 @@ def SPIRE1d_fit(indir, objname):
     idl.pro('extract_spire', indir=indir+'data/', filename=objname+'_spire_corrected',
             outdir=indir+'advanced_products/',
             plotdir=indir+'advanced_products/plots/', noiselevel=3, ra=0, dec=0, global_noise=20,
-            localbaseline=10, continuum=1, flat=1, object=objname, double_gauss=1, fx=1)
+            localbaseline=10, continuum=1, flat=1, object=objname, double_gauss=1, fx=1,
+            print_all=indir)
 
 # observation info
 obsid = [['AB_Aur','1342217842','1342217843','0'],\
