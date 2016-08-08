@@ -75,8 +75,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
     ax = fig.add_subplot(111)
 
     e1 = (wl < 72.3)
-    e2 = ((wl >= 103) & (wl < 143))
-    e3 = ((wl >= 72.3) & (wl < 95.05))
+    e2 = ((wl >= 72.3) & (wl < 95.05))
+    e3 = ((wl >= 103) & (wl < 143))
     e4 = ((wl >= 143) & (wl < 190.31))
 
     spec, = ax.plot(wl[e1], flux[e1], color='b')
@@ -91,7 +91,14 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
     ax.tick_params('both',labelsize=18,width=1.5,which='major',pad=10,length=5)
     ax.tick_params('both',labelsize=18,width=1.5,which='minor',pad=10,length=2.5)
 
-    fig.savefig(outdir+objname+'_pacs_weighted.pdf', format='pdf', dpi=300, bbox_inches='tight')
+    # fix the tick label font
+    ticks_font = mpl.font_manager.FontProperties(family='STIXGeneral',size=18)
+    for label in ax_sed.get_xticklabels():
+        label.set_fontproperties(ticks_font)
+    for label in ax_sed.get_yticklabels():
+        label.set_fontproperties(ticks_font)
+
+    fig.savefig(outdir+'pacs/data/'+objname+'_pacs_weighted.pdf', format='pdf', dpi=300, bbox_inches='tight')
     fig.clf()
 
 
