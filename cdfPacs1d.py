@@ -93,9 +93,9 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
 
     # fix the tick label font
     ticks_font = mpl.font_manager.FontProperties(family='STIXGeneral',size=18)
-    for label in ax_sed.get_xticklabels():
+    for label in ax.get_xticklabels():
         label.set_fontproperties(ticks_font)
-    for label in ax_sed.get_yticklabels():
+    for label in ax.get_yticklabels():
         label.set_fontproperties(ticks_font)
 
     fig.savefig(outdir+'pacs/data/'+objname+'_pacs_weighted.pdf', format='pdf', dpi=300, bbox_inches='tight')
