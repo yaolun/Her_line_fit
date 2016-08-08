@@ -4,6 +4,9 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
     outdir: The output directory for the source.  e.g. /CDF_archive/BHR71/
     """
     import numpy as np
+    # to avoid X server error
+    import matplotlib as mpl
+    mpl.use('Agg')
     from astropy.io import ascii, fits
     import matplotlib.pyplot as plt
     import sys
