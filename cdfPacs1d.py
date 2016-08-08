@@ -66,7 +66,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
     foo = open(outdir+'pacs/data/'+objname+'_pacs_weighted.txt','w')
     foo.write('{} \t {}\n'.format('Wavelength(um)', 'Flux_Density(Jy)'))
     for i in range(len(wl)):
-        foo.write('{} \t {}\n'.format(wl[i], flux[i]))
+        if flux[i] != 0:
+            foo.write('{} \t {}\n'.format(wl[i], flux[i]))
     foo.close()
 
     # make an overall plot of spectrum
