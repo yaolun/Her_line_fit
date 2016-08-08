@@ -72,6 +72,9 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
 
     # make an overall plot of spectrum
     # need to incorporate with photometry in the near future
+    wl = wl[flux != 0]
+    flux = flux[flux != 0]
+
     fig = plt.figure(figsize=(8,6))
     ax = fig.add_subplot(111)
 
