@@ -5,6 +5,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
     """
     import numpy as np
     from astropy.io import ascii, fits
+    import matplotlib.pyplot as plt
     import sys
     import os
     sys.path.append(os.path.expanduser('~')+'/programs/spectra_analysis/')
@@ -64,6 +65,31 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
     for i in range(len(wl)):
         foo.write('{} \t {}\n'.format(wl[i], flux[i]))
     foo.close()
+
+    # make an overall plot of spectrum
+    # need to incorporate with photometry in the near future
+    fig = plt.figure(figsize=(8,6))
+    ax = fig.add_subplot(111)
+
+    e1 = (wl < 72.3)
+    e2 = ((wl >= 103) & (wl < 143))
+    e3 = ((wl >= 72.3) & (wl < 95.05))
+    e4 = ((wl >= 143) & (wl < 190.31))
+
+    spec, = ax.plot(wl[e1], flux[e1], color='b')
+    ax.plot(wl[e2], flux[e2], color='b')
+    ax.plot(wl[e3], flux[e3], color='b')
+    ax.plot(wl[e4], flux[e4], color='b')
+
+    ax.set_xlabel(r'$\rm{Wavelength\,[\mu m]}$', fontsize=18)
+    ax.set_ylabel(r'$\rm{Flux\,Density\,[Jy]}$', fontsize=18)
+    [ax.spines[axis].set_linewidth(1.5) for axis in ['top','bottom','left','right']]
+    ax.minorticks_on()
+    ax.tick_params('both',labelsize=18,width=1.5,which='major',pad=10,length=5)
+    ax.tick_params('both',labelsize=18,width=1.5,which='minor',pad=10,length=2.5)
+
+    fig.savefig(outdir+objname+'_pacs_weighted.pdf', format='pdf', dpi=300, bbox_inches='tight')
+    fig.clf()
 
 
 # observation info
