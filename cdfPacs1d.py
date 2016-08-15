@@ -196,7 +196,7 @@ obsid = [['AB_Aur','1342217842','1342217843','0'],\
 datadir = '/scratch/CDF_PACS_HSA/'
 outdir = '/home/bettyjo/yaolun/CDF_archive_test/'
 
-for obs in obsid[0:4]:
+for obs in obsid:
     if obs[3] == '0':
         continue
     if obs[1] == '0':
