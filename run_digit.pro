@@ -1,5 +1,6 @@
-pro run_digit, indir=indir,outdir=outdir,fixed_width=fixed_width,localbaseline=localbaseline,global_noise=global_noise,noiselevel=noiselevel,test=test,central9=central9,centralyes=centralyes,centralno=centralno,cube=cube,$
-	jitter=jitter,nojitter=nojitter,refine=refine,no_fit=no_fit,print_all=print_all,co_add=co_add,no_plot=no_plot,proj=proj,double_gauss=double_gauss,contour=contour,FWD=FWD,single=single,obj_flag=obj_flag,localnoise=localnoise
+pro run_digit, indir=indir,outdir=outdir,fixed_width=fixed_width,localbaseline=localbaseline,global_noise=global_noise,noiselevel=noiselevel,test=test,$
+    central9=central9,centralyes=centralyes,centralno=centralno,cube=cube,hsa_cube=hsa_cube,jitter=jitter,nojitter=nojitter,refine=refine,no_fit=no_fit,print_all=print_all,$
+    co_add=co_add,no_plot=no_plot,proj=proj,double_gauss=double_gauss,contour=contour,FWD=FWD,single=single,obj_flag=obj_flag,localnoise=localnoise
 ; don’t use the jitter-corrected version for L1455-IRS3, L1014, Serpens-SMM4, RCrA-IRS5A, RCrA-IRS7C, or IRAM 04191.
 if not keyword_set(FWD) then tic
 if not keyword_set(outdir) then outdir = indir
@@ -11,7 +12,8 @@ endif else begin
 endelse
 
 objname = []
-suffix = 'os8sf7'
+suffix = ''
+word2 = ''
 if keyword_set(cube) then suffix = 'os8_sf7'
 if keyword_set(jitter) then word2 = suffix+'.fits'
 if keyword_set(nojitter) then word2 = suffix+'_nojitter.fits'
@@ -24,7 +26,13 @@ endcase
 
 ; Get the data listing
 ;
-filelist = file_search(indir, search_word)
+if not keyword_set(hsa_cube) then begin
+    filelist = file_search(indir, search_word)
+endif else begin
+    search_word = ['hpacs*_20hps3drbs_00*', 'hpacs*_20hps3drrs_00*']
+    filelist = [file_search(indir, search_word[0]), file_search(indir, search_word[1])]
+    suffix = 'hsa'
+endelse
 if n_elements(filelist) eq 0 then begin
   	return
   	end
@@ -67,7 +75,7 @@ endfor
 objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
 
-if not keyword_set(cube) then begin
+; if not keyword_set(cube) then begin
   	; Exclude every with 'basic' and not using 'os8sf7' parameters
   	;
     ;	objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
@@ -90,13 +98,13 @@ if not keyword_set(cube) then begin
   	;objname = objname[where(strmatch(digit_file, '*1342207781*',/fold_case) ne 1)]
   	;digit_file = digit_file[where(strmatch(digit_file, '*1342207781*',/fold_case) ne 1)]
   	;endif
-endif
-if keyword_set(cube) and proj eq 'wish' then begin
+; endif
+; if keyword_set(cube) and proj eq 'wish' then begin
   	; objname = objname[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
   	; digit_file = digit_file[where(strmatch(digit_file, '*slice*',/fold_case) ne 1)]
     ;	objname = objname[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
     ;	digit_file = digit_file[where(strmatch(digit_file, '*basic*',/fold_case) ne 1)]
-endif
+; endif
 
 ;objname = objname[where(strmatch(digit_file, '*TMC1_*',/fold_case) eq 1)]
 ;digit_file = digit_file[where(strmatch(digit_file, '*TMC1_*',/fold_case) eq 1)]
@@ -228,7 +236,7 @@ while i eq 1 do begin
 				continue
 			endif
 		endif else begin
-			if (file_test(outdir+current_obj+'/pacs/data/cube/'+current_obj+'_pacs_pixel1_os8_sf7.txt') ne 0) and keyword_set(nojitter) then begin
+			if (file_test(outdir+current_obj+'/pacs/data/cube/'+current_obj+'_pacs_pixel1_'+suffix+'.txt') ne 0) and keyword_set(nojitter) then begin
 				printf, tot_list, format='(4(a16,2x))',current_obj, 'PACS', reduction,noisetype
 				free_lun, tot_list
 				close, tot_list
@@ -236,7 +244,10 @@ while i eq 1 do begin
 			endif
 		endelse
 
-	endif
+	endif else begin
+        ; prevent the end-of-code-write-out failed
+        openw, tot_list, outdir+'full_source_list.txt',/get_lun, /append
+    endelse
 
 	if keyword_set(single) then if current_obj ne single then continue ; Uncomment this line for all objects fitting
 
@@ -250,7 +261,7 @@ while i eq 1 do begin
 			free_lun, tot_list
 			close, tot_list
 		endif
-		continue
+		; continue
 	endif
 	; "filename" contains the all of the filepath of the object in each iteration
 	; Extract the fits files of each object now.  Output a two-column spectrum in ascii file and a whole spectrum plot.
@@ -260,8 +271,8 @@ while i eq 1 do begin
 	if keyword_set(central9) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/central9,ra=ra,dec=dec,general=general,datadir=indir,coorddir=outdir+current_obj+'/pacs/data/cube/'
 	if keyword_set(centralyes) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralyes,ra=ra,dec=dec,general=general,datadir=indir,coorddir=outdir+current_obj+'/pacs/data/cube/'
 	if keyword_set(centralno) then get_pacs_1d,outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename,/centralno,ra=ra,dec=dec,general=general,datadir=indir,coorddir=outdir+current_obj+'/pacs/data/cube/'
-	if keyword_set(cube) then get_pacs, outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename, suffix='os8_sf7',general=general;,datadir=indir
-	suffix='os8_sf7'
+	if keyword_set(cube) then get_pacs, outdir=outdir+current_obj+'/pacs/data/',objname=current_obj, filename=filename, suffix=suffix,general=general;,datadir=indir
+	; suffix='os8_sf7'
 
 	; Set the name of the ascii file containing the spectrum
 	;

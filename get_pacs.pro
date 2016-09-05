@@ -1,13 +1,26 @@
+<<<<<<< HEAD
 pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix, general=general, hsa=hsa
 ; if not keyword_set(outdir) then outdir = indir
+=======
+pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix,general=general, separate=separate, hsa=hsa
+
+>>>>>>> ff8122072f353fa92152e39b8d6eff5007737e74
 outdir = outdir+'cube/'
 plotdir = outdir+'plots/spectrum/'
 if file_test(outdir) eq 0 then file_mkdir, outdir
 if file_test(plotdir) eq 0 then file_mkdir, plotdir
 
+<<<<<<< HEAD
 ; For some reasons, HSA products stop at different wavelength than CDF for B2A
 b2a_break = 72.3
 if keyword_set(hsa) then b2a_break = 71.8
+=======
+; if KEYWORD_SET(hsa) then begin
+;     ext_index = []
+; endif else begin
+;     ext_index = [8, 1, 5, 2, 3]
+; endelse
+>>>>>>> ff8122072f353fa92152e39b8d6eff5007737e74
 
 if keyword_set(general) then begin
 	for i = 0, n_elements(filename)-1 do begin
@@ -39,6 +52,32 @@ if keyword_set(general) then begin
 		ra_dum = readfits(filename[ifile[i]], exten=2,/silent)
 		dec_dum = readfits(filename[ifile[i]], exten=3,/silent)
 		hdr = headfits(filename[ifile[i]],/silent)
+
+        if KEYWORD_SET(separate) then begin
+            band = strtrim(sxpar(hdr,'BAND'),1)
+    		band = strcompress(band,/remove_all)
+
+            flux_dum = flux[*,*,sort(wl_dum)]
+        	std_dum = std[*,*,sort(wl_dum)]
+        	wl_dum = wl[sort(wl_dum)]
+        	pix = 1
+        	for x = 0, 4 do begin
+        		for y = 0, 4 do begin
+        			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+band+'.txt',/get_lun
+        			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'; , 'Error(Jy)'
+        			for dum = 0, n_elements(wl_dum)-1 do printf, lun, format='(2(g16.10,2x))',wl_dum[dum],flux_dum[x,y,dum];,std[x,y,dum]
+        			free_lun, lun
+        			close, lun
+
+        			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+band+'_coord.txt',/get_lun
+        			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)'
+        			for dum = 0, n_elements(wl_dum)-1 do printf, lun, format='(3(g16.12,2x))', wl_dum[dum], ra_dum[x,y,dum], dec_dum[x,y,dum]
+        			free_lun, lun
+        			close, lun
+                endfor
+            endfor
+        endif
+
 		if i eq 0 then begin
 			wl = [wl_dum]
 			flux = [flux_dum]
@@ -225,8 +264,6 @@ endif else begin
 		endfor
 	endfor
 
-	;print, ra_b2a[2,2,0:10]
-	;print, dec_b2a[2,2,0:10]
 	for pix =1, 26 do file_delete, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_coord.txt',/allow_nonexistent,/recursive
 	pix = 1
 	for x = 0, 4 do begin
@@ -259,10 +296,6 @@ endif else begin
 			close, lun
 
 			; Write the RA & Dec coordinate into ASCII file
-
-
-
-			;openw, lun, outdir+objname+'_pacs_coord.txt',/append
 			openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_coord.txt',/get_lun
 			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)'
 			if n_elements(wl_b2a) ne 0 then begin
@@ -288,14 +321,67 @@ endif else begin
 			free_lun, lun
 			close, lun
 
-			;printf, lun, format='((a4,2x),2(g16.8,2x))', strtrim(string(pix),1), mean(ra_dum[x,y,*]), mean(dec_dum[x,y,*])
-			;free_lun, lun
-			;close, lun
+            ; For printing out the spectrum of each band separately
+            if KEYWORD_SET(separate) then begin
+                if n_elements(wl_b2a) ne 0 then begin
+                    ; Spectrum
+                    openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_b2a.txt',/get_lun
+        			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'
+                    for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(2(g16.10,2x))',wl_b2a[x,y,dum],flux_b2a[x,y,dum]
+                    free_lun, lun
+                    close, lun
+                    ; RA & Dec
+                    openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_b2a_coord.txt',/get_lun
+        			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)'
+                    for dum = 0, n_elements(wl_b2a[x,y,*])-1 do printf, lun, format='(3(g16.12,2x))',wl_b2a[x,y,dum],ra_b2a[x,y,dum],dec_b2a[x,y,dum]
+                    free_lun, lun
+                    close, lun
+                endif
+                if n_elements(wl_b2b) ne 0 then begin
+                    ; Spectrum
+                    openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_b2b.txt',/get_lun
+        			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'
+                    for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(2(g16.10,2x))',wl_b2b[x,y,dum],flux_b2b[x,y,dum]
+                    free_lun, lun
+                    close, lun
+                    ; RA & Dec
+                    openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_b2b_coord.txt',/get_lun
+        			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)'
+                    for dum = 0, n_elements(wl_b2b[x,y,*])-1 do printf, lun, format='(3(g16.12,2x))',wl_b2b[x,y,dum],ra_b2b[x,y,dum],dec_b2b[x,y,dum]
+                    free_lun, lun
+                    close, lun
+                endif
+                if n_elements(wl_r1s) ne 0 then begin
+                    ; Spectrum
+                    openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_r1s.txt',/get_lun
+        			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'
+                    for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(2(g16.10,2x))',wl_r1s[x,y,dum],flux_r1s[x,y,dum]
+                    free_lun, lun
+                    close, lun
+                    ; RA & Dec
+                    openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_r1s_coord.txt',/get_lun
+        			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)'
+                    for dum = 0, n_elements(wl_r1s[x,y,*])-1 do printf, lun, format='(3(g16.12,2x))',wl_r1s[x,y,dum],ra_r1s[x,y,dum],dec_r1s[x,y,dum]
+                    free_lun, lun
+                    close, lun
+                endif
+                if n_elements(wl_r1l) ne 0 then begin
+                    ; Spectrum
+                    openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_r1l.txt',/get_lun
+        			printf, lun, format='(2(a16,2x))', 'Wavelength(um)', 'Flux_Density(Jy)'
+                    for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(2(g16.10,2x))',wl_r1l[x,y,dum],flux_r1l[x,y,dum]
+                    free_lun, lun
+                    close, lun
+                    ; RA & Dec
+                    openw, lun, outdir+objname+'_pacs_pixel'+strtrim(string(pix),1)+'_'+suffix+'_r1l_coord.txt',/get_lun
+        			printf, lun, format='(3(a16,2x))', 'Wavelength(um)', 'RA(deg)', 'Dec(deg)'
+                    for dum = 0, n_elements(wl_r1l[x,y,*])-1 do printf, lun, format='(3(g16.12,2x))',wl_r1l[x,y,dum],ra_r1l[x,y,dum],dec_r1l[x,y,dum]
+                    free_lun, lun
+                    close, lun
+                endif
+            endif
 
 			; Make a plot
-
-			;wl = [reform(wl_b2a[x,y,*]), reform(wl_b2b[x,y,*]), reform(wl_r1s[x,y,*]), reform(wl_r1l[x,y,*])]
-			;flux = [reform(flux_b2a[x,y,*]), reform(flux_b2b[x,y,*]), reform(flux_r1s[x,y,*]), reform(flux_r1l[x,y,*])]
 			set_plot, 'ps'
 			!p.font=0
 			loadct,13,/silent
