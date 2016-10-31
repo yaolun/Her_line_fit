@@ -197,6 +197,7 @@ for obs in obsid:
     # load aperture from SPIRE SECT reduction
     if os.path.exists('/home/bettyjo/yaolun/CDF_SPIRE_reduction/photometry/'+str(obsid[0])+'_spire_phot.txt'):
         spire_phot = ascii.read('/home/bettyjo/yaolun/CDF_SPIRE_reduction/photometry/'+str(obsid[0])+'_spire_phot.txt', data_start=4)
+        print spire_phot
         aper_size = spire_phot['aperture(arcsec)'][spire_phot['wavelength(um)'] == spire_phot['wavelength(um)'].min()]
     else:
         aper_size = 31.8
