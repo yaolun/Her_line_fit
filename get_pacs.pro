@@ -1,26 +1,18 @@
-<<<<<<< HEAD
-pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix, general=general, hsa=hsa
-; if not keyword_set(outdir) then outdir = indir
-=======
 pro get_pacs, outdir=outdir, filename=filename, objname=objname, suffix=suffix,general=general, separate=separate, hsa=hsa
 
->>>>>>> ff8122072f353fa92152e39b8d6eff5007737e74
 outdir = outdir+'cube/'
 plotdir = outdir+'plots/spectrum/'
 if file_test(outdir) eq 0 then file_mkdir, outdir
 if file_test(plotdir) eq 0 then file_mkdir, plotdir
 
-<<<<<<< HEAD
 ; For some reasons, HSA products stop at different wavelength than CDF for B2A
 b2a_break = 72.3
 if keyword_set(hsa) then b2a_break = 71.8
-=======
 ; if KEYWORD_SET(hsa) then begin
 ;     ext_index = []
 ; endif else begin
 ;     ext_index = [8, 1, 5, 2, 3]
 ; endelse
->>>>>>> ff8122072f353fa92152e39b8d6eff5007737e74
 
 if keyword_set(general) then begin
 	for i = 0, n_elements(filename)-1 do begin

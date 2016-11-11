@@ -1,4 +1,4 @@
-pro get_radec_spire, filename=filename, pix, ra, dec, slw=slw, ssw=ssw, central=central, hsa=hsa, write=write
+pro get_radec_spire, filename=filename, slw=slw, ssw=ssw, central=central, hsa=hsa, write=write
 
 ; the extension index for CDF product: SLW-11, SSW-39
 ; the extension index for HSA product: point--SLW-5, SSW-18; ext--SLW-11, SSW-39
@@ -50,7 +50,7 @@ if not keyword_set(central) then begin
         if KEYWORD_SET(slw) then mod = 'slw'
         if KEYWORD_SET(ssw) then mod  = 'ssw'
 
-        openw, lun, write+'_radec'+mod+'.txt', /get_lun
+        openw, lun, write+'_radec_'+mod+'.txt', /get_lun
         printf, lun, format='(3(a16,2x))', 'Pixel', 'RA(dec)', 'Dec(deg)'
         for i = 0, n_elements(pix)-1 do printf, lun, format='((a16,2x),2(g16.6,2X))', pix[i], ra[i], dec[i]
         free_lun, lun
