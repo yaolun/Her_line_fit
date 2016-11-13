@@ -77,12 +77,13 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
 
     # compare the mismatch between PACS and SPIRE
     if auto_match:
+        print outdir+objname+'/spire/data/'+objname+'_spire_corrected.txt'
         if not os.path.exists(outdir+objname+'/spire/data/'+objname+'_spire_corrected.txt'):
             spire_path = raw_input('Where does the spire corrected spectrum located?')
         else:
-            spire_path = outdir+'spire/data/'+objname+'_spire_corrected.txt'
+            spire_path = outdir+objname+'spire/data/'+objname+'_spire_corrected.txt'
         spire = ascii.read(spire_path)
-        pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
+        pacs = ascii.read(outdir+objname+'pacs/data/'+objname+'_pacs_weighted.txt')
 
         used_aperture = [aper_size]
 
