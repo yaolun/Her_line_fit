@@ -87,7 +87,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
         used_aperture = [aper_size]
 
         print used_aperture
-        
+
         while PacsSpire_SpecMatch(pacs, spire, threshold) != 0:
             # check if it is a u-turn in aperture size
             if len(used_aperture) == 1:
