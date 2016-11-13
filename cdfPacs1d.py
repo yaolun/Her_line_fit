@@ -292,5 +292,6 @@ for obs in obsid:
     else:
         aper_size = 31.8
     print obs[0], aper_size
-    # continue
+    if obs[0] != 'BHR71':
+        continue
     cdfPacs1d(obs[1:3], datadir, outdir+obs[0]+'/', obs[0], auto_match=True)
