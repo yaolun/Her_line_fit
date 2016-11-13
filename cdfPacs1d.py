@@ -276,23 +276,23 @@ obsid = [['AB_Aur','1342217842','1342217843','0'],\
         #  ['VLA1623','1342213918','1342213917','1342251287'],\
          ['WL12','1342228187','1342228188','1342251290']]
 
-# datadir = '/scratch/CDF_PACS_HSA/'
-# outdir = '/home/bettyjo/yaolun/CDF_archive_test/'
-#
-# import os
-# from astropy.io import ascii
-#
-# for obs in obsid:
-#     if obs[3] == '0':
-#         continue
-#     if obs[1] == '0':
-#         continue
-#     # load aperture from SPIRE SECT reduction
-#     if os.path.exists('/home/bettyjo/yaolun/CDF_SPIRE_reduction/photometry/'+str(obs[0])+'_spire_phot.txt'):
-#         spire_phot = ascii.read('/home/bettyjo/yaolun/CDF_SPIRE_reduction/photometry/'+str(obs[0])+'_spire_phot.txt', data_start=4)
-#         aper_size = spire_phot['aperture(arcsec)'][spire_phot['wavelength(um)'] == spire_phot['wavelength(um)'].min()][0]
-#     else:
-#         aper_size = 31.8
-#     print obs[0], aper_size
-#     continue
-#     cdfPacs1d(obs[1:3], datadir, outdir+obs[0]+'/', obs[0])
+datadir = '/scratch/CDF_PACS_HSA/'
+outdir = '/home/bettyjo/yaolun/CDF_archive_test/'
+
+import os
+from astropy.io import ascii
+
+for obs in obsid:
+    if obs[3] == '0':
+        continue
+    if obs[1] == '0':
+        continue
+    # load aperture from SPIRE SECT reduction
+    if os.path.exists('/home/bettyjo/yaolun/CDF_SPIRE_reduction/photometry/'+str(obs[0])+'_spire_phot.txt'):
+        spire_phot = ascii.read('/home/bettyjo/yaolun/CDF_SPIRE_reduction/photometry/'+str(obs[0])+'_spire_phot.txt', data_start=4)
+        aper_size = spire_phot['aperture(arcsec)'][spire_phot['wavelength(um)'] == spire_phot['wavelength(um)'].min()][0]
+    else:
+        aper_size = 31.8
+    print obs[0], aper_size
+    continue
+    cdfPacs1d(obs[1:3], datadir, outdir+obs[0]+'/', obs[0])
