@@ -77,7 +77,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
 
     # compare the mismatch between PACS and SPIRE
     if auto_match:
-        if not os.path.exists(outdir+'spire/data/'+objname+'_spire_corrected.txt'):
+        if not os.path.exists(outdir+objname+'/spire/data/'+objname+'_spire_corrected.txt'):
             spire_path = raw_input('Where does the spire corrected spectrum located?')
         else:
             spire_path = outdir+'spire/data/'+objname+'_spire_corrected.txt'
