@@ -295,4 +295,4 @@ for obs in obsid:
         aper_size = 31.8
     print obs[0], aper_size
     continue
-    cdfPacs1d(obs[1:3], datadir, outdir+obs[0]+'/', obs[0])
+    cdfPacs1d(obs[1:3], datadir, outdir+obs[0]+'/', obs[0], auto_match=True)
