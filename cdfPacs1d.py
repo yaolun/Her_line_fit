@@ -84,7 +84,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
             spire_path = outdir+'spire/data/'+objname+'_spire_corrected.txt'
         spire = ascii.read(spire_path)
         pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
-
+        current_status = PacsSpire_SpecMatch(pacs, spire, threshold)
+        
         used_aperture = [aper_size]
 
         print used_aperture
