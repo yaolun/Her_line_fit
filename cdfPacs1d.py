@@ -1,5 +1,5 @@
 def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
-              auto_match=False, threshold=0.1, aper_step=10):
+              auto_match=False, threshold=0.05, aper_step=10):
     """
     obsid  = [obsid1, obsid2]
     outdir: The output directory for the source.  e.g. /CDF_archive/BHR71/
@@ -96,8 +96,6 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
                     aper_step = aper_step/2
             # store the comparison result for next iteration
             previous_status = PacsSpire_SpecMatch(pacs, spire, threshold)
-
-            print previous_status
 
             aper_size = aper_size + previous_status*aper_step
             used_aperture.append(aper_size)
