@@ -146,6 +146,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
             pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
             current_status = PacsSpire_SpecMatch(pacs, spire, threshold)
 
+        print used_aperture
 
     # make an overall plot of spectrum
     # need to incorporate with photometry in the near future
