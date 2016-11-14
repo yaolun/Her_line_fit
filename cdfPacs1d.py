@@ -89,10 +89,10 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
 
         print used_aperture
 
-        while PacsSpire_SpecMatch(pacs, spire, threshold) != 0:
+        while current_status != 0:
             # check if it is a u-turn in aperture size
             if len(used_aperture) > 1:
-                if previous_status*PacsSpire_SpecMatch(pacs, spire, threshold) < 0:
+                if previous_status*current_status < 0:
                     aper_step = aper_step/2
             # store the comparison result for next iteration
             previous_status = PacsSpire_SpecMatch(pacs, spire, threshold)
@@ -144,7 +144,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
 
             spire = ascii.read(spire_path)
             pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
-
+            current_status = PacsSpire_SpecMatch(pacs, spire, threshold)
 
 
     # make an overall plot of spectrum
@@ -193,7 +193,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
         idl.pro('extract_pacs', indir=outdir+'pacs/data/cube/', filename=objname+'_pacs_pixel'+str(i)+suffix,
                 outdir=outdir+'pacs/advanced_products/cube/', plotdir=outdir+'pacs/advanced_products/cube/plots/',
                 noiselevel=3, ra=ra_dum, dec=dec_dum, global_noise=20, localbaseline=10, opt_width=1,
-                continuum_sub=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
+                continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
 
     # fit the 1-D weighted spectrum
     coord = ascii.read(outdir+'pacs/data/cube/'+objname+'_pacs_pixel13_'+suffix+'_coord.txt')
@@ -202,7 +202,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
     idl.pro('extract_pacs', indir=outdir+'pacs/data/', filename=objname+'_pacs_weighted',
             outdir=outdir+'pacs/advanced_products/', plotdir=outdir+'pacs/advanced_products/plots/',
             noiselevel=3, ra=ra_cen, dec=dec_cen, global_noise=20, localbaseline=10, opt_width=1,
-            continuum_sub=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
+            continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
 
 # observation info
 obsid = [['AB_Aur','1342217842','1342217843','0'],\
