@@ -86,7 +86,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
         pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
         current_status = PacsSpire_SpecMatch(pacs, spire, threshold)
         print current_status
-        
+
         used_aperture = [aper_size]
 
         while current_status != 0:
@@ -302,4 +302,4 @@ for obs in obsid:
     print obs[0], aper_size
     if obs[0] != 'BHR71':
         continue
-    cdfPacs1d(obs[1:3], datadir, outdir+obs[0]+'/', obs[0], auto_match=True)
+    cdfPacs1d(obs[1:3], datadir, outdir+obs[0]+'/', obs[0], auto_match=True, aper_size=aper_size)
