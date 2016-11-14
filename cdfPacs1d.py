@@ -85,10 +85,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
         spire = ascii.read(spire_path)
         pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
         current_status = PacsSpire_SpecMatch(pacs, spire, threshold)
-        
-        used_aperture = [aper_size]
 
-        print used_aperture
+        used_aperture = [aper_size]
 
         while current_status != 0:
             # check if it is a u-turn in aperture size
@@ -204,6 +202,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
             outdir=outdir+'pacs/advanced_products/', plotdir=outdir+'pacs/advanced_products/plots/',
             noiselevel=3, ra=ra_cen, dec=dec_cen, global_noise=20, localbaseline=10, opt_width=1,
             continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
+    return aper_size
 
 # observation info
 obsid = [['AB_Aur','1342217842','1342217843','0'],\
