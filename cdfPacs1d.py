@@ -85,7 +85,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
         spire = ascii.read(spire_path)
         pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
         current_status = PacsSpire_SpecMatch(pacs, spire, threshold)
-
+        print current_status
+        
         used_aperture = [aper_size]
 
         while current_status != 0:
@@ -189,7 +190,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
         coord_dum = ascii.read(outdir+'pacs/data/cube/'+objname+'_pacs_pixel'+str(i)+'_'+suffix+'_coord.txt')
         ra_dum = np.mean(coord_dum['RA(deg)'])
         dec_dum = np.mean(coord_dum['Dec(deg)'])
-        idl.pro('extract_pacs', indir=outdir+'pacs/data/cube/', filename=objname+'_pacs_pixel'+str(i)+suffix,
+        idl.pro('extract_pacs', indir=outdir+'pacs/data/cube/', filename=objname+'_pacs_pixel'+str(i)+'_'+suffix,
                 outdir=outdir+'pacs/advanced_products/cube/', plotdir=outdir+'pacs/advanced_products/cube/plots/',
                 noiselevel=3, ra=ra_dum, dec=dec_dum, global_noise=20, localbaseline=10, opt_width=1,
                 continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
