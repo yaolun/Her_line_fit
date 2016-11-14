@@ -97,6 +97,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
             # store the comparison result for next iteration
             previous_status = PacsSpire_SpecMatch(pacs, spire, threshold)
 
+            print previous_status
+
             aper_size = aper_size + previous_status*aper_step
             used_aperture.append(aper_size)
 
@@ -140,6 +142,10 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
                     foo.write('{} \t {}\n'.format(wl[i], flux[i]))
             foo.close()
 
+            spire = ascii.read(spire_path)
+            pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
+
+
 
     # make an overall plot of spectrum
     # need to incorporate with photometry in the near future
@@ -182,8 +188,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
     # first, load the coordinate file
     for i in range(1,26):
         coord_dum = ascii.read(outdir+'pacs/data/cube/'+objname+'_pacs_pixel'+str(i)+'_'+suffix+'_coord.txt')
-        ra_dum = mean(coord_dum['RA(deg)'])
-        dec_dum = mean(coord_dum['Dec(deg)'])
+        ra_dum = np.mean(coord_dum['RA(deg)'])
+        dec_dum = np.mean(coord_dum['Dec(deg)'])
         idl.pro('extract_pacs', indir=outdir+'pacs/data/cube/', filename=objname+'_pacs_pixel'+str(i)+suffix,
                 outdir=outdir+'pacs/advanced_products/cube/', plotdir=outdir+'pacs/advanced_products/cube/plots/',
                 noiselevel=3, ra=ra_dum, dec=dec_dum, global_noise=20, localbaseline=10, opt_width=1,
@@ -191,8 +197,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
 
     # fit the 1-D weighted spectrum
     coord = ascii.read(outdir+'pacs/data/cube/'+objname+'_pacs_pixel13_'+suffix+'_coord.txt')
-    ra_cen = mean(coord['RA(deg)'])
-    dec_cen = mean(coord['Dec(deg)'])
+    ra_cen = np.mean(coord['RA(deg)'])
+    dec_cen = np.mean(coord['Dec(deg)'])
     idl.pro('extract_pacs', indir=outdir+'pacs/data/', filename=objname+'_pacs_weighted',
             outdir=outdir+'pacs/advanced_products/', plotdir=outdir+'pacs/advanced_products/plots/',
             noiselevel=3, ra=ra_cen, dec=dec_cen, global_noise=20, localbaseline=10, opt_width=1,
