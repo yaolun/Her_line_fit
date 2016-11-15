@@ -13,6 +13,7 @@ def PreFittingModify(indir, outdir, obs):
         os.makedirs(outdir)
 
     # temp fix
+    print indir+obs[3]+'spire_sect.txt'
     if os.path.isfile(indir+obs[3]+'spire_sect.txt'):
         os.rename(indir+obs[3]+'spire_sect.txt', indir+obs[3]+'_spire_sect.txt')
 
