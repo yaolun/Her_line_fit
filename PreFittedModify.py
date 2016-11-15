@@ -8,7 +8,7 @@ def PreFittingModify(indir, outdir, obs):
     import os
 
     # modify outdir
-    outdir = outdir+obs[0]+'/data/'
+    # outdir = outdir+obs[0]+'/data/'
     if not os.path.isdir(outdir):
         os.makedirs(outdir)
 
@@ -173,6 +173,6 @@ def SPIRE1D_run(obsid=None, indir=None, outdir=None, global_dir=None):
     for obs in obsid:
         if obs[3] == '0':
             continue
-        PreFittingModify(indir, outdir, obs)
+        PreFittingModify(outdir+obs[0]+'/spire/', outdir+obs[0]+'/spire/data/', obs)
 
         SPIRE1d_fit(outdir+obs[0]+'/spire/', obs[0], global_dir)
