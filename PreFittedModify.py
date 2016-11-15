@@ -12,6 +12,10 @@ def PreFittingModify(indir, outdir, obs):
     if not os.path.isdir(outdir):
         os.makedirs(outdir)
 
+    # temp fix
+    if os.path.isfile(indir+obs[3]+'spire_sect.txt'):
+        os.rename(indir+obs[3]+'spire_sect.txt', indir+obs[3]+'_spire_sect.txt')
+
     if not os.path.isfile(indir+obs[3]+'_spire_sect.txt'):
         print obs[0]+' is not found.'
         return None
