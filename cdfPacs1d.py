@@ -183,6 +183,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
 
     # line fitting
     idl('.r '+os.path.expanduser('~')+'/programs/line_fitting/extract_pacs.pro')
+    idl('.r '+os.path.expanduser('~')+'/programs/line_fitting/gauss.pro')
     # fit the cube
     # first, load the coordinate file
     for i in range(1,26):
@@ -204,7 +205,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
             continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
     return aper_size
 
-# 
+#
 # obsid = [['AB_Aur','1342217842','1342217843','0'],\
 #          ['AS205','1342215737','1342215738','0'],\
 #          ['B1-a','1342216182','1342216183','1342249475'],\
