@@ -12,10 +12,6 @@ def PreFittingModify(indir, outdir, obs):
     if not os.path.isdir(outdir):
         os.makedirs(outdir)
 
-    # temp fix
-    print indir+obs[3]+'spire_sect.txt'
-    if os.path.isfile(indir+obs[3]+'spire_sect.txt'):
-        os.rename(indir+obs[3]+'spire_sect.txt', indir+obs[3]+'_spire_sect.txt')
 
     if not os.path.isfile(indir+obs[3]+'_spire_sect.txt'):
         print obs[0]+' is not found.'
@@ -99,8 +95,7 @@ def SPIRE1D_run(obsid=None, indir=None, outdir=None, global_dir=None):
                  ['EC82','1342192975','1342219435','0'],\
                  ['Elias29','1342228519','1342228520','0'],\
                  ['FUOri','1342250907','1342250908','1342230412'],\
-                 ['GSS30-IRS1','1342215678','1342215679','0'],\
-                 ['GSS30','0','0','1342251286'],\
+                 ['GSS30-IRS1','1342215678','1342215679','1342251286'],\
                  ['HD100453','1342211695','1342211696','0'],\
                  ['HD100546','1342188037','1342188038','0'],\
                  ['HD104237','1342207819','1342207820','0'],\
