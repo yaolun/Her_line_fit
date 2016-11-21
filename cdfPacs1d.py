@@ -1,5 +1,5 @@
 def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
-              auto_match=False, threshold=0.05, aper_step=10):
+              auto_match=False, threshold=0.05, aper_step=10, max_iter=20):
     """
     obsid  = [obsid1, obsid2]
     outdir: The output directory for the source.  e.g. /CDF_archive/BHR71/
@@ -89,6 +89,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
 
         used_aperture = [aper_size]
 
+        iter_num = 0
         while current_status != 0:
             # check if it is a u-turn in aperture size
             if len(used_aperture) > 1:
@@ -143,6 +144,10 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
             spire = ascii.read(spire_path)
             pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
             current_status = PacsSpire_SpecMatch(pacs, spire, threshold)
+            iter_num += 1
+            if iter_num == max_iter:
+                print 'Maximum iterations reached.'
+                break
 
         print used_aperture
 
@@ -205,7 +210,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
             continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
     return aper_size
 
-#
+# observation info
 # obsid = [['AB_Aur','1342217842','1342217843','0'],\
 #          ['AS205','1342215737','1342215738','0'],\
 #          ['B1-a','1342216182','1342216183','1342249475'],\
@@ -281,7 +286,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
 #         #  ['V1735_Cyg','1342235849','1342235848','1342219560'],\
 #         #  ['VLA1623','1342213918','1342213917','1342251287'],\
 #          ['WL12','1342228187','1342228188','1342251290']]
-#
+
 # datadir = '/scratch/CDF_PACS_HSA/'
 # outdir = '/home/bettyjo/yaolun/CDF_archive_test/'
 #
