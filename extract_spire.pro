@@ -42,7 +42,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			ra = ra_dum & dec = dec_dum
 		endif
 	endif else begin
-		pixelname = ['spire_corrected']
+		pixelname = ['c']
 	endelse
 	plot_pixelname = pixelname
 	c = 2.998d8
