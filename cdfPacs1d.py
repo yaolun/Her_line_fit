@@ -1,5 +1,5 @@
 def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
-              auto_match=False, threshold=0.05, aper_step=10, max_iter=20):
+              auto_match=False, threshold=0.05, aper_step=10, max_iter=20, print_all_path=0):
     """
     obsid  = [obsid1, obsid2]
     outdir: The output directory for the source.  e.g. /CDF_archive/BHR71/
@@ -197,8 +197,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
         dec_dum = np.mean(coord_dum['Dec(deg)'])
         idl.pro('extract_pacs', indir=outdir+'pacs/data/cube/', filename=objname+'_pacs_pixel'+str(i)+'_'+suffix,
                 outdir=outdir+'pacs/advanced_products/cube/', plotdir=outdir+'pacs/advanced_products/cube/plots/',
-                noiselevel=3, ra=ra_dum, dec=dec_dum, global_noise=20, localbaseline=10, opt_width=1,
-                continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
+                noiselevel=3, ra=ra_dum, dec=dec_dum, global_noise=20, localbaseline=10, opt_width=1, current_pix=str(i),
+                continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1, print_all=print_all_path)
 
     # fit the 1-D weighted spectrum
     coord = ascii.read(outdir+'pacs/data/cube/'+objname+'_pacs_pixel13_'+suffix+'_coord.txt')
@@ -206,8 +206,8 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
     dec_cen = np.mean(coord['Dec(deg)'])
     idl.pro('extract_pacs', indir=outdir+'pacs/data/', filename=objname+'_pacs_weighted',
             outdir=outdir+'pacs/advanced_products/', plotdir=outdir+'pacs/advanced_products/plots/',
-            noiselevel=3, ra=ra_cen, dec=dec_cen, global_noise=20, localbaseline=10, opt_width=1,
-            continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1)
+            noiselevel=3, ra=ra_cen, dec=dec_cen, global_noise=20, localbaseline=10, opt_width=1, current_pix='c',
+            continuum=1, flat=1, object=objname, double_gauss=1, fixed_width=1, print_all=print_all_path)
     return aper_size
 
 # observation info
