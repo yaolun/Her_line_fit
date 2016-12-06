@@ -18,7 +18,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     ; The path to the data that you want to fit.  wavelength in um and flux in Jy.
     readcol, indir+filename+'.txt', format='D,D', wl, flux,/silent
     ; Read the corrdinates information if we are fitting data cube.
-    if keyword_set(current_pix) then readcol, indir+filename+'_coord.txt', format='D,D,D', wl_coord, ra_tot, dec_tot, /silent
+    if (keyword_set(current_pix)) and (not current_pix eq 'c') then readcol, indir+filename+'_coord.txt', format='D,D,D', wl_coord, ra_tot, dec_tot, /silent
     ; Get rid off the NaN
     wl = wl[where(finite(flux) eq 1)]
     std = flux[where(finite(flux) eq 1)] * 0
@@ -394,7 +394,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             base_str = interpol(base[where((wl[indl] le median(wl[indl])+10) and (wl[indl] ge median(wl[indl])-10))], wll, cen_wl)
             if not keyword_set(ra) then ra = 0
             if not keyword_set(dec) then dec = 0
-            if keyword_set(current_pix) then begin
+            if (keyword_set(current_pix)) and (not current_pix eq 'c') then begin
             	ra = interpol(ra_tot, wl_coord, line_center[i])
             	dec = interpol(dec_tot, wl_coord, line_center[i])
             endif
@@ -513,7 +513,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				endif
 				read_line_ref, line_name_dg[2*i], E_u1, A1, g1
 				read_line_ref, line_name_dg[2*i+1], E_u2, A2, g2
-				if keyword_set(current_pix) then begin
+				if (keyword_set(current_pix)) and (not current_pix eq 'c') then begin
             		ra = interpol(ra_tot, wl_coord, line[0])
 					dec = interpol(dec_tot, wl_coord, line[0])
 				endif
@@ -911,7 +911,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 			ind_n = where(wl gt limit_low and wl lt limit_hi)
 			wl_n = wl[ind_n] & flux_n = flat_noise[ind_n] & std_n = std[ind_n]
 			flat_noise_smooth = [[wl_n],[flux_n],[std_n]]
-			
+
 			;
 			; Fitting part
 			if keyword_set(fixed_width) and keyword_set(opt_width) then begin
@@ -976,7 +976,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 				base_str = interpol(base[where((wl[indl] le median(wl[indl])+10) and (wl[indl] ge median(wl[indl])-10))], wll, cen_wl)
             	if not keyword_set(ra) then ra = 0
             	if not keyword_set(dec) then dec = 0
-				if keyword_set(current_pix) then begin
+				if (keyword_set(current_pix)) and (not current_pix eq 'c') then begin
             		ra = interpol(ra_tot, wl_coord, line_center[i])
 					dec = interpol(dec_tot, wl_coord, line_center[i])
 				endif
@@ -1100,7 +1100,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 					endif
 					read_line_ref, line_name_dg[2*i], E_u1, A1, g1
 					read_line_ref, line_name_dg[2*i+1], E_u2, A2, g2
-					if keyword_set(current_pix) then begin
+					if (keyword_set(current_pix)) and (not current_pix eq 'c') then begin
 						ra = interpol(ra_tot, wl_coord, line[0])
 						dec = interpol(dec_tot, wl_coord, line[0])
 					endif
