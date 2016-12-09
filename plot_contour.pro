@@ -224,7 +224,7 @@ if not keyword_set(no_plot) then begin
 		        ; if encounter an error skip this one and keep going
 		        catch, error_status
 		        if error_status ne 0 then begin
-  		        	;stop
+  		        	stop
   		        	print, 'Object: ', objname, ' Line: ',line_name[i]
   		        	print, !error_state.msg
   		        	file_delete, plotdir+objname+'_'+line_name[i]+'_contour.eps',/allow_nonexistent,/verbose
