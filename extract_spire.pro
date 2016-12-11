@@ -49,8 +49,6 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	pix_slw = !PI/4*34^2
 	pix_ssw = !PI/4*19^2
 
-    stop
-
   ; Information about the line that you want to fit including the range for baseline fitting.  SLW and SSW included
   line_name_oh2o = ['o-H2O5_23-5_14','o-H2O6_25-5_32','o-H2O8_45-9_18','o-H2O8_27-7_34','o-H2O7_43-6_52','o-H2O8_54-7_61','o-H2O3_21-3_12','o-H2O6_34-5_41','o-H2O3_12-2_21','o-H2O7_25-8_18',$
           				  'o-H2O3_12-3_03','o-H2O5_32-4_41','o-H2O1_10-1_01'];,'o-H2O4_23-3_30'
