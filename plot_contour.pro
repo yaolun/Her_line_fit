@@ -227,7 +227,6 @@ if not keyword_set(no_plot) then begin
                     if !error_state.msg eq 'Program caused arithmetic error: Floating illegal operand' then continue
   		        	print, 'Object: ', objname, ' Line: ',line_name[i]
   		        	print, !error_state.msg
-                    stop
   		        	file_delete, plotdir+objname+'_'+line_name[i]+'_contour.eps',/allow_nonexistent,/verbose
                 goto, exit_slw
 		        endif
