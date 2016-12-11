@@ -65,7 +65,6 @@ if keyword_set(spire) then begin
 		data_ssw[pix].dec = dec
 		data_ssw[pix].snr = snr
 		data_ssw[pix].validity = validity
-        stop
 		for i = 0, n_elements(base_str)-1 do if base_str[i] lt 0 then base_str[i] = 0
 		data_ssw[pix].base_str = base_str*fwhm / beam_ssw ;*2.354    ; Use a top-hat function to calculate the baseline strength under the line
   	endfor
