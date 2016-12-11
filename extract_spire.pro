@@ -29,6 +29,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 			for ipix = 0, n_elements(pixelname)-1 do begin
 				ra_dum = [ra_dum, ra[where(coordpix eq pixelname[ipix])]]
 				dec_dum = [dec_dum, dec[where(coordpix eq pixelname[ipix])]]
+                stop
 			endfor
 			ra = ra_dum & dec = dec_dum
 		endif
