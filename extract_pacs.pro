@@ -966,6 +966,8 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 													/single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot, feedback=feedback
 			endelse
 
+            if line_name[i] eq 'CH+5-4' then stop
+
 			; Print the fittng result into text file
 
         	if status le 0 then begin
