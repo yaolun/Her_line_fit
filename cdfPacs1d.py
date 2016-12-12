@@ -202,7 +202,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
 
     # make contour plots
     idl.pro('plot_contour', noise=3, indir=outdir+obj+'/pacs/advanced_products/cube/',
-            plotdir=outdir+obj+'/pacs/advanced_products/contours/', objname=obj,
+            plotdir=outdir+obj+'/pacs/advanced_products/contours/', objname=objname,
             pacs=1, brightness=1)
 
 
