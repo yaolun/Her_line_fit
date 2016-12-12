@@ -734,7 +734,6 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     	; Line subtraction
     	flux_sub = flux
     	for line = 0, n_elements(line_name_n)-1 do begin
-    	  if line_name_n[i] eq 'CO22-21' then stop
     		if abs(snr_n[line]) ge noiselevel-1.0 then begin
 				if (lowest_E_n[line] ne 1) then continue
     			ind = where((wl gt cen_wl_n[line]-2*fwhm_n[line]) and (wl lt cen_wl_n[line]+2*fwhm_n[line]))
@@ -966,6 +965,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 													/single_gauss,outdir=plotdir, noiselevel=noiselevel, global_noise=flat_noise_smooth, base_range=base_range, no_plot=no_plot, feedback=feedback
 			endelse
 
+            print, line_name[i]
             if line_name[i] eq 'CH+5-4' then stop
 
 			; Print the fittng result into text file
