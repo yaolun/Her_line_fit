@@ -22,13 +22,13 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
 
     # extract the cube file
     # the main purpose is getting the coordinates, which can be done in python as well
-    import pidly
+    # import pidly
     # grad13yy
     # idl = pidly.IDL('/Applications/exelis/idl83/bin/idl')
     # bettyjo
-    idl = pidly.IDL('/opt/local/exelis/idl83/bin/idl')
-    idl('.r '+os.path.expanduser('~')+'/programs/line_fitting/get_pacs.pro')
-    idl.pro('get_pacs', outdir=outdir+'pacs/data/', objname=objname, filename=cubefile, suffix='hsa', separate=1)
+    # idl = pidly.IDL('/opt/local/exelis/idl83/bin/idl')
+    # idl('.r '+os.path.expanduser('~')+'/programs/line_fitting/get_pacs.pro')
+    # idl.pro('get_pacs', outdir=outdir+'pacs/data/', objname=objname, filename=cubefile, suffix='hsa', separate=1)
 
     wl = np.array([])
     flux = np.array([])
@@ -45,7 +45,7 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
             band = 'r1l'
         print hdu_dum[1].header['CROTA2']
         wl_dum, flux_dum = pacs_weight(outdir+'pacs/data/cube/', objname, aper_size,
-                                       outdir+'pacs/data/', cube, suffix='hsa_'+band)
+                                       outdir+'pacs/data/', cube, suffix='hsa_'+band, plot=outdir+'pacs/data/')
 
         if band == 'b2a':
             trimmer = (wl_dum >= 54.8) & (wl_dum < 72.3)
@@ -183,13 +183,13 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8):
 # #          ['V1735_Cyg','1342235849','1342235848','1342219560'],\
 # #          ['VLA1623','1342213918','1342213917','1342251287'],\
 #          ['WL12','1342228187','1342228188','1342251290']]
-# 
+#
 # datadir = '/scratch/CDF_PACS_HSA/'
 # outdir = '/home/bettyjo/yaolun/CDF_archive_test/'
-# 
+#
 # import os
 # from astropy.io import ascii
-# 
+#
 # for obs in obsid:
 #     if obs[3] == '0':
 #         continue
