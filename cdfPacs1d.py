@@ -28,10 +28,13 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
     # extract the cube file
     # the main purpose is getting the coordinates, which can be done in python as well
     import pidly
-    # grad13yy
-    # idl = pidly.IDL('/Applications/exelis/idl83/bin/idl')
-    # bettyjo
-    idl = pidly.IDL('/opt/local/exelis/idl83/bin/idl')
+    if 'bettyjo' in os.path.expanduser('~'):
+        # bettyjo
+        idl = pidly.IDL('/opt/local/exelis/idl83/bin/idl')
+    else:
+        # grad13yy
+        idl = pidly.IDL('/Applications/exelis/idl83/bin/idl')
+
     idl('.r '+os.path.expanduser('~')+'/programs/line_fitting/get_pacs.pro')
     idl.pro('get_pacs', outdir=outdir+'pacs/data/', objname=objname, filename=cubefile,
             suffix=suffix, separate=1)
@@ -84,13 +87,13 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
         spire = ascii.read(spire_path)
         pacs = ascii.read(outdir+'pacs/data/'+objname+'_pacs_weighted.txt')
         current_status = PacsSpire_SpecMatch(pacs, spire, threshold)
-        print current_status
+        print(current_status)
 
         used_aperture = [aper_size]
 
         iter_num = 0
         while current_status != 0:
-            print 'iteration ', iter_num
+            print('iteration ', iter_num)
             # check if it is a u-turn in aperture size
             if len(used_aperture) > 1:
                 if previous_status*current_status < 0:
@@ -146,10 +149,10 @@ def cdfPacs1d(obsid, datadir, outdir, objname, aper_size=31.8, suffix='hsa',
             current_status = PacsSpire_SpecMatch(pacs, spire, threshold)
             iter_num += 1
             if iter_num == max_iter:
-                print 'Maximum iterations reached.'
+                print('Maximum iterations reached.')
                 break
 
-        print used_aperture
+        print(used_aperture)
 
     # make an overall plot of spectrum
     # need to incorporate with photometry in the near future

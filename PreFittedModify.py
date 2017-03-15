@@ -14,7 +14,7 @@ def PreFittingModify(indir, outdir, obs):
 
 
     if not os.path.isfile(indir+obs[3]+'_spire_sect.txt'):
-        print obs[0]+' is not found.'
+        print(obs[0]+' is not found.')
         return None
     # read in the spectrum
     spire_spec = ascii.read(indir+obs[3]+'_spire_sect.txt', data_start=4)
@@ -65,7 +65,7 @@ def SPIRE1d_fit(indir, objname, global_dir):
     import os
     from astropy.io import ascii
     if not os.path.isfile(indir+'data/'+objname+'_spire_corrected.txt'):
-        print objname+' is not found.'
+        print(objname+' is not found.')
         return None
 
     # read RA/Dec

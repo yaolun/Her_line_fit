@@ -34,16 +34,16 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
         if keyword_set(trim_detail) then begin
             ; SSW
             openw, lun, outdir+object+'_spire_corrected_ssw.txt', /get_lun
-            if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'Flux_Density(Jy)'
-            if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
-            for k = 0, n_elements(wl_ssw)-1 do printf, lun, format = '(2(g12.6,2X))', wl_ssw[k], flux_ssw[k]
+            if keyword_set(fx) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'Flux_Density(Jy)'
+            if keyword_set(brightness) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
+            for k = 0, n_elements(wl_ssw)-1 do printf, lun, format = '(2(g14.6,2X))', wl_ssw[k], flux_ssw[k]
             free_lun, lun
             close, lun
             ; SSW
             openw, lun, outdir+object+'_spire_corrected_slw.txt', /get_lun
-            if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'Flux_Density(Jy)'
-            if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
-            for k = 0, n_elements(wl_slw)-1 do printf, lun, format = '(2(g12.6,2X))', wl_slw[k], flux_slw[k]
+            if keyword_set(fx) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'Flux_Density(Jy)'
+            if keyword_set(brightness) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
+            for k = 0, n_elements(wl_slw)-1 do printf, lun, format = '(2(g14.6,2X))', wl_slw[k], flux_slw[k]
             free_lun, lun
             close, lun
         endif
@@ -82,9 +82,9 @@ pro get_spire_1d, indir=indir, filename=filename, outdir=outdir,object=object, b
     flux = flux[sort(wl)]
     wl = wl[sort(wl)]
     openw, lun, outdir+object+'_spire_corrected.txt',/get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'Flux_Density(Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+    if keyword_set(fx) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'Flux_Density(Jy)'
+    if keyword_set(brightness) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
+    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g14.6,2X))', wl[k], flux[k]
     free_lun, lun
     close, lun
     ; Plot the spectrum
@@ -173,9 +173,9 @@ for i =2, 20 do begin
     ; plot spaxel spectrum
     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'Flux_Density(Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+    if keyword_set(fx) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'Flux_Density(Jy)'
+    if keyword_set(brightness) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
+    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g14.6,2X))', wl[k], flux[k]
     free_lun, lun
     close, lun
 endfor
@@ -195,9 +195,9 @@ for i = 21, 55 do begin
     ; plot spaxel spectrum
     plot_spire_1d, wl, flux, object=object, pixname=label[i-2], outdir=outdir, fx=fx, brightness=brightness
     openw, lun, outdir+object+'_'+label[i-2]+'.txt', /get_lun
-    if keyword_set(fx) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'Flux_Density(Jy)'
-    if keyword_set(brightness) then printf, lun, format='(2(a12,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
-    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g12.6,2X))', wl[k], flux[k]
+    if keyword_set(fx) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'Flux_Density(Jy)'
+    if keyword_set(brightness) then printf, lun, format='(2(a14,2x))','Wavelength(um)', 'I_nu(Jy/as2)'
+    for k = 0, n_elements(wl)-1 do printf, lun, format = '(2(g14.6,2X))', wl[k], flux[k]
     free_lun, lun
     close, lun
 endfor

@@ -236,7 +236,7 @@ pro extract_pacs, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
 		endif
 	endfor
 
-    ; The path to the output file for print out the fitting result.
+  ; The path to the output file for print out the fitting result.
 	name = outdir+filename+'_lines'
 	if keyword_set(linescan) then name = name+'_LS'
     openw, firstfit, name+'.txt', /get_lun
