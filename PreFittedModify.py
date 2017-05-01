@@ -169,6 +169,9 @@ def SPIRE1D_run(obsid=None, indir=None, outdir=None, global_dir=None, wl_shift=0
     for obs in obsid:
         if obs[3] == '0':
             continue
+        # exclude HH100
+        if obs[0] == 'HH100':
+            continue
         PreFittingModify(outdir+obs[0]+'/spire/data/', outdir+obs[0]+'/spire/data/', obs)
 
         SPIRE1d_fit(outdir+obs[0]+'/spire/', obs[0], global_dir, wl_shift=wl_shift)
