@@ -81,6 +81,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
     ; For testing flase-positive rate, shift the line centroid by a certain ammount to see how many fake lines are detected.
     if keyword_set(wl_shift) then begin
         line_center = line_center + wl_shift
+        print, 'Line centroids are shifted by', wl_shift, ' um'
     endif
 
 	; Define the range of line center by setting the range within 2 times of the resolution elements of the line center
