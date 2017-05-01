@@ -79,7 +79,7 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 	line_center = [line_center_oh2o, line_center_ph2o, line_center_co, line_center_13co, line_center_hco, line_center_hcn, line_center_other]
 
     ; For testing flase-positive rate, shift the line centroid by a certain ammount to see how many fake lines are detected.
-    if keyword_test(wl_shift) then begin
+    if keyword_set(wl_shift) then begin
         line_center = line_center + wl_shift
     endif
 
