@@ -1,6 +1,6 @@
 pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filename, test=test,fixed_width=fixed_width,slw=slw,ssw=ssw,$
 				   localbaseline=localbaseline,global_noise=global_noise,ra=ra,dec=dec,noiselevel=noiselevel,brightness=brightness,fx=fx,object=object,current_pix=current_pix,$
-				   print_all=print_all,flat=flat,continuum=continuum,plot_subtraction=plot_subtraction,no_plot=no_plot,coordpix=coordpix,double_gauss=double_gauss
+				   print_all=print_all,flat=flat,continuum=continuum,plot_subtraction=plot_subtraction,no_plot=no_plot,coordpix=coordpix,double_gauss=double_gauss, wl_shift=wl_shift
 	; Test if the target path is valid. If not, create them.
 	if file_test(outdir,/directory) eq 0 then file_mkdir, outdir
 	if not keyword_set(no_plot) then begin
@@ -77,6 +77,11 @@ pro extract_spire, indir=indir, outdir=outdir, plotdir=plotdir, filename=filenam
 
 	line_name = [line_name_oh2o, line_name_ph2o, line_name_co, line_name_13co, line_name_hco, line_name_hcn, line_name_other]
 	line_center = [line_center_oh2o, line_center_ph2o, line_center_co, line_center_13co, line_center_hco, line_center_hcn, line_center_other]
+
+    ; For testing flase-positive rate, shift the line centroid by a certain ammount to see how many fake lines are detected.
+    if keyword_test(wl_shift) then begin
+        line_center = line_center + wl_shift
+    endif
 
 	; Define the range of line center by setting the range within 2 times of the resolution elements of the line center
 	range = []
