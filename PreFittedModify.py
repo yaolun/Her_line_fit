@@ -61,7 +61,7 @@ def PreFittingModify(indir, outdir, obs):
     fig.savefig(outdir+obs[0]+'_spire_corrected.pdf', format='pdf', dpi=300, bbox_inches='tight')
     fig.clf()
 
-def SPIRE1d_fit(indir, objname, global_dir):
+def SPIRE1d_fit(indir, objname, global_dir, wl_shift=0):
     import os
     from astropy.io import ascii
     if not os.path.isfile(indir+'data/'+objname+'_spire_corrected.txt'):
@@ -79,9 +79,9 @@ def SPIRE1d_fit(indir, objname, global_dir):
             outdir=indir+'advanced_products/', plotdir=indir+'advanced_products/plots/', noiselevel=3,
             ra=radec_slw['RA(deg)'][radec_slw['Pixel'] == 'SLWC3'], dec=radec_slw['Dec(deg)'][radec_slw['Pixel'] == 'SLWC3'],
             global_noise=20, localbaseline=10, continuum=1, flat=1, object=objname, double_gauss=1, fx=1, current_pix=1,
-            print_all=global_dir+'_lines')
+            print_all=global_dir+'_lines', wl_shift=wl_shift)
 
-def SPIRE1D_run(obsid=None, indir=None, outdir=None, global_dir=None):
+def SPIRE1D_run(obsid=None, indir=None, outdir=None, global_dir=None, wl_shift=0):
     if obsid == None:
         # observation info
         obsid = [['AB_Aur','1342217842','1342217843','0'],\
@@ -169,6 +169,9 @@ def SPIRE1D_run(obsid=None, indir=None, outdir=None, global_dir=None):
     for obs in obsid:
         if obs[3] == '0':
             continue
+        # exclude HH100
+        if obs[0] == 'HH100':
+            continue
         PreFittingModify(outdir+obs[0]+'/spire/data/', outdir+obs[0]+'/spire/data/', obs)
 
-        SPIRE1d_fit(outdir+obs[0]+'/spire/', obs[0], global_dir)
+        SPIRE1d_fit(outdir+obs[0]+'/spire/', obs[0], global_dir, wl_shift=wl_shift)
