@@ -1,32 +1,172 @@
-filename = '/Users/yaolun/data/hh168_texes/ggd37-yaolun/aor_17856768_expid_62_0_file1_pixel1_TSA.txt'
-readcol, filename, comment='#', wl, flux, err, format='F,F,F'
-base_para = [0,0,0]
-line = [25.97, 25.92, 26.02]
-base_range = [25.67, 25.92, 26.02, 26.37]
+;; LH
+;;
+;indir = '/Users/yaolun/data/hh168_texes/ggd37-yaolun/5005568/'
+;filename = 'aor_5005568_expid_126_0_file1_pixel1_TSA'
+;expo_id = 126
+;prefix = 'aor_5005568_expid_'
+;outdir = '~/test/ggd37_fitting/LH/'
+;objname = 'ggd37'
+;radec=  indir+'ra_dec_5005568_LH.txt'
+;max_file_num = 30
+;r_spectral = 600.0
+;
+;readcol, radec, format='I,I,I,I,D,D', comment=';', Module, EXPID, File_num_coord, Pixel_num_coord, RA_PIX, DEC_PIX, /silent
+;
+;pix_counter = 0
+;
+;for file_num = 1, max_file_num do begin
+;  for pix_num = 1, 5 do begin
+;    ra_dum = ra_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    dec_Dum = dec_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    filename = prefix+strtrim(expo_id-1+file_num,2)+'_0_file'+strtrim(file_num,2)+'_pixel'+strtrim(pix_num,2)+'_TSA'
+;    extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=outdir, noiselevel=3, ra=ra_dum, dec=dec_dum,$
+;      localbaseline=10, global_noise=0, fixed_width=0, continuum=1, object='GGD37', flat=1,$
+;      plot_subtraction=0, no_plot=0, double_gauss=0, r_spectral=r_spectral
+;     pix_counter = pix_counter + 1
+;    file_move, outdir+filename+'_lines.txt', outdir+objname+'_irs_pixel'+strtrim(pix_counter,2)+'_lines.txt', /overwrite
+;  endfor
+;endfor
+;
+;indir = '/Users/yaolun/data/hh168_texes/ggd37-yaolun/5005312/'
+;filename = 'aor_5005312_expid_126_0_file1_pixel1_TSA'
+;expo_id = 126
+;prefix = 'aor_5005312_expid_'
+;outdir = '~/test/ggd37_fitting/LH/'
+;objname = 'ggd37'
+;radec=  indir+'ra_dec_5005312_LH.txt'
+;max_file_num = 30
+;r_spectral = 600.0
+;
+;readcol, radec, format='I,I,I,I,D,D', comment=';', Module, EXPID, File_num_coord, Pixel_num_coord, RA_PIX, DEC_PIX, /silent
+;
+;for file_num = 1, max_file_num do begin
+;  for pix_num = 1, 5 do begin
+;    ra_dum = ra_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    dec_Dum = dec_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    filename = prefix+strtrim(expo_id-1+file_num,2)+'_0_file'+strtrim(file_num,2)+'_pixel'+strtrim(pix_num,2)+'_TSA'
+;    extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=outdir, noiselevel=3, ra=ra_dum, dec=dec_dum,$
+;      localbaseline=10, global_noise=0, fixed_width=0, continuum=1, object='GGD37', flat=1,$
+;      plot_subtraction=0, no_plot=0, double_gauss=0, r_spectral=r_spectral
+;    pix_counter = pix_counter + 1
+;    file_move, outdir+filename+'_lines.txt', outdir+objname+'_irs_pixel'+strtrim(pix_counter,2)+'_lines.txt', /overwrite
+;  endfor
+;endfor
 
-pixelname = 'pixel1'
-linename = 'FeII26'
+;plot_contour_irs, noiselevel=3, indir=outdir, plotdir=outdir, objname=objname, verbose=1, fx=1,spitzerirs=1, max_irs_pixel=pix_counter
 
-ind = where(wl gt base_range[0] and wl lt base_range[3])
-ind_line = where(wl gt base_range[1] and wl lt base_range[2])
-ind_base = where((wl gt base_range[0] and wl lt base_range[1]) or (wl gt base_range[2] and wl lt base_range[3]))
-plot_base = [[wl[ind_line]], [flux[ind_line]]]
+;; SH
+;
+;indir = '/Users/yaolun/data/hh168_texes/ggd37-yaolun/5005568/'
+;filename = 'aor_5005568_expid_0_0_file1_pixel1_TSA'
+;expo_id = 0
+;prefix = 'aor_5005568_expid_'
+;outdir = '~/test/ggd37_fitting/SH/'
+;objname = 'ggd37'
+;radec=  indir+'ra_dec_5005568_SH.txt'
+;max_file_num = 126
+;r_spectral = 600.0
+;
+;readcol, radec, format='I,I,I,I,D,D', comment=';', Module, EXPID, File_num_coord, Pixel_num_coord, RA_PIX, DEC_PIX, /silent
+;
+;pix_counter = 0
+;
+;for file_num = 1, max_file_num do begin
+;  for pix_num = 1, 5 do begin
+;    ra_dum = ra_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    dec_Dum = dec_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    filename = prefix+strtrim(expo_id-1+file_num,2)+'_0_file'+strtrim(file_num,2)+'_pixel'+strtrim(pix_num,2)+'_TSA'
+;    extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=outdir, noiselevel=3, ra=ra_dum, dec=dec_dum,$
+;      localbaseline=10, global_noise=0, fixed_width=0, continuum=1, object='GGD37', flat=1,$
+;      plot_subtraction=0, no_plot=0, double_gauss=0, r_spectral=r_spectral
+;    pix_counter = pix_counter + 1
+;    file_move, outdir+filename+'_lines.txt', outdir+objname+'_irs_pixel'+strtrim(pix_counter,2)+'_lines.txt', /overwrite
+;  endfor
+;endfor
+;
+;indir = '/Users/yaolun/data/hh168_texes/ggd37-yaolun/5005312/'
+;filename = 'aor_5005312_expid_0_0_file1_pixel1_TSA'
+;expo_id = 0
+;prefix = 'aor_5005312_expid_'
+;outdir = '~/test/ggd37_fitting/SH/'
+;objname = 'ggd37'
+;radec=  indir+'ra_dec_5005312_SH.txt'
+;max_file_num = 126
+;r_spectral = 600.0
+;
+;readcol, radec, format='I,I,I,I,D,D', comment=';', Module, EXPID, File_num_coord, Pixel_num_coord, RA_PIX, DEC_PIX, /silent
+;
+;for file_num = 1, max_file_num do begin
+;  for pix_num = 1, 5 do begin
+;    ra_dum = ra_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    dec_Dum = dec_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    filename = prefix+strtrim(expo_id-1+file_num,2)+'_0_file'+strtrim(file_num,2)+'_pixel'+strtrim(pix_num,2)+'_TSA'
+;    extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=outdir, noiselevel=3, ra=ra_dum, dec=dec_dum,$
+;      localbaseline=10, global_noise=0, fixed_width=0, continuum=1, object='GGD37', flat=1,$
+;      plot_subtraction=0, no_plot=0, double_gauss=0, r_spectral=r_spectral
+;    pix_counter = pix_counter + 1
+;    file_move, outdir+filename+'_lines.txt', outdir+objname+'_irs_pixel'+strtrim(pix_counter,2)+'_lines.txt', /overwrite
+;  endfor
+;endfor
+;
+;plot_contour_irs, noiselevel=3, indir=outdir, plotdir=outdir, objname=objname, verbose=1, fx=1,spitzerirs=1, max_irs_pixel=pix_counter
 
-; baseline fitting
-fit_line, 'pixel1','FeII26', wl[ind_base], flux[ind_base], status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, /baseline, /convert, outdir='~/test/', $
-          noiselevel=3, plot_base=plot_base
 
-print, base_para
-base = base_para[0]*wl[ind]^2+base_para[1]*wl[ind]+base_para[2]
-plot_base = [[wl[ind_base]], [flux[ind_base]]]
+; SL
+;
+indir = '/Users/yaolun/data/hh168_texes/ggd37-yaolun/17856768/'
+filename = 'aor_17856768_expid_0_0_file1_pixel1_TSA'
+expo_id = 0
+prefix = 'aor_17856768_expid_'
+outdir = '~/test/ggd37_fitting/SL/'
+objname = 'ggd37'
+radec=  indir+'ra_dec_17856768_SL_trim.txt'
+max_file_num = 124
+;max_file_num = 2
+r_spectral = 60.0
 
-fit_line, 'pixel1','FeII26', wl[ind], flux[ind]-base, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, /single_gauss, /convert, outdir='~/test/', noiselevel=3,$
-          base_range=base_range, plot_base=plot_base
-          
-; generic extraction routine
-indir = '/Users/yaolun/data/hh168_texes/ggd37-yaolun/'
-filename = 'aor_17856768_expid_62_0_file1_pixel1_TSA'
-outdir = '~/test/'
-extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=outdir, noiselevel=3, ra=0, dec=0,$
-  localbaseline=10, global_noise=0, fixed_width=0, continuum=1, object='GGD37', flat=1,$
-  plot_subtraction=0, no_plot=0, double_gauss=0
+;readcol, radec, format='A,I,I,I,D,D', comment=';', Module, EXPID, File_num_coord, Pixel_num_coord, RA_PIX, DEC_PIX, /silent
+;
+;pix_counter = 0
+;
+;for file_num = 1, max_file_num do begin
+;  for pix_num = 2, 27 do begin
+;    ra_dum = ra_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    dec_Dum = dec_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+;    filename = prefix+strtrim(expo_id+floor((file_num-1)/2),2)+'_0_file'+strtrim(file_num,2)+'_pixel'+strtrim(pix_num,2)+'_TSA'
+;    extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=outdir, noiselevel=3, ra=ra_dum, dec=dec_dum,$
+;      localbaseline=3, global_noise=0, fixed_width=0, continuum=1, object='GGD37', flat=1,$
+;      plot_subtraction=0, no_plot=0, double_gauss=0, r_spectral=r_spectral
+;    pix_counter = pix_counter + 1
+;    file_move, outdir+filename+'_lines.txt', outdir+objname+'_irs_pixel'+strtrim(pix_counter,2)+'_lines.txt', /overwrite
+;  endfor
+;endfor
+
+indir = '/Users/yaolun/data/hh168_texes/ggd37-yaolun/17857536/'
+filename = 'aor_17857536_expid_0_0_file1_pixel1_TSA'
+expo_id = 0
+prefix = 'aor_17857536_expid_'
+outdir = '~/test/ggd37_fitting/SL/'
+objname = 'ggd37'
+radec=  indir+'ra_dec_17857536_SL_trim.txt'
+max_file_num = 124
+max_file_num = 2
+r_spectral = 60.0
+
+readcol, radec, format='A,I,I,I,D,D', comment=';', Module, EXPID, File_num_coord, Pixel_num_coord, RA_PIX, DEC_PIX, /silent
+
+for file_num = 1, max_file_num do begin
+  for pix_num = 2, 27 do begin
+    ra_dum = ra_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+    dec_dum = dec_pix[where((file_num_coord eq file_num) and (pixel_num_coord eq pix_num))]
+    filename = prefix+strtrim(expo_id+floor((file_num-1)/2),2)+'_0_file'+strtrim(file_num,2)+'_pixel'+strtrim(pix_num,2)+'_TSA'
+    extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=outdir, noiselevel=3, ra=ra_dum, dec=dec_dum,$
+      localbaseline=10, global_noise=0, fixed_width=0, continuum=1, object='GGD37', flat=1,$
+      plot_subtraction=0, no_plot=0, double_gauss=0, r_spectral=r_spectral
+    pix_counter = pix_counter + 1
+    file_move, outdir+filename+'_lines.txt', outdir+objname+'_irs_pixel'+strtrim(pix_counter,2)+'_lines.txt', /overwrite
+  endfor
+endfor
+;
+;plot_contour_irs, noiselevel=3, indir=outdir, plotdir=outdir, objname=objname, verbose=1, fx=1, spitzerirs=1, max_irs_pixel=pix_counter
+
+end

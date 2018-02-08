@@ -234,7 +234,8 @@ if not keyword_set(no_plot) then begin
   		        	cgplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition, /overplot;,xrange=[140,-140],yrange=[-140,140], position=plotposition, /overplot
   		        	cgplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5, position=oposition, /overplot
                     cgplot, [0], [0], psym=1, color=250, symsize=1.5, position=oposition, /overplot
-  		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color='blue',/onimage,label=0
+  		        	;cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color='blue',/onimage,label=0
+  		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color=95,/onimage,label=0
 		        endif else begin
   		        	cgplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition, /overplot
   		        	cgplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5, position=oposition, /overplot
@@ -358,7 +359,8 @@ if not keyword_set(no_plot) then begin
   		        	cgplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition, /overplot;,xrange=[140,-140],yrange=[-140,140], position=plotposition, /overplot
   		        	cgplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5, position=oposition, /overplot
                     cgplot, [0], [0], psym=1, color=250, symsize=1.5, position=oposition, /overplot
-  		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color='blue',/onimage,label=0
+  		        	;cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color='blue',/onimage,label=0
+  		        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color=95,/onimage,label=0
 		        endif else begin
   		        	cgplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition, /overplot
   		        	cgplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5, position=oposition, /overplot
@@ -506,7 +508,8 @@ if not keyword_set(no_plot) then begin
     	        	cgplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition, /overplot;,xrange=[140,-140],yrange=[-140,140], position=plotposition, /overplot
     	        	cgplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5, position=oposition, /overplot
                     cgplot, [0], [0], psym=1, color=250, symsize=1.5, position=oposition, /overplot
-    	        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color='blue',/onimage,label=0
+    	        	;cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color='blue',/onimage,label=0
+    	        	cgcontour, flux_smooth, ra_smooth, dec_smooth, levels=level, /irregular, /noerase, color=95,/onimage,label=0
       	        endif else begin
     	        	cgplot, ra_tot, dec_tot, psym=1,color=0, symsize=1.5, position=oposition, /overplot
     	        	cgplot, ra_tot[where(flux ne 0)], dec_tot[where(flux ne 0)], psym=1, color=160, symsize=1.5, position=oposition, /overplot

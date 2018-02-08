@@ -1,6 +1,6 @@
 pro fit_line, pixelname, linename, wl, flux, std=std, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, line, noise, plot_base=plot_base,$
 baseline=baseline, test=test, single_gauss=single_gauss, double_gauss=double_gauss, outdir=outdir, noiselevel=noiselevel, fixed_width=fixed_width,global_noise=global_noise,base_range=base_range,brightness=brightness,$
-no_plot=no_plot,b3a=b3a,fix_dg=fix_dg,spire=spire,feedback=feedback
+no_plot=no_plot,b3a=b3a,fix_dg=fix_dg,spire=spire,feedback=feedback, r_spectral=r_spectral
 
 ; The double gaussian function still in alpha test
 ; Create a separated directory for putting the double fitting plots
@@ -99,11 +99,13 @@ if not keyword_set(baseline) then begin
     ; define the initial guess of the line profile
     ;--------------------------------------------
     ; First, construct the structure of the constrain.  Here to constrain that the width of the Gaussian cannot larger than the range of the wavelength put into this program
-    if max(wl) gt 200 then begin
+    case 1 of 
+    max(wl) gt 200: begin
         ; instrument resolution 1.2 GHz and plus apodize 1.5 factor in the pipeline
         ; FWHM = 1.207*delta_sigma  (from silde: spire dp webinar by Nanyao Lu)
         dl = 1.5*1.207*(1.2*1e9*(line[0]*1e-4)^2/c)/2.354 * 1e4
-    endif else begin
+        end
+    (max(wl) lt 200) and (max(wl) gt 50): begin
         ; the width in these files are the FWHM.
         readcol, '~/programs/line_fitting/spectralresolution_order1.txt', format='D,D', wl1, res1,/silent
         readcol, '~/programs/line_fitting/spectralresolution_order2.txt', format='D,D', wl2, res2,/silent
@@ -122,7 +124,15 @@ if not keyword_set(baseline) then begin
                 dl = double(interpol(fwhm3/2.354,wl3,line[0]))
             endif
         endif
-    endelse
+        end
+    (max(wl) lt 50) and max(wl) gt 5: begin
+        if keyword_set(r_spectral) then begin
+            dl = median(wl)/r_spectral/2.354
+        endif else begin
+            dl = median(wl)/600/2.354
+        end
+    endcase
+    
     ; Calculate the over sample rate
     if n_elements(wl) le 1 then begin
         ; if wl point equal to 1 or fewer, fitting cannot be proceded.  over_sample is meaningless.
