@@ -1,55 +1,25 @@
 pro extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir, noiselevel=noiselevel, ra=ra, dec=dec,$
     localbaseline=localbaseline, global_noise=global_noise, fixed_width=fixed_width, continuum=continuum, object=object, flat=flat,$
-    plot_subtraction=plot_subtraction, no_plot=no_plot, double_gauss=double_gauss, r_spectral=r_spectral
-    ; The indir is the path of the spectrum of each pixel, including every letter in the filename except the pixel number.  For example, '/path/to/data/pacs_pixel13.txt', the indir will be '/path/to/data/pacs_pixel'
+    plot_subtraction=plot_subtraction, no_plot=no_plot, double_gauss=double_gauss, r_spectral=r_spectral, $
+    line_name=line_name, line_center=line_center, cont=cont
+    ; The indir is the path of the spectrum of each pixel,
+    ; including every letter in the filename except the pixel number.
+    ; For example, '/path/to/data/pacs_pixel13.txt', the indir will be '/path/to/data/pacs_pixel'
     ; Same method of the indir apply to the outdir.
+
+    ; file structure
     if file_test(outdir) eq 0 then file_mkdir, outdir
     if not keyword_set(no_plot) then begin
-    if file_test(plotdir+'base',/directory) eq 0 then file_mkdir,plotdir+'base'
-    endif
-    if file_test(plotdir+'cannot_fit',/directory) eq 0 then file_mkdir,plotdir+'cannot_fit'
-
-    ; no_plot flags the option of plotting the fitting results of individual line.
-    if keyword_set(no_plot) then begin
-    no_plot = 1
+        if file_test(plotdir+'base',/directory) eq 0 then file_mkdir,plotdir+'base'
+        if file_test(plotdir+'cannot_fit',/directory) eq 0 then file_mkdir,plotdir+'cannot_fit'
+        no_plot = 0
     endif else begin
-    no_plot = 0
+        no_plot = 1
     endelse
-    ; The path to the data that you want to fit.  wavelength in um and flux in Jy.
-    readcol, indir+filename+'.txt', format='D,D,D', comment='#', wl, flux , /silent
-    ; Get rid off the NaN
-    wl = wl[where(finite(flux) eq 1)]
-    std = flux[where(finite(flux) eq 1)] * 0
-    flux = flux[where(finite(flux) eq 1)]
-    ; Convert the flux to appropriate unit
-    c = 2.998d8
-    flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26  ; Change F_nu (Jy) -> F_lambda (W cm-2 um-1)
-    std = std*1d-4*c/(wl*1d-6)^2*1d-6*1d-26 + 1 ; weight = 1/0 cause problem
-    ; Information about the line that you want to fit including the range for baseline fitting.
-    ; every level is equal to LAMDA level-1
-    ; In the later version, the 10 times of resolutions is used for determining the baseline. Thus the baseline number here is less important
 
-;	line_name = ['NeII12', 'FeII18', 'FeII26', 'FeII35']
-;	line_center = [12.81, 17.93, 25.97, 35.3]
-;	cont = [[12.4, 12.7, 13.0, 13.3], [17.6, 17.8, 18.1,18.4], [25.5, 25.92, 26.02, 26.5],[35.0, 35.2, 35.4, 36.0]]
-
-    line_name =  ['H2S2', 'NeII12', 'NeIII15', 'H2S1', 'FeII18',$
-                  'SIII18','FeIII23', 'FeII24',$
-                  'SI25', 'FeII26', 'H2S0',$
-                  'SIII33', 'SiII34',  'FeII35', 'NeIII36', 'H2S3',$
-                  'H2S4', 'H2S5', 'H2S6', 'H2S7', 'FeII53']
-
-    line_center = [12.28, 12.81, 15.55, 17.03, 17.93,$
-                  18.71, 22.91, 24.52,$
-                  25.25, 25.98, 28.22,$
-                  33.48, 34.81, 35.34, 35.96, 9.67,$
-                  8.02, 6.91, 6.11, 5.51, 5.33]
-
-    cont = [[11.9,12.1,12.4,12.7],[12.4, 12.7, 13.0, 13.3],[15.1,15.4,15.7,16.0],[16.6,16.9,17.2,17.5], [17.6, 17.8, 18.1,18.4],$
-            [18.1,18.5,18.9,19.2],[22.4,22.7,23.2,23.5],[24.35, 24.45, 24.7, 24.9],$
-            [24.8,25.1,25.4,25.7],[25.5, 25.82, 26.02, 26.5],[27.8,28.0,28.5,29.0],$
-            [32.9,33.2,33.7,34.0],[34.3,34.6, 35.0,35.2],[35.0, 35.2, 35.4, 35.8],[35.4,35.8,36.2,36.5], [9.6,9.65,9.7,9.75],$
-            [7.9,7.97,8.1,8.2], [6.8,6.88,7.0,7.1], [5.95,6.05,6.12,6.14], [5.4,5.45,5.6,5.7], [5.2,5.3,5.4,5.45]]
+    ; ########################
+    ; process input parameters
+    ; ########################
 
     ; resolving power of the spectrograph
     ; dl in the unit of um
@@ -60,10 +30,7 @@ pro extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     endelse
     dl = median(wl)/R
 
-    ; Define the range of line center by setting the range within -2-2 times of the resolution elements of the line center
-    ; Since the [OI] 63 um lines are usually wider, we use -3-3 times of the resolution for this line.
-    range = []
-  ; sort the lists of line info
+    ; refine the input line list
     line_name = line_name[sort(line_center)]
     cont = cont[*,sort(line_center)]
     line_center = line_center[sort(line_center)]
@@ -73,9 +40,64 @@ pro extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     cont = cont[*,where((line_center ge min(wl)) and (line_center le max(wl)))]
     line_center = line_center[where((line_center ge min(wl)) and (line_center le max(wl)))]
 
-    ; define the range of line centroids
+    ; Modified the line list for double Gaussian fitting
+    if keyword_set(double_gauss) then begin
+        line_name_dg = [[]]
+        line_center_dg = []
+        range_dg = []
+        line_dg = []
+        excluded_line =[]
+
+        for dg = 0, n_elements(line_name_dg[0,*])-1 do begin
+            ind = where(line_name eq line_name_dg[0,dg] or line_name eq line_name_dg[1,dg])
+            if n_elements(ind) eq 2 then begin
+                range_dg = [[range_dg],[min(range[*,ind]), max(range[*,ind])]]
+                excluded_line = [excluded_line,line_name_dg[0,dg],line_name_dg[1,dg]]
+                line_center_dg = [line_center_dg,line_center[ind]]
+                for k = 0, n_elements(ind)-1 do begin
+                    line_dg = [[line_dg], [line_center[ind[k]], range[0,ind[k]], range[1,ind[k]]]]
+                endfor
+            endif
+        endfor
+    endif
+
+
+    ; #######
+    ; DATA IO
+    ; #######
+
+    ; Read in the spectrum. wavelength in um and flux in Jy.
+    readcol, indir+filename+'.txt', format='D,D,D', comment='#', wl, flux , /silent
+    ; Get rid off the NaN
+    wl = wl[where(finite(flux) eq 1)]
+    std = flux[where(finite(flux) eq 1)] * 0
+    flux = flux[where(finite(flux) eq 1)]
+
+    ; Convert the flux to appropriate unit
+    c = 2.998d8
+    flux = flux*1d-4*c/(wl*1d-6)^2*1d-6*1d-26    ; Change F_nu (Jy) -> F_lambda (W cm-2 um-1)
+    std = std*1d-4*c/(wl*1d-6)^2*1d-6*1d-26 + 1  ; weight = 1/0 cause problem
+
+    ; The path to the output file for print out the fitting result.
+    ; Always print out the pixel number.  If processing 1D spectrum, use 'c'.
+    name = filename+'_lines'
+    openw, firstfit, outdir+name+'.txt', /get_lun
+    printf, firstfit, format='(15(a18,2x))', $
+    'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)',$
+        'Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)',$
+        'SNR','RA(deg)','Dec(deg)','Pixel_No.','Blend'
+
+    ; ##################
+    ; SET UP CONSTRAINTS
+    ; ##################
+
+    ; Define the range of line center can vary
+    ; [VAR]
     range_factor = 1.5
+    range = []
+    ; define the range of line centroids
     for i = 0, n_elements(line_center)-1 do begin
+        ; The shortest line entry for the input spectrum
         if i eq 0 then begin
             lower = line_center[i]-(range_factor)*dl
             if (range_factor)*dl gt 0.5*(line_center[i+1]-line_center[i]) then begin
@@ -98,6 +120,7 @@ pro extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
             endelse
             range = [[range], [[lower, upper]]]
         endif
+        ; The longest line entry for the input spectrum
         if i eq n_elements(line_center)-1 then begin
             if range_factor*dl gt 0.5*(line_center[i]-line_center[i-1]) then begin
                 lower = line_center[i]-0.5*(line_center[i]-line_center[i-1])
@@ -112,98 +135,84 @@ pro extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
     ; Create a wavelength array that every elements in this array can be selected as a valid point for baseline fitting
     base_mask = 0*wl
     for i = 0, n_elements(wl)-1 do begin
-        valid=1
+        valid = 1
         for j = 0, n_elements(line_name)-1 do begin
             if (wl[i] ge range[0,j]) and (wl[i] le range[1,j]) then valid = valid*0
         endfor
         if valid eq 1 then base_mask[i] = 1
     endfor
+    wl_basepool = wl[where(base_mask ne 0)]
+    flux_basepool = flux[where(base_mask ne 0)] & std_basepool = std[where(base_mask ne 0)]
 
-    wl_basepool = wl[where(base_mask ne 0)] & flux_basepool = flux[where(base_mask ne 0)] & std_basepool = std[where(base_mask ne 0)]
+    ; ############
+    ; LINE FITTING
+    ; ############
 
-    if keyword_set(double_gauss) then begin
-    	; Modified the line list for double Gaussian fitting
-    	line_name_dg = [[]]
-    	line_center_dg = []
-    	range_dg = []
-    	line_dg = []
-    	excluded_line =[]
-
-    	for dg = 0, n_elements(line_name_dg[0,*])-1 do begin
-    		ind = where(line_name eq line_name_dg[0,dg] or line_name eq line_name_dg[1,dg])
-    		if n_elements(ind) eq 2 then begin
-    			range_dg = [[range_dg],[min(range[*,ind]), max(range[*,ind])]]
-    			excluded_line = [excluded_line,line_name_dg[0,dg],line_name_dg[1,dg]]
-    			line_center_dg = [line_center_dg,line_center[ind]]
-    			for k = 0, n_elements(ind)-1 do begin
-    				line_dg = [[line_dg], [line_center[ind[k]], range[0,ind[k]], range[1,ind[k]]]]
-    			endfor
-    		endif
-    	endfor
-    endif
-
-    ; The path to the output file for print out the fitting result.
-    ; Always print out the pixel number.  If processing 1D spectrum, use 'c'.
-    name = filename+'_lines'
-    openw, firstfit, outdir+name+'.txt', /get_lun
-    printf, firstfit, format='(15(a18,2x))', $
-    'Line','LabWL(um)','ObsWL(um)','Sig_Cen(um)','Str(W/cm2)',$
-        'Sig_str(W/cm2)','FWHM(um)','Sig_FWHM(um)','Base(W/cm2/um)','Noise(W/cm2/um)',$
-        'SNR','RA(deg)','Dec(deg)','Pixel_No.','Blend'
-
-    ; Do the fitting for every line in the list
     ; Single Gaussian fitting
     for i = 0, n_elements(line_name)-1 do begin
-    	; Check if the line that about to fit is the one in the double Gaussian fitting list.
+    	; Check if the line will be fitted with the double Gaussian fitting.
     	if (keyword_set(double_gauss)) then if ((where(excluded_line eq line_name[i]))[0] ne -1) then continue
 
+        ; ###################
         ; select the baseline
-        ; Usually localbaseline = 10
-        dlb = localbaseline*dl
-        wl_diff = wl[1:-1]-wl[0:-2]
-        ; find the how many pixels correspond to the number of resolution elements specified.
-        numb = ceil(dlb/(wl_diff[where(wl ge line_center[i])])[0])
+        ; ###################
 
-        left = where(wl_basepool lt range[0,i] and wl_basepool ge min(wl))
-        right = where(wl_basepool gt range[1,i] and wl_basepool le max(wl))
+        ; if localbaseline = 0, it will use the pre-defined continuum ranges
+        ; for the baseline fitting and plotting.
+        if localbaseline ne 0 then begin
+            dlb = localbaseline*dl
+            wl_diff = wl[1:-1]-wl[0:-2]
+            ; find the how many pixels correspond to the number of resolution elements specified.
+            numb = ceil(dlb/(wl_diff[where(wl ge line_center[i])])[0])
 
-        if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
-        if n_elements(right) gt numb then right = right[0:numb-1]
+            left = where(wl_basepool lt range[0,i] and wl_basepool ge min(wl))
+            right = where(wl_basepool gt range[1,i] and wl_basepool le max(wl))
 
-        if left[0] ne -1 and right[0] ne -1 then begin
-            wlb = [wl_basepool[left], wl_basepool[right]]
-            fluxb = [flux_basepool[left], flux_basepool[right]]
-            stdb = [std_basepool[left], std_basepool[right]]
-            base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
-        endif
-        if left[0] eq -1 and right[0] ne -1 then begin
-            wlb = [wl_basepool[right]]
-            fluxb = [flux_basepool[right]]
-            stdb = [std_basepool[right]]
-            base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
-        endif
-        if left[0] ne -1 and right[0] eq -1 then begin
-            wlb = [wl_basepool[left]]
-            fluxb = [flux_basepool[left]]
-            stdb = [std_basepool[left]]
-            base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
-        endif
+            if n_elements(left) gt numb then left = left[n_elements(left)-1-numb:n_elements(left)-1]
+            if n_elements(right) gt numb then right = right[0:numb-1]
+
+            if left[0] ne -1 and right[0] ne -1 then begin
+                wlb = [wl_basepool[left], wl_basepool[right]]
+                fluxb = [flux_basepool[left], flux_basepool[right]]
+                stdb = [std_basepool[left], std_basepool[right]]
+                base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]], wl_basepool[right[0]], wl_basepool[right[n_elements(right)-1]]]
+            endif
+            if left[0] eq -1 and right[0] ne -1 then begin
+                wlb = [wl_basepool[right]]
+                fluxb = [flux_basepool[right]]
+                stdb = [std_basepool[right]]
+                base_range = [wl_basepool[right[0]], wl_basepool[right[0]],wl_basepool[right[0]],wl_basepool[right[n_elements(right)-1]]]
+            endif
+            if left[0] ne -1 and right[0] eq -1 then begin
+                wlb = [wl_basepool[left]]
+                fluxb = [flux_basepool[left]]
+                stdb = [std_basepool[left]]
+                base_range = [wl_basepool[left[0]], wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]],wl_basepool[left[n_elements(left)-1]]]
+            endif
+        endif else begin
+            ; use the pre-defined continuum range
+            wlb = [wl_basepool[where(wl_basepool)]]
+            base_range = cont[i] ; here
+        endelse
 
         ; the region of spectrum that will use for fitting
         indl = where(wl gt base_range[0] and wl lt base_range[3])
         if base_range[0] eq base_range[1] then indl = where(wl gt min(wl) and wl lt base_range[3])
         if base_range[2] eq base_range[3] then indl = where(wl gt base_range[0] and wl lt max(wl))
         wll = wl[indl] & fluxl = flux[indl] & stdl = std[indl]
+        plot_base = [[wll],[fluxl]]
 
         ; select the line+baseline
         ; use the plot_base feature to plot the actual spectrum (with line) here
-        plot_base = [[wll],[fluxl]]
 
+
+        ; Baseline fitting
         if n_elements(wlb) lt 3 then continue
         ; fit the baseline and return the baseline parameter in 'base_para'
         ; fit_line, filename, line_name[i], wlb, fluxb, std=stdb, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
         fit_line, filename, line_name[i], wl_basepool, flux_basepool, std=std_basepool, $
-            status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
+            status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para, $
+            snr, /baseline, outdir=plotdir, no_plot=no_plot, plot_base=plot_base
 
         ; extract the wave and flux for plottng that is for better visualization of the fitting results.
         ; ind_plot = where(wl gt base_range[0]-5*dl and wl lt base_range[3]+5*dl)
@@ -216,10 +225,10 @@ pro extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
         ; Subtract
         fluxx = fluxl - base
         stdd = stdl
-        line = [line_center[i],range[0,i],range[1,i]]                      ;[line_center, line profile lower limit, line profile upper limit]
+        ; [line_center, line profile lower limit, line profile upper limit]
+        line = [line_center[i],range[0,i],range[1,i]]
         ; Fitting part
         ; Different fitting keyword for fixed width and test arguement
-        if line_name[i] eq 'H2S7' and filename eq 'aor_17856768_expid_0_0_file1_pixel4_TSA' then stop
 
         if keyword_set(fixed_width) then begin
         fit_line, filename, line_name[i], wll, fluxx, std=stdd, status, errmsg, cen_wl, sig_cen_wl, str, sig_str, fwhm, sig_fwhm, base_para,$
@@ -243,8 +252,7 @@ pro extract_line, indir=indir, filename=filename, outdir=outdir, plotdir=plotdir
                               base_range=base_range, no_plot=no_plot, feedback=feedback, r_spectral=r_spectral
             endelse
         endif
-        
-        if line_name[i] eq 'H2S7' and filename eq 'aor_17856768_expid_0_0_file1_pixel4_TSA' then stop
+
 
         ; Print the fittng result into text file
         if status le 0 then begin
